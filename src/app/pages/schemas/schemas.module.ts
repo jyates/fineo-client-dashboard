@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { CKEditorModule } from 'ng2-ckeditor';
 import { NgaModule } from '../../theme/nga.module';
 
-import { SchemaComponent } from './components/schema/schema.component'
-import { Schemas } from './schemas.component';
-import { routing }       from './schemas.routing';
+import { AddSchemaComponent }  from './components/add/add.component'
+import { SchemaComponent }     from './components/schema/schema.component'
+import { Schemas }             from './schemas.component';
+import { routing }             from './schemas.routing';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { routing }       from './schemas.routing';
   ],
   declarations: [
     Schemas,
-        SchemaComponent
+    SchemaComponent,
+    AddSchemaComponent
   ]
 })
 export default class SchemasModule {

@@ -91,7 +91,7 @@ export class App {
     schemaService.schemas().forEach(function(schema){
       var name = schema["name"];
       schemas.push({
-        path: schema["id"],
+        path: ["schemas", "inst", schema["id"]],
         data: {
           menu: {
             title: name
@@ -99,6 +99,17 @@ export class App {
         }
       })
     });
+    // add a 'plus' schema with no name
+    schemas.push({
+      path: "create",
+      data: {
+        menu:{
+          title: "",
+          icon: 'ion-plus-circled',
+        }
+      }
+    })
+
     schemaMenu["children"] = schemas
 
     return menu;
