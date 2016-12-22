@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Route, Routes } from '@angular/router';
 import './app.loader.ts';
 import { Component, ViewEncapsulation, ViewContainerRef } from '@angular/core';
 import { GlobalState } from './global.state';
@@ -7,6 +7,7 @@ import { layoutPaths } from './theme/theme.constants';
 import { BaThemeConfig } from './theme/theme.config';
 import { BaMenuService } from './theme';
 import {ComponentsHelper } from 'ng2-bootstrap';
+import { SchemaService } from './schema.service'
 
 import { MENU } from './app.menu';
 /*
@@ -33,9 +34,11 @@ export class App {
               private _spinner: BaThemeSpinner,
               private _config: BaThemeConfig,
               private _menuService: BaMenuService,
-              private viewContainerRef: ViewContainerRef) {
+              private viewContainerRef: ViewContainerRef,
+              private schemaService: SchemaService) {
 
-    this._menuService.updateMenuByRoutes(<Routes>MENU);
+    var routes = this.updateMenuForSchemas(<Routes>MENU, schemaService)
+    this._menuService.updateMenuByRoutes(routes);
 
     this._fixModals();
 
@@ -78,5 +81,40 @@ export class App {
         throw new Error("ApplicationRef instance not found");
       }
     };
+  }
+
+  private updateMenuForSchemas(menu:Route[], schemaService:SchemaService):Route[]{
+    var schemaMenu = menu[0]["children"].filter(function(route){
+      return route.path == "schemas";
+    })[0];
+    var schemas = [];
+    schemaService.schemas().forEach(function(schema){
+      var name = schema["name"];
+      schemas.push({
+        path: schema["id"],
+        data: {
+          menu: {
+            title: name
+          }
+        }
+      })
+    });
+    schemaMenu["children"] = schemas
+
+    return menu;
+    // // rebuild the menu
+    // var routes = [];
+    // menu[0].children.forEach(function(route){
+    //   if (route.path == "schemas"){
+    //     routes.push(schemaMenu);
+    //   }else{
+    //     routes.push(route);
+    //   }
+    // })
+    
+    // return [{
+    //   path: 'pages',
+    //   children: routes
+    // }];
   }
 }

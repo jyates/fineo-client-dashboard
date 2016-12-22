@@ -26,6 +26,17 @@ export const PAGES_MENU = [
         }
       },
       {
+        path: 'schemas',
+        data: {
+          menu: {
+            title: 'Schemas',
+            pathMatch: 'schemas',
+            icon: 'ion-android-list',
+            order: 110,
+          }
+        }
+      },
+      {
         path: 'editors',
         data: {
           menu: {
@@ -33,7 +44,7 @@ export const PAGES_MENU = [
             icon: 'ion-edit',
             selected: false,
             expanded: false,
-            order: 101,
+            order: 199,
           }
         },
         children: [

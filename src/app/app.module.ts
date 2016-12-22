@@ -15,13 +15,15 @@ import { routing } from './app.routing';
 import { App } from './app.component';
 import { AppState, InternalStateType } from './app.service';
 import { GlobalState } from './global.state';
+import { SchemaService } from './schema.service'
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
-  GlobalState
+  GlobalState,
+  SchemaService
 ];
 
 type StoreType = {
