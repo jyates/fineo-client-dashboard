@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => System.import('./register/register.module')
   },
   {
+    path: 'payment',
+    loadChildren: () => System.import('./payment/payment.module')
+  },
+  {
     path: 'pages',
     component: Pages,
     children: [

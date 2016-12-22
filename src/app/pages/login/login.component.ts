@@ -29,7 +29,7 @@ export class Login {
     this.submitted = true;
     if (this.form.valid) {
       // this is how you redirect on sign-in
-      this.router.navigate(['/register']);
+      this.router.navigate(['/payment']);
       // your code goes here
       // console.log(values);
     }
