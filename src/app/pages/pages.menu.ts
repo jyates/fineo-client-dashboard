@@ -15,6 +15,17 @@ export const PAGES_MENU = [
         }
       },
       {
+        path: 'devices',
+        data: {
+          menu: {
+            title: 'Devices',
+            pathMatch: 'devices',
+            icon: 'ion-social-rss',
+            order: 100,
+          }
+        }
+      },
+      {
         path: 'editors',
         data: {
           menu: {
@@ -22,7 +33,7 @@ export const PAGES_MENU = [
             icon: 'ion-edit',
             selected: false,
             expanded: false,
-            order: 100,
+            order: 101,
           }
         },
         children: [
