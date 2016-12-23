@@ -1,111 +1,112 @@
-<div class="row">
-  <div class="col-lg-12" align="right">
-    <button (onClick)="save()" type="button" class="btn btn-success btn-md btn-raised">Save</button>
+<div class="schema-block">
+  <div class="row">
+    <div class="col-lg-12" align="right">
+      <button (onClick)="save()" type="button" class="btn btn-success btn-md btn-raised">Save</button>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-lg-10">
-    <label for="inputName3" class="col-sm-2 control-label">Name</label>
-    <div class="col-sm-10">
-      <input type="text" value="{{schema_properties.name}}">
-    </div>  
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-lg-10">
-    <label for="inputName3" class="col-sm-2 control-label">Aliases</label>
-    <div class="col-sm-10">
-      <input type="text" value="{{schema_properties.aliases}}">
-    </div>  
-  </div>
-</div>
-
-<br/>
-<h5 class="panel-subtitle">Timestamp</h5>
   <div class="row">
     <div class="col-lg-10">
-      <label class="col-sm-2 control-label">Aliases</label>
+      <label for="inputName3" class="col-sm-2 control-label">Name</label>
       <div class="col-sm-10">
-        <input type="text" value="{{timestamp.aliases}}">
+        <input type="text" value="{{schema_properties.name}}">
       </div>  
     </div>
   </div>
 
   <div class="row">
     <div class="col-lg-10">
-      <label class="col-sm-2 control-label">Formats</label>
+      <label for="inputName3" class="col-sm-2 control-label">Aliases</label>
       <div class="col-sm-10">
-        <input type="text" value="{{timestamp.formats}}">
+        <input type="text" value="{{schema_properties.aliases}}">
       </div>  
     </div>
   </div>
 
-<br/>
-<h5 class="panel-subtitle">Fields</h5>
-
-<div *ngFor="let item of schema_info.fields" class="no-top-border">
-  <div class="row">
-    <div class="col-lg-10">
-      <label class="col-sm-2 control-label">Name</label>
-      <div class="col-sm-10">
-        <input type="text" name="{{item.id}}_name_id"  name="{{item.id}}_name" value="{{item.name}}">
-      </div>  
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-lg-10">
-      <label class="col-sm-2 control-label">Aliases</label>
-      <div class="col-sm-10">
-        <input type="text" id="inputName3" name="{{item.id}}_aliases" value="{{item.aliases}}">
-      </div>  
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-lg-10">
-      <label class="col-sm-2 control-label">Type</label>
-      <div class="col-sm-10">
-        <input readonly="true" type="text" name="{{item.id}}_type" value="{{item.type}}">
+  <br/>
+  <h5 class="panel-subtitle">Timestamp</h5>
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="col-sm-2 control-label">Aliases</label>
+        <div class="col-sm-10">
+          <input type="text" value="{{timestamp.aliases}}">
+        </div>  
       </div>
     </div>
-  </div>
-  <br/>
-</div>
 
-
-<div *ngFor="let item of added_fields" class="no-top-border">
-  <div class="row">
-    <div class="col-lg-10">
-      <label class="col-sm-2 control-label">Name</label>
-      <div class="col-sm-10">
-        <input type="text" name="{{item.id}}_name_id"  name="{{item.id}}_name" value="{{item.name}}">
-      </div>  
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-lg-10">
-      <label class="col-sm-2 control-label">Aliases</label>
-      <div class="col-sm-10">
-        <input type="text" id="inputName3" name="{{item.id}}_aliases" value="{{item.aliases}}">
-      </div>  
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-lg-10">
-      <label class="col-sm-2 control-label">Type</label>
-      <div class="col-sm-10">
-        <input readonly="true" type="text" name="{{item.id}}_type" value="{{item.type}}">
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="col-sm-2 control-label">Formats</label>
+        <div class="col-sm-10">
+          <input type="text" value="{{timestamp.formats}}">
+        </div>  
       </div>
     </div>
-  </div>
-  <br/>
-</div>
 
+  <br/>
+  <h5 class="panel-subtitle">Fields</h5>
+
+  <div *ngFor="let item of schema_info.fields" class="no-top-border">
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <input type="text" name="{{item.id}}_name_id"  name="{{item.id}}_name" value="{{item.name}}">
+        </div>  
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="col-sm-2 control-label">Aliases</label>
+        <div class="col-sm-10">
+          <input type="text" id="inputName3" name="{{item.id}}_aliases" value="{{item.aliases}}">
+        </div>  
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <input readonly="true" type="text" name="{{item.id}}_type" value="{{item.type}}">
+        </div>
+      </div>
+    </div>
+    <br/>
+  </div>
+
+
+  <div *ngFor="let item of added_fields" class="no-top-border">
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <input type="text" name="{{item.id}}_name_id"  name="{{item.id}}_name" value="{{item.name}}">
+        </div>  
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="col-sm-2 control-label">Aliases</label>
+        <div class="col-sm-10">
+          <input type="text" id="inputName3" name="{{item.id}}_aliases" value="{{item.aliases}}">
+        </div>  
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <input readonly="true" type="text" name="{{item.id}}_type" value="{{item.type}}">
+        </div>
+      </div>
+    </div>
+    <br/>
+  </div>
+</div>
 <div class="row">
   <div class="col-lg-3"></div>
   <div class="col-xs-1">
