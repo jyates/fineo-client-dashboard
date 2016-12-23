@@ -1,22 +1,84 @@
-Hello World - {{schema_info.id}}!
+<div class="row">
+  <div class="col-lg-12" align="right">
+    <button (onClick)="save()" type="button" class="btn btn-success btn-md btn-raised">Save</button>
+  </div>
+</div>
 
-<!-- <div class="horizontal-scroll">
-  <table class="table table-hover">
-    <thead>
-    <tr class="black-muted-bg">
-      <th ngClass="nowrap">ID</th>
-      <th class="align-right">Name</th>
-      <th class="align-right">Keys</th>
-      <th class="table-arr"> </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let item of metricsTableData" class="no-top-border">
-      <td ngClass="nowrap"><a routerLink="/devices/{{item.id}}" class="auth-link">{{item.id}}</a></td>
-      <td class="align-right">{{item.name}}</td>
-      <td class="align-right">{{item.keys}}</td>
-      <td><button type="button" (click)="onDeleteConfirm(item)" ngClass="{status-button btn btn-raised btn-xs btn-danger"><i class="ion-close-round"></i></button></td>
-    </tr>
-    </tbody>
-  </table>
-</div> -->
+<div class="row">
+  <div class="col-lg-10">
+    <label for="inputName3" class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-10">
+      <input type="text" id="inputName3" ng-model="chema_info.name">
+    </div>  
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-10">
+    <label for="inputName3" class="col-sm-2 control-label">Aliases</label>
+    <div class="col-sm-10">
+      <input type="text" id="inputName3" placeholder="{{schema_info.aliases}}">
+    </div>  
+  </div>
+</div>
+
+<br/>
+<h5 class="panel-subtitle">Timestamp</h5>
+
+<div class="row">
+  <div class="col-lg-10">
+    <label for="inputName3" class="col-sm-2 control-label">Aliases</label>
+    <div class="col-sm-10">
+      <input type="text" id="inputName3" value="{{schema_info.fields.timestamp.aliases}}">
+    </div>  
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-10">
+    <label for="inputName3" class="col-sm-2 control-label">Formats</label>
+    <div class="col-sm-10">
+      <input type="text" id="inputName3" value="{{schema_info.fields.timestamp.aliases}}">
+    </div>  
+  </div>
+</div>
+
+<br/>
+<h5 class="panel-subtitle">Fields</h5>
+
+<div *ngFor="let field of schema_info.fields" class="no-top-border">
+  <div class="row">
+    <div class="col-lg-10">
+      <label for="inputName3" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" id="inputName3" name="{{item.id}}_name" placeholder="Loading...">
+      </div>  
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10">
+      <label for="inputName3" class="col-sm-2 control-label">Aliases</label>
+      <div class="col-sm-10">
+        <input type="text" id="inputName3" name="{{item.id}}_aliases" placeholder="Loading...">
+      </div>  
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10">
+      <label for="inputName3" class="col-sm-2 control-label">Type</label>
+      <div class="col-sm-10">
+        <input readonly="true" type="text" id="inputName3" name="{{item.id}}_type" placeholder="Loading...">
+      </div>
+    </div>
+  </div>
+  <br/>
+</div>
+
+<div class="row">
+  <div class="col-lg-3"></div>
+  <div class="col-xs-1">
+    <button (onClick)="addField()" type="button" class="btn btn-success">Add Field</button>
+  </div>
+</div>
