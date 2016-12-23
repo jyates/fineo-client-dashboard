@@ -8,7 +8,7 @@
   <div class="col-lg-10">
     <label for="inputName3" class="col-sm-2 control-label">Name</label>
     <div class="col-sm-10">
-      <input type="text" id="inputName3" ng-model="chema_info.name">
+      <input type="text" value="{{schema_properties.name}}">
     </div>  
   </div>
 </div>
@@ -17,59 +17,89 @@
   <div class="col-lg-10">
     <label for="inputName3" class="col-sm-2 control-label">Aliases</label>
     <div class="col-sm-10">
-      <input type="text" id="inputName3" placeholder="{{schema_info.aliases}}">
+      <input type="text" value="{{schema_properties.aliases}}">
     </div>  
   </div>
 </div>
 
 <br/>
 <h5 class="panel-subtitle">Timestamp</h5>
-
-<div class="row">
-  <div class="col-lg-10">
-    <label for="inputName3" class="col-sm-2 control-label">Aliases</label>
-    <div class="col-sm-10">
-      <input type="text" id="inputName3" value="{{schema_info.fields.timestamp.aliases}}">
-    </div>  
+  <div class="row">
+    <div class="col-lg-10">
+      <label class="col-sm-2 control-label">Aliases</label>
+      <div class="col-sm-10">
+        <input type="text" value="{{timestamp.aliases}}">
+      </div>  
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-lg-10">
-    <label for="inputName3" class="col-sm-2 control-label">Formats</label>
-    <div class="col-sm-10">
-      <input type="text" id="inputName3" value="{{schema_info.fields.timestamp.aliases}}">
-    </div>  
+  <div class="row">
+    <div class="col-lg-10">
+      <label class="col-sm-2 control-label">Formats</label>
+      <div class="col-sm-10">
+        <input type="text" value="{{timestamp.formats}}">
+      </div>  
+    </div>
   </div>
-</div>
 
 <br/>
 <h5 class="panel-subtitle">Fields</h5>
 
-<div *ngFor="let field of schema_info.fields" class="no-top-border">
+<div *ngFor="let item of schema_info.fields" class="no-top-border">
   <div class="row">
     <div class="col-lg-10">
-      <label for="inputName3" class="col-sm-2 control-label">Name</label>
+      <label class="col-sm-2 control-label">Name</label>
       <div class="col-sm-10">
-        <input type="text" id="inputName3" name="{{item.id}}_name" placeholder="Loading...">
+        <input type="text" name="{{item.id}}_name_id"  name="{{item.id}}_name" value="{{item.name}}">
       </div>  
     </div>
   </div>
 
   <div class="row">
     <div class="col-lg-10">
-      <label for="inputName3" class="col-sm-2 control-label">Aliases</label>
+      <label class="col-sm-2 control-label">Aliases</label>
       <div class="col-sm-10">
-        <input type="text" id="inputName3" name="{{item.id}}_aliases" placeholder="Loading...">
+        <input type="text" id="inputName3" name="{{item.id}}_aliases" value="{{item.aliases}}">
       </div>  
     </div>
   </div>
 
   <div class="row">
     <div class="col-lg-10">
-      <label for="inputName3" class="col-sm-2 control-label">Type</label>
+      <label class="col-sm-2 control-label">Type</label>
       <div class="col-sm-10">
-        <input readonly="true" type="text" id="inputName3" name="{{item.id}}_type" placeholder="Loading...">
+        <input readonly="true" type="text" name="{{item.id}}_type" value="{{item.type}}">
+      </div>
+    </div>
+  </div>
+  <br/>
+</div>
+
+
+<div *ngFor="let item of added_fields" class="no-top-border">
+  <div class="row">
+    <div class="col-lg-10">
+      <label class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" name="{{item.id}}_name_id"  name="{{item.id}}_name" value="{{item.name}}">
+      </div>  
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10">
+      <label class="col-sm-2 control-label">Aliases</label>
+      <div class="col-sm-10">
+        <input type="text" id="inputName3" name="{{item.id}}_aliases" value="{{item.aliases}}">
+      </div>  
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10">
+      <label class="col-sm-2 control-label">Type</label>
+      <div class="col-sm-10">
+        <input readonly="true" type="text" name="{{item.id}}_type" value="{{item.type}}">
       </div>
     </div>
   </div>
@@ -79,6 +109,90 @@
 <div class="row">
   <div class="col-lg-3"></div>
   <div class="col-xs-1">
-    <button (onClick)="addField()" type="button" class="btn btn-success">Add Field</button>
+    <button (click)="showFieldCreateModal()" type="button" class="btn btn-success">Add Field</button>
   </div>
 </div>
+
+<!-- External component modal -->
+<!-- <add-field-modal #modal></add-field-modal> -->
+
+
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Large modal</h4>
+      </div>
+      <div class="modal-body">
+        {{addField.id}}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary confirm-btn" (click)="lgModal.hide()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- control modal from parent component -->
+<!-- <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" aria-label="Close" (click)="hideFieldCreateModal(false)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Add Field</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-10">
+            <label class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" value="{{addField.name}}">
+            </div>  
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-10">
+            <label class="col-sm-2 control-label">Aliases</label>
+            <div class="col-sm-10">
+              <input type="text" value="{{addField.aliases}}">
+            </div>  
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-10">
+            <label class="col-sm-2 control-label">Type</label>
+            <div class="col-sm-10">
+              <div class="btn-group flex-dropdown" dropdown>
+                <button type="button" class="btn btn-primary">Type</button>
+                <button type="button" class="btn btn-primary" dropdownToggle addToggleClass="true">
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" dropdownMenu>
+                  <li class="dropdown-item">Varchar</li>
+                  <li class="dropdown-item">Integer</li>
+                  <li class="dropdown-item">Long</li>
+                  <li class="dropdown-item">Double</li>
+                  <li class="dropdown-item">Float</li>
+                  <li class="dropdown-item">Binary</li>
+                  <li class="dropdown-item">Boolean</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br/>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary confirm-btn" (click)="hideFieldCreateModal(true)">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
