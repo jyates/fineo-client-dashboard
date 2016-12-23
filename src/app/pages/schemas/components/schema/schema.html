@@ -109,6 +109,7 @@
 <div class="row">
   <div class="col-lg-3"></div>
   <div class="col-xs-1">
+    <!-- <button (click)="lgModal.show()" type="button" class="btn btn-success">Add Field</button> -->
     <button (click)="showFieldCreateModal()" type="button" class="btn btn-success">Add Field</button>
   </div>
 </div>
@@ -127,7 +128,10 @@
         <h4 class="modal-title">Large modal</h4>
       </div>
       <div class="modal-body">
-        {{addField.id}}
+        ...
+        <div *ngIf="addField != null" class="error">
+          {{addField.id}}
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary confirm-btn" (click)="lgModal.hide()">Save changes</button>
@@ -137,7 +141,7 @@
 </div>
 
 <!-- control modal from parent component -->
-<!-- <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
@@ -147,52 +151,56 @@
         <h4 class="modal-title">Add Field</h4>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <div class="col-lg-10">
-            <label class="col-sm-2 control-label">Name</label>
-            <div class="col-sm-10">
-              <input type="text" value="{{addField.name}}">
-            </div>  
+        <!-- field may not have a value, which breaks things hard. -->
+        <div *ngIf="addField != null">
+          <div class="row">
+            <div class="col-lg-10">
+              <label class="col-sm-2 control-label">Name</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="addField.name">
+              </div>  
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-lg-10">
-            <label class="col-sm-2 control-label">Aliases</label>
-            <div class="col-sm-10">
-              <input type="text" value="{{addField.aliases}}">
-            </div>  
+          <div class="row">
+            <div class="col-lg-10">
+              <label class="col-sm-2 control-label">Aliases</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="addField.aliases">
+              </div>  
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-lg-10">
-            <label class="col-sm-2 control-label">Type</label>
-            <div class="col-sm-10">
-              <div class="btn-group flex-dropdown" dropdown>
-                <button type="button" class="btn btn-primary">Type</button>
-                <button type="button" class="btn btn-primary" dropdownToggle addToggleClass="true">
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" dropdownMenu>
-                  <li class="dropdown-item">Varchar</li>
-                  <li class="dropdown-item">Integer</li>
-                  <li class="dropdown-item">Long</li>
-                  <li class="dropdown-item">Double</li>
-                  <li class="dropdown-item">Float</li>
-                  <li class="dropdown-item">Binary</li>
-                  <li class="dropdown-item">Boolean</li>
-                </ul>
+          <div class="row">
+            <div class="col-lg-10">
+              <label class="col-sm-2 control-label">Type</label>
+              <div class="col-sm-10">
+                <div class="btn-group flex-dropdown" dropdown>
+                  <button type="button" class="btn btn-primary">Type</button>
+                  <button type="button" class="btn btn-primary" dropdownToggle addToggleClass="true">
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu" dropdownMenu>
+                    <li class="dropdown-item">Varchar</li>
+                    <li class="dropdown-item">Integer</li>
+                    <li class="dropdown-item">Long</li>
+                    <li class="dropdown-item">Double</li>
+                    <li class="dropdown-item">Float</li>
+                    <li class="dropdown-item">Binary</li>
+                    <li class="dropdown-item">Boolean</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <br/>
+          <label control-label>{{addField.error}}</label>
+          <br/>
+        </div> <!-- end if -->
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary confirm-btn" (click)="hideFieldCreateModal(true)">Save changes</button>
       </div>
     </div>
   </div>
-</div> -->
+</div>
 

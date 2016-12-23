@@ -48,7 +48,7 @@ export class SchemaComponent {
   private schema_info:Object;
   private schema_properties:SchemaMetaInfo;
   private added_fields:Field[] = [];
-  private addField:Field;
+  public addField:Field;
   private timestamp:TimestampFieldInfo;
   @ViewChild('childModal') childModal: ModalDirective;
   // private childModal:AddFieldModalComponent;
@@ -82,7 +82,17 @@ export class SchemaComponent {
 
   public hideFieldCreateModal(save:boolean): void {
     console.log("hiding modal: "+save)
-    this.childModal.hide();
+    console.log("Current field state: "+JSON.stringify(this.addField));
+    // not saving, so just close
+    if(!save){
+      this.childModal.hide();
+    }
+    else if(this.addField.validate()){
+      this.added_fields.push(this.addField);
+      this.childModal.hide();
+      // clear the old state
+      this.addField = null;
+    }
     // this.childModal.hide(save);
   }
 
@@ -97,8 +107,40 @@ export class SchemaComponent {
 }
 
 export class Field{
+  error:string = null;
   name:string;
-  aliases:Array<string>;
+  aliases:string[];
   type:string;
   constructor(private id:string){}
+
+  public validate():boolean{
+    this.error = null;
+    if(name == null){
+      this.error = "Must specify a field name";
+    }
+   
+   this.validType(this.type);
+    return this.error == null;
+  }
+
+  private validType(type:string):boolean {
+    if (type === undefined) {
+      this.error = "Must specify a type!"
+      return false;
+    }
+    type = type.toLowerCase()
+    switch(type){
+      case "varchar":
+      case "integer":
+      case "long":
+      case "double":
+      case "float":
+      case "binary":
+      case "boolean":
+        return true;
+      default:
+        this.error = "Not a valid type! Valid types are: varchar, integer, long, double, float, binary & boolean";
+    }
+    return false;
+  }
 }
