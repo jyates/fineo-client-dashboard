@@ -1,4 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'devices',
   encapsulation: ViewEncapsulation.None,
@@ -7,6 +9,11 @@ import {Component, ViewEncapsulation} from '@angular/core';
 })
 export class Devices {
 
-  constructor() {
+  constructor(private router: Router) {
+  }
+
+  // user wants to create a new device
+  public newDevice():void{
+    this.router.navigate(['/devices/create']);
   }
 }
