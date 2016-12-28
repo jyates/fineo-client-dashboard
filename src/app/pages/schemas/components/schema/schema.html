@@ -109,15 +109,17 @@
             <div class="col-lg-6">
               <div>
                 <label for="selectType">Type</label>
-                <select multiple id="selectType" [(ngModel)]="addField.type">
-                  <option>Varchar</option>
-                  <option>Integer</option>
-                  <option>Long</option>
-                  <option>Double</option>
-                  <option>Float</option>
-                  <option>Binary</option>
-                  <option>Boolean</option>
-                </select>
+                <div class="col-sm-10">
+                  <select class="form-control-modal bootstrap-select" id="selectType" [(ngModel)]="addField.type">
+                    <option>Varchar</option>
+                    <option>Integer</option>
+                    <option>Long</option>
+                    <option>Double</option>
+                    <option>Float</option>
+                    <option>Binary</option>
+                    <option>Boolean</option>
+                  </select>
+                </div>
               </div>
 
             </div>
