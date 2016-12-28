@@ -26,6 +26,7 @@ export class Login {
   }
 
   public onSubmit(values:Object):void {
+    console.log("Submitted: "+JSON.stringify(values))
     this.submitted = true;
     if (this.form.valid) {
       // this is how you redirect on sign-in
