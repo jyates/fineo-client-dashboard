@@ -51,41 +51,20 @@
     <h5 class="panel-subtitle">Fields</h5>
     <div formArrayName="fields">
       <div *ngFor="let control of form.controls['fields'].controls; let i = index">
-        <field-sub-component [index]="i" [fieldForm]="form.controls.fields.controls[i]"></field-sub-component>
-      </div>
-      <br/>
-    </div>
-  </form>
-
-  <div *ngFor="let item of added_fields" class="no-top-border">
-    <div class="row">
-      <div class="col-lg-10">
-        <label class="col-sm-2 control-label">Name</label>
-        <div class="col-sm-10">
-          <input type="text" name="{{item.id}}_name_id"  name="{{item.id}}_name" value="{{item.name}}">
-        </div>  
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-10">
-        <label class="col-sm-2 control-label">Aliases</label>
-        <div class="col-sm-10">
-          <input type="text" id="inputName3" name="{{item.id}}_aliases" value="{{item.aliases}}">
-        </div>  
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-10">
-        <label class="col-sm-2 control-label">Type</label>
-        <div class="col-sm-10">
-          <input readonly="true" type="text" name="{{item.id}}_type" value="{{item.type}}">
+        <!-- Skip timestamp because we already handle it above. Timestamp is the only field that doesn't allow modifying the name -->
+        <div *ngIf="!checkTimestamp(control)">
+          <field-sub-component [index]="i" [fieldForm]="control"></field-sub-component>
+          <br/>
         </div>
       </div>
     </div>
-    <br/>
-  </div>
+    <div formArrayName="added_fields">
+      <div *ngFor="let control of form.controls['added_fields'].controls; let i = index">
+        <field-sub-component [index]="i" [fieldForm]="form.controls.added_fields.controls[i]"></field-sub-component>
+        <br/>
+      </div>
+    </div>
+  </form>
 </div>
 <div class="row">
   <div class="col-lg-3"></div>

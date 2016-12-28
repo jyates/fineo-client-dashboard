@@ -6,7 +6,7 @@ import { NgaModule } from '../../theme/nga.module';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { AddSchemaComponent }  from './components/add/add.component'
-import { SchemaComponent, FieldSubComponent }     from './components/schema/schema.component'
+import { SchemaComponent, FieldSubComponent, StringifyPipe }     from './components/schema/schema.component'
 // import { AddFieldModalComponent }     from './components/add-field-modal/add_field_modal.component'
 import { Schemas }             from './schemas.component';
 import { routing }             from './schemas.routing';
@@ -26,7 +26,8 @@ import { routing }             from './schemas.routing';
     Schemas,
     SchemaComponent,
     AddSchemaComponent,
-    FieldSubComponent
+    FieldSubComponent,
+    StringifyPipe
     // ,AddFieldModalComponent
   ]
 })

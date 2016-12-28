@@ -62,6 +62,7 @@ export class SchemaComponent {
   private ts_aliases:AbstractControl;
   private ts_formats:AbstractControl;
   private fields:AbstractControl;
+  private added_fields_control:AbstractControl;
 
   private schema_info:Object;
   private schema_properties:SchemaMetaInfo;
@@ -92,7 +93,8 @@ export class SchemaComponent {
         'aliases': [this.schema_properties.aliases, []],
         'ts_aliases': [this.timestamp.aliases, []],
         'ts_formats': [this.timestamp.formats, []],
-        'fields': this.fb.array([])
+        'fields': this.fb.array([]),
+        'added_fields': this.fb.array([])
       }
 
       this.form = this.fb.group(group);
@@ -103,38 +105,40 @@ export class SchemaComponent {
 
       this.initFields();
       this.fields = this.form.controls['fields']
+      this.added_fields_control = this.form.controls['added_fields']
     })
   }
 
   private initFields(){
     const arrayControl = <FormArray>this.form.controls['fields'];
     this.schema_info['fields'].forEach(field => {
-      let newGroup = this.fb.group({
-        name: [field.name, []],
-        aliases: [field.aliases, []],
-        type: [field.type, []]
-      });
-      arrayControl.push(newGroup);
+      this.addFieldToControl(field, arrayControl);
     });
+  }
+
+  private addNewField(field:Field){
+    const arrayControl = <FormArray>this.form.controls['added_fields'];
+    this.addFieldToControl(field, arrayControl);
+  }
+
+  private addFieldToControl(field, arrayControl:FormArray){
+    let newGroup = this.fb.group({
+      name: [field.name, []],
+      aliases: [field.aliases, []],
+      type: [field.type, []]
+    });
+    arrayControl.push(newGroup);
+  }
+
+  public checkTimestamp(control:FormGroup){
+    var value = control.controls['name'].value
+    console.log("Checking value: "+value)
+    return value == "timestamp"
   }
 
   public onSubmit(form):void{
     // save the changes
     console.log("Submitted: "+JSON.stringify(form));
-  }
-
-  private stringify(obj){
-    var seen = [];
-
-    return JSON.stringify(obj, function(key, val) {
-       if (val != null && typeof val == "object") {
-            if (seen.indexOf(val) >= 0) {
-                return;
-            }
-            seen.push(val);
-        }
-        return val;
-    });
   }
 
   public delete(){
@@ -150,14 +154,13 @@ export class SchemaComponent {
   }
 
   public hideFieldCreateModal(save:boolean): void {
-    console.log("hiding modal: "+save)
     console.log("Current field state: "+JSON.stringify(this.addField));
     // not saving, so just close
     if(!save){
       this.childModal.hide();
     }
     else if(this.addField.validate()){
-      this.added_fields.push(this.addField);
+      this.addNewField(this.addField)
       this.childModal.hide();
       // clear the old state
       this.addField = null;
@@ -172,6 +175,20 @@ export class SchemaComponent {
         text += charset.charAt(Math.floor(Math.random() * charset.length));
     }
     return text;
+  }
+
+  private stringify(obj){
+    var seen = [];
+
+    return JSON.stringify(obj, function(key, val) {
+       if (val != null && typeof val == "object") {
+            if (seen.indexOf(val) >= 0) {
+                return;
+            }
+            seen.push(val);
+        }
+        return val;
+    });
   }
 }
 
@@ -211,5 +228,26 @@ export class Field{
         this.error = "Not a valid type! Valid types are: varchar, integer, long, double, float, binary & boolean";
     }
     return false;
+  }
+}
+
+import { Pipe, PipeTransform } from '@angular/core';
+/*
+ * Simplified stringify for when you have a circular reference
+ */
+@Pipe({name: 'stringify'})
+export class StringifyPipe implements PipeTransform {
+  transform(value: Object): string {
+    var seen = [];
+
+    return JSON.stringify(value, function(key, val) {
+       if (val != null && typeof val == "object") {
+            if (seen.indexOf(val) >= 0) {
+                return;
+            }
+            seen.push(val);
+        }
+        return val;
+    });
   }
 }
