@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, ViewChild, HostListener, Input } from '@a
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ModalDirective } from 'ng2-bootstrap';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import { AlertModule } from 'ng2-bootstrap';
 
 import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../schema.service'
 
@@ -122,12 +123,16 @@ export class SchemaComponent {
   }
 
   private addFieldToControl(field, arrayControl:FormArray){
-    let newGroup = this.fb.group({
+    let newGroup = this.newFieldGroup(field);
+    arrayControl.push(newGroup);
+  }
+
+  private newFieldGroup(field:Field){
+    return this.fb.group({
       name: [field.name, []],
       aliases: [field.aliases, []],
       type: [field.type, []]
     });
-    arrayControl.push(newGroup);
   }
 
   public checkTimestamp(control:FormGroup){
@@ -195,24 +200,27 @@ export class Field{
   error:string = null;
   name:string;
   aliases:string[];
-  type:string;
+  type:string[] = [];
   constructor(private id:string){}
 
   public validate():boolean{
     this.error = null;
-    if(name == null){
-      this.error = "Must specify a field name";
+    if(this.name == null || this.name == ""){
+      this.error = "Must specify a name for the field!";
+      return false;
     }
    
    this.validType(this.type);
     return this.error == null;
   }
 
-  private validType(type:string):boolean {
-    if (type === undefined) {
+  private validType(t:string[]):boolean {
+    if (t === undefined || t == null || t.length == 0) {
       this.error = "Must specify a type!"
       return false;
     }
+    var type = t[0];
+
     type = type.toLowerCase()
     switch(type){
       case "varchar":

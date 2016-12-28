@@ -74,32 +74,6 @@
   </div>
 </div>
 
-<!-- External component modal -->
-<!-- <add-field-modal #modal></add-field-modal> -->
-
-
-<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button class="close" (click)="lgModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Large modal</h4>
-      </div>
-      <div class="modal-body">
-        ...
-        <div *ngIf="addField != null" class="error">
-          {{addField.id}}
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary confirm-btn" (click)="lgModal.hide()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- control modal from parent component -->
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
@@ -112,49 +86,45 @@
       </div>
       <div class="modal-body">
         <!-- field may not have a value, which breaks things hard. -->
-        <div *ngIf="addField != null">
+        <div *ngIf="addField != null" class="form-horizontal">
           <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-6">
               <label class="col-sm-2 control-label">Name</label>
               <div class="col-sm-10">
-                <input type="text" [(ngModel)]="addField.name">
+                <input type="text" [(ngModel)]="addField.name" class="form-control-modal">
               </div>  
             </div>
           </div>
 
           <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-6">
               <label class="col-sm-2 control-label">Aliases</label>
               <div class="col-sm-10">
-                <input type="text" [(ngModel)]="addField.aliases">
+                <input type="text" [(ngModel)]="addField.aliases" class="form-control-modal">
               </div>  
             </div>
           </div>
 
           <div class="row">
-            <div class="col-lg-10">
-              <label class="col-sm-2 control-label">Type</label>
-              <div class="col-sm-10">
-                <div class="btn-group flex-dropdown" dropdown>
-                  <button type="button" class="btn btn-primary">Type</button>
-                  <button type="button" class="btn btn-primary" dropdownToggle addToggleClass="true">
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu" dropdownMenu>
-                    <li class="dropdown-item">Varchar</li>
-                    <li class="dropdown-item">Integer</li>
-                    <li class="dropdown-item">Long</li>
-                    <li class="dropdown-item">Double</li>
-                    <li class="dropdown-item">Float</li>
-                    <li class="dropdown-item">Binary</li>
-                    <li class="dropdown-item">Boolean</li>
-                  </ul>
-                </div>
+            <div class="col-lg-6">
+              <div>
+                <label for="selectType">Type</label>
+                <select multiple id="selectType" [(ngModel)]="addField.type">
+                  <option>Varchar</option>
+                  <option>Integer</option>
+                  <option>Long</option>
+                  <option>Double</option>
+                  <option>Float</option>
+                  <option>Binary</option>
+                  <option>Boolean</option>
+                </select>
               </div>
+
             </div>
           </div>
-          <label control-label>{{addField.error}}</label>
-          <br/>
+          <div *ngIf="addField.error != null">
+            <alert type="danger">{{addField.error}}</alert>
+          </div>
         </div> <!-- end if -->
       </div>
       <div class="modal-footer">

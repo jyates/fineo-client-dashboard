@@ -25,7 +25,23 @@
 }
 
 
-$text-color: #ffffff;
+.form-control-modal {
+  color: #000000;
+  @include placeholderStyle($content-text, 0.7);
+  border: 1px solid $primary-bg;
+  border-radius: 5px;
+  background-color: $input-background;
+  box-shadow: none;
+  font-size: 14px;
+  &:focus {
+    color: #000000;
+    box-shadow: none;
+    border-color: $primary-bg;
+    background: $input-background;
+  }
+}
+
+$text-color: $default;
 
 .schema-block{
   margin: 0 auto;
