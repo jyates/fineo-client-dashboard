@@ -132,7 +132,6 @@ export class SchemaComponent {
 
   public checkTimestamp(control:FormGroup){
     var value = control.controls['name'].value
-    console.log("Checking value: "+value)
     return value == "timestamp"
   }
 
@@ -141,7 +140,7 @@ export class SchemaComponent {
     console.log("Submitted: "+JSON.stringify(form));
   }
 
-  public delete(){
+  public delete_schema(){
      // delete the schema
      console.log("Deleteing schema!");
   }

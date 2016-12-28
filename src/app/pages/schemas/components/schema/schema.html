@@ -2,7 +2,7 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
     <div class="row">
       <div class="col-md-1">
-        <button (onClick)="delete()" type="button" class="btn btn-danger btn-md">Delete</button>
+        <button (click)="delete_schema()" type="button" class="btn btn-danger btn-md">Delete</button>
       </div>
       <div class="col-md1">
         <button type="submit" [disabled]="!form.valid" class="btn btn-success btn-md btn-raised">Save</button>
