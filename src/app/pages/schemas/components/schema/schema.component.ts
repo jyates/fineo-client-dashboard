@@ -1,53 +1,15 @@
 import { Component, ViewEncapsulation, ViewChild, HostListener, Input } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ModalDirective } from 'ng2-bootstrap';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+
+import {NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import { ModalDirective } from 'ng2-bootstrap';
 import { AlertModule } from 'ng2-bootstrap';
 
 import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../schema.service'
 
-import {NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-
-// import { AddFieldModalComponent, Field } from '../add-field-modal/add_field_modal.component'
-
-@Component({
-  selector: 'add-field-modal',
-  template: require('./add_field_modal.html'),
-  styles: [require('./add_field_modal.scss')]
-})
-export class AddFieldModalComponent {
-  @Input() addField: Field;
-  @ViewChild('childModal') childModal: ModalDirective;
-
-  public show(field:Field): void {
-    console.log("showing modal")
-    this.childModal.show();
-  }
-
-  public hide(save:boolean): void {
-    console.log("hiding modal: "+save)
-    this.childModal.hide();
-  }
-
-  private randomString(len:number):string{
-    var text = " ";
-    var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-    for( var i=0; i < len; i++ ){
-        text += charset.charAt(Math.floor(Math.random() * charset.length));
-    }
-    return text;
-  }
-}
-
-@Component({
-    selector: 'field-sub-component',
-    templateUrl: './field-subcomponent.html'
-    // styles: [require('./schema.scss')]
-})
-export class FieldSubComponent {
-    @Input() fieldForm: FormGroup; // This component is passed a FormGroup from the base component template
-    @Input() index: number;
-}
+import { FieldSubComponent } from '../field/field.component';
+import { StringifyPipe } from '../util/stringify.pipe';
 
 @Component({
   selector: 'schema-component',
@@ -235,26 +197,5 @@ export class Field{
         this.error = "Not a valid type! Valid types are: varchar, integer, long, double, float, binary & boolean";
     }
     return false;
-  }
-}
-
-import { Pipe, PipeTransform } from '@angular/core';
-/*
- * Simplified stringify for when you have a circular reference
- */
-@Pipe({name: 'stringify'})
-export class StringifyPipe implements PipeTransform {
-  transform(value: Object): string {
-    var seen = [];
-
-    return JSON.stringify(value, function(key, val) {
-       if (val != null && typeof val == "object") {
-            if (seen.indexOf(val) >= 0) {
-                return;
-            }
-            seen.push(val);
-        }
-        return val;
-    });
   }
 }

@@ -7,12 +7,11 @@ import { NgaModule } from '../../theme/nga.module';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { AddSchemaComponent }  from './components/add/add.component'
-import { SchemaComponent, FieldSubComponent, StringifyPipe }     from './components/schema/schema.component'
-// import { AddFieldModalComponent }     from './components/add-field-modal/add_field_modal.component'
+import { FieldSubComponent }   from './components/field/field.component'
+import { SchemaComponent }     from './components/schema/schema.component'
+import { StringifyPipe }       from './components/util/stringify.pipe';
 import { Schemas }             from './schemas.component';
 import { routing }             from './schemas.routing';
-
-
 
 @NgModule({
   imports: [
@@ -30,7 +29,6 @@ import { routing }             from './schemas.routing';
     AddSchemaComponent,
     FieldSubComponent,
     StringifyPipe
-    // ,AddFieldModalComponent
   ]
 })
 export default class SchemasModule {

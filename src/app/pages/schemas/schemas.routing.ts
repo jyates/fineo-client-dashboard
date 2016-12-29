@@ -4,7 +4,6 @@ import { Schemas } from './schemas.component';
 import { SchemaComponent } from './components/schema/schema.component';
 import { AddSchemaComponent } from './components/add/add.component';
 
-
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
   {
