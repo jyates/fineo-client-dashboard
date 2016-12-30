@@ -1,19 +1,12 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import { Router } from '@angular/router';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'devices',
-  encapsulation: ViewEncapsulation.None,
   styles: [require('./devices.scss')],
-  template: require('./devices.html')
+  template: `<router-outlet></router-outlet>`
 })
 export class Devices {
 
-  constructor(private router: Router) {
-  }
-
-  // user wants to create a new device
-  public newDevice():void{
-    this.router.navigate(['/devices/create']);
+  constructor() {
   }
 }

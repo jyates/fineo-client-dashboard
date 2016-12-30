@@ -3,6 +3,7 @@ import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { DeviceDataService, DeviceInfo, DeviceKeyInfo } from '../../deviceData.service'
+import { ViewKeysComponent } from '../keys/view-keys.component'
 
 @Component({
   selector: 'view-device',
@@ -44,9 +45,15 @@ export class ViewDeviceComponent {
     this.service.updateDeviceName(this.id, this.name.value);
 
     // DONE! Now, go to the main device page
-    var target = '/pages/devices'
+    var target = '/pages/devices/view'
     console.log("redirecting to: "+target);
     this.router.navigate([target]);
+  }
+
+  public delete_device():void{
+    if (window.confirm('Are you sure you want to delete this device?')) {
+      this.service.delete_device(this.id);
+    }
   }
 
   private checkArraySet(val:string):string[]{

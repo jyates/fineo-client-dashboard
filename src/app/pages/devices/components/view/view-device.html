@@ -4,7 +4,7 @@
       <div class="col-md-1">
         <button (click)="delete_device()" type="button" class="btn btn-danger btn-md">Delete</button>
       </div>
-      <div class="col-md1">
+      <div class="col-md-1">
         <button type="submit" [disabled]="!form.valid" class="btn btn-success btn-md btn-raised">Save</button>
       </div>
     </div>
@@ -14,7 +14,7 @@
       <div class="col-lg-10">
         <label class="col-sm-2 control-label">ID</label>
         <div class="col-sm-10">
-          <span>{{id}}</span>
+          <label class="col-sm-2 control-label">{{id}}</label>
         </div>
       </div>
     </div>
@@ -30,8 +30,7 @@
   </form>
     <br/>
     <hr/>
-    <!--
-    <device-keys [keys]="keys"></device-keys>
-  -->
+    <!-- Show all the device keys -->
+    <device-keys [id]="id" [keys]="keys"></device-keys>
 </div>
 

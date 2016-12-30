@@ -4,6 +4,12 @@ export class DeviceKeyInfo{
   constructor(public id:string){}
 }
 
+export class CreatedDeviceKeyInfo extends DeviceKeyInfo{
+  constructor(id:string, public secret:string){
+    super(id);
+  }
+}
+
 export class DeviceInfo{
   constructor(public id:string,
               public name:string,
@@ -44,5 +50,14 @@ export class DeviceDataService {
   public delete_device(device:string):void{
     console.log("'Deleting' device: "+device);
     // netork call to delete the device
+  }
+
+  public createKey(id:string):CreatedDeviceKeyInfo{
+    console.log("creating key for device id: "+id);
+    return new CreatedDeviceKeyInfo("created_1234", "secret_key54321");
+  }
+
+  public deleteKey(id:string, key_id:string):void{
+    console.log(id+") deleting key: "+key_id);
   }
 }

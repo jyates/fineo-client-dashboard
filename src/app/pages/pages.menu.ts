@@ -15,7 +15,7 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'devices',
+        path: ['devices', 'view'],
         data: {
           menu: {
             title: 'Devices',
