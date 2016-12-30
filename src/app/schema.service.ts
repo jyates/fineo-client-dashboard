@@ -37,6 +37,35 @@ export class SchemaService {
   public getSchemaProperties(id:string):SchemaMetaInfo{
     return this.schema_properties.filter(elem => elem.id == id)[0];
   }
+
+  /*
+  * Create a schema with the given name.
+  * Returns: ID (canonical name) of the schema
+  */
+  public createSchema(name:string, aliases:string[]):string {
+    return "5555";
+  }
+
+  /*
+  * Set the aliases for the timestmap field for a metric
+  */
+  public setTimestampAliases(name:string, aliases:string[]):void {
+
+  }
+
+  /*
+  * Set the timestamp patterns for a metric
+  */
+  public setMetricTimestampPatterns(name:string, patterns:string[]):void {
+
+  }
+
+  /*
+  * Add a field to a schema
+  */
+  public addField(schema_name:string, name:string, type:string, aliases:string[]):void {
+
+  }
 }
 
 export class SchemaMetaInfo{
