@@ -1,21 +1,13 @@
 import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
 
 import { routing } from './devices.routing';
 
 import { DeviceDataService }  from './deviceData.service';
 import { DeviceHoverTable }   from './components/basicTables/components/hoverTable';
-
-// import { ResponsiveTable }     from './components/basicTables/components/responsiveTable';
-// import { StripedTable }        from './components/basicTables/components/stripedTable';
-// import { BorderedTable }       from './components/basicTables/components/borderedTable';
-// import { CondensedTable }      from './components/basicTables/components/condensedTable';
-// import { ContextualTable }     from './components/basicTables/components/contextualTable';
-
-// import { Ng2SmartTableModule } from 'ng2-smart-table';
-// import { SmartTablesService } from './smartTables.service';
+import { ViewDeviceComponent }   from './components/view/view-device.component';
 
 import { Devices } from './devices.component';
 
@@ -23,23 +15,17 @@ import { Devices } from './devices.component';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     NgaModule,
-    // Ng2SmartTableModule,
     routing
   ],
   declarations: [
     Devices,
     DeviceHoverTable,
-    // BasicTables,
-    // BorderedTable,
-    // CondensedTable,
-    // StripedTable,
-    // ContextualTable,
-    // ResponsiveTable
+    ViewDeviceComponent
   ],
   providers: [
-    DeviceDataService,
-    // SmartTablesService
+    DeviceDataService
   ]
 })
 export default class DevicesModule {}

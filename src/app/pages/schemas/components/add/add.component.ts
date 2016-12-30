@@ -8,7 +8,7 @@ import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../s
   selector: 'add-schema-component',
   encapsulation: ViewEncapsulation.None,
   template: require('./add.html'),
-  styles: [require('./add.scss')]
+  styles: []//require('./add.scss')
 })
 export class AddSchemaComponent {
 
