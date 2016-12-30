@@ -7,6 +7,7 @@ import { NgaModule } from '../../theme/nga.module';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { AddSchemaComponent }  from './components/add/add.component'
+import { AddFieldComponent }  from './components/add-field/add-field.component'
 import { FieldSubComponent }   from './components/field/field.component'
 import { SchemaComponent }     from './components/schema/schema.component'
 import { StringifyPipe }       from './components/util/stringify.pipe';
@@ -26,8 +27,9 @@ import { routing }             from './schemas.routing';
   declarations: [
     Schemas,
     SchemaComponent,
-    AddSchemaComponent,
     FieldSubComponent,
+    AddSchemaComponent,
+    AddFieldComponent,
     StringifyPipe
   ]
 })
