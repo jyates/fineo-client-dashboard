@@ -92,7 +92,11 @@ export class BaMenuService {
       item.route.paths = item.route.path;
     } else {
       item.route.paths = parent && parent.route && parent.route.paths ? parent.route.paths.slice(0) : ['/'];
-      if (!!item.route.path) item.route.paths.push(item.route.path);
+      if (!!item.route.path) {
+        item.route.path.split("/").forEach(part =>{
+          item.route.paths.push(part);
+        });
+      }
     }
 
     if (object.children && object.children.length > 0) {
@@ -100,7 +104,6 @@ export class BaMenuService {
     }
 
     let prepared = this._prepareItem(item);
-
     // if current item is selected or expanded - then parent is expanded too
     if ((prepared.selected || prepared.expanded) && parent) {
       parent.expanded = true;
@@ -120,7 +123,9 @@ export class BaMenuService {
   }
 
   protected _selectItem(object:any):any {
-    object.selected = this._router.isActive(this._router.createUrlTree(object.route.paths), object.pathMatch === 'full');
+    var tree = this._router.createUrlTree(object.route.paths);
+    var match = object.pathMatch === 'full';
+    object.selected = this._router.isActive(tree, match);
     return object;
   }
 }

@@ -89,12 +89,11 @@ export class App {
     })[0];
     var schemas = [];
     schemaService.schemas().forEach(function(schema){
-      var name = schema["name"];
       schemas.push({
         path: ["schemas", "inst", schema["id"]],
         data: {
           menu: {
-            title: name
+            title: schema["name"]
           }
         }
       })
@@ -113,19 +112,5 @@ export class App {
     schemaMenu["children"] = schemas
 
     return menu;
-    // // rebuild the menu
-    // var routes = [];
-    // menu[0].children.forEach(function(route){
-    //   if (route.path == "schemas"){
-    //     routes.push(schemaMenu);
-    //   }else{
-    //     routes.push(route);
-    //   }
-    // })
-    
-    // return [{
-    //   path: 'pages',
-    //   children: routes
-    // }];
   }
 }

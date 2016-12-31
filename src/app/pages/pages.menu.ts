@@ -15,12 +15,16 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: ['devices', 'view'],
+        // using a non-array version here makes the link under the parent path (e.g. pages/devices/view)
+        // but still matches when we check 'is selected' in baMenuService.
+        path: 'devices/view',
         data: {
           menu: {
             title: 'Devices',
             pathMatch: 'devices',
             icon: 'ion-social-rss',
+            expanded: false,
+            selected: false,
             order: 100,
           }
         }
