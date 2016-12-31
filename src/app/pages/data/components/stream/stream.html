@@ -1,0 +1,42 @@
+<!-- <ng-progress></ng-progress> -->
+<div class="schema-block">
+  <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
+    <div class="form-group row">
+      <div class="col-sm-10">
+          <textarea [formControl]="content" class="form-control" placeholder="JSON request"></textarea>
+      </div>
+    </div>
+    <br/>
+    <div class="row" align="left">
+      <div class="col-md-1">
+        <input #fileUpload type="file" hidden="true" id="uploadFile" (change)="onFiles()">
+        <button (click)="load()" type="button" class="btn btn-primary btn-md">Load File</button>
+      </div>
+      <div class="col-md-1">
+        <button type="submit" [disabled]="!form.valid" class="btn btn-success btn-md btn-raised">Send</button>
+      </div>
+    </div>
+    <div class="row" style="color:red" *ngIf="!content.valid && content.touched">
+      <br/>
+      <span>{{content.errors.invalidJson}}</span>
+    </div>
+  </form>
+</div>
+
+<!-- show/hide controled from parent component -->
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Uploading</h4>
+        <div class="loading">
+          <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

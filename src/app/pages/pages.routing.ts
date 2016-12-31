@@ -22,6 +22,7 @@ const routes: Routes = [
       { path: 'dashboard', loadChildren: () => System.import('./dashboard/dashboard.module') },
       { path: 'devices', loadChildren: () => System.import('./devices/devices.module') },
       { path: 'schemas', loadChildren: () => System.import('./schemas/schemas.module') },
+      { path: 'data', loadChildren: () => System.import('./data/data.module') },
 
       { path: 'editors', loadChildren: () => System.import('./editors/editors.module') },
       //{ path: 'components', loadChildren: () => System.import('./components/components.module') }

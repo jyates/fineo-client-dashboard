@@ -35,10 +35,38 @@ export const PAGES_MENU = [
           menu: {
             title: 'Schemas',
             pathMatch: 'schemas',
-            icon: 'ion-android-list',
+            icon: 'ion-clipboard',
             order: 110,
           }
         }
+      },
+      {
+        path: 'data',
+        data: {
+          menu: {
+            title: 'Data',
+            icon: 'ion-upload',
+            order: 120,
+          }
+        },
+        children: [
+          {
+            path: 'batch',
+            data: {
+              menu: {
+                title: 'Batch',
+              }
+            }
+          },
+          {
+            path: 'stream',
+            data: {
+              menu: {
+                title: 'Stream',
+              }
+            }
+          },
+        ]
       },
       {
         path: 'editors',
