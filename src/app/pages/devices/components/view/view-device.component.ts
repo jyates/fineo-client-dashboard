@@ -14,6 +14,8 @@ import { ViewKeysComponent } from '../keys/view-keys.component'
 export class ViewDeviceComponent {
 
   public form:FormGroup;
+  public deleting:boolean;
+
   private name:AbstractControl;
   private device_info:DeviceInfo;
   private keys:DeviceKeyInfo[];
@@ -45,14 +47,15 @@ export class ViewDeviceComponent {
     this.service.updateDeviceName(this.id, this.name.value);
 
     // DONE! Now, go to the main device page
-    var target = '/pages/devices/view'
-    console.log("redirecting to: "+target);
-    this.router.navigate([target]);
+    this.returnHome();
   }
 
   public delete_device():void{
     if (window.confirm('Are you sure you want to delete this device?')) {
+      this.deleting = true;
       this.service.delete_device(this.id);
+      this.deleting = false;
+      this.returnHome();
     }
   }
 
@@ -61,5 +64,11 @@ export class ViewDeviceComponent {
       return val.split(",");
     } 
     return null;
+  }
+
+  private returnHome():void{
+    var target = '/pages/devices/view'
+    console.log("redirecting to: "+target);
+    this.router.navigate([target]);
   }
 }
