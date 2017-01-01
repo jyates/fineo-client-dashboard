@@ -19,6 +19,8 @@ import { StringifyPipe } from '../util/stringify.pipe';
 })
 export class SchemaComponent {
 
+  public deleting:boolean = false;
+
   public form:FormGroup;
   private name:AbstractControl;
   private aliases:AbstractControl;
@@ -27,11 +29,13 @@ export class SchemaComponent {
   private fields:AbstractControl;
   private added_fields_control:AbstractControl;
 
+  private id:string;
   private schema_info:Object;
   private schema_properties:SchemaMetaInfo;
   private added_fields:Field[] = [];
   public addField:Field;
   private timestamp:TimestampFieldInfo;
+
   @ViewChild('childModal') childModal: ModalDirective;
   // private childModal:AddFieldModalComponent;
 
@@ -45,9 +49,9 @@ export class SchemaComponent {
 
   ngOnInit() {
     this.route.params.subscribe(path_info => {
-      var id = path_info["id"];
-      this.schema_info = this.service.getSchema(id);
-      this.schema_properties = this.service.getSchemaProperties(id)
+      this.id = path_info["id"];
+      this.schema_info = this.service.getSchema(this.id);
+      this.schema_properties = this.service.getSchemaProperties(this.id)
       this.timestamp = this.schema_info["fields"].filter(elem => elem.id == "timestamp")[0];
 
       // build the form information based on the retrieved schema properties
@@ -110,6 +114,16 @@ export class SchemaComponent {
   public delete_schema(){
      // delete the schema
      console.log("Deleteing schema!");
+     this.deleting = true;
+     this.service.delete_schema(this.id);
+     this.deleting = false;
+     this.returnHome();
+  }
+
+  private returnHome():void{
+    var target = '/'
+    console.log("redirecting to: "+target);
+    this.router.navigate([target]);
   }
 
   public showFieldCreateModal(): void {

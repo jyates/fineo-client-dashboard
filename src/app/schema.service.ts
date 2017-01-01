@@ -38,6 +38,14 @@ export class SchemaService {
     return this.schema_properties.filter(elem => elem.id == id)[0];
   }
 
+  /**
+  * Delete the schema for the given id
+  * @param id - id of the schema to delete
+  */
+  public delete_schema(id:string):void{
+    console.log("Deleteing schema: "+id);
+  }
+
   /*
   * Create a schema with the given name.
   * Returns: ID (canonical name) of the schema
