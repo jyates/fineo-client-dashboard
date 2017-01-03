@@ -37,15 +37,10 @@ export class StreamComponent {
     const val = control.value
     try{
       JSON.parse(val);
-    } catch(e:Error){
+    } catch(e){
       return {"invalidJson": e.message };
     }
     return null;
-  }
-
-  private getErrors():string{
-    console.log("getting...");
-    console.log("Errors: "+JSON.stringify(this.content.errors));
   }
 
   private onSubmit(form_value):void{

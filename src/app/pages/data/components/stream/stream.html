@@ -18,7 +18,8 @@
     </div>
     <div class="row" style="color:red" *ngIf="!content.valid && content.touched">
       <br/>
-      <span>{{content.errors.invalidJson}}</span>
+      <span *ngIf="content.hasError['invalidJson']">{{content.errors.invalidJson}}</span>
+      <span *ngIf="content.hasError['minlength']">{{content.errors.minLength}}</span>
     </div>
   </form>
 </div>
