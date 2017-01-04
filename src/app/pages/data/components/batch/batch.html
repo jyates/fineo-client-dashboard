@@ -1,1 +1,59 @@
-Hello batch upload!
+<!-- <ng-progress></ng-progress> -->
+<div class="batch-block">
+  <form [formGroup]="s3Form" (ngSubmit)="submitS3(s3Form.value)" class="form-horizontal">
+    <div class="form-group row">
+      <label class="col-sm-10" for="inputS3" class="col-sm-2 control-label">S3 File</label>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-10">
+          <input [formControl]="s3Location" class="form-control" placeholder="Path to S3 File">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-1">
+        <button type="submit" [disabled]="!s3Form.valid" class="btn btn-success btn-md btn-raised">Send</button>
+      </div>
+    </div>
+  </form>
+
+  <hr>
+
+  <form [formGroup]="localForm" (ngSubmit)="submitLocal(localForm.value)" class="form-horizontal">
+    <div class="form-group row">
+      <label class="col-sm-10" for="inputS3" class="col-sm-2 control-label">Local File</label>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-6">
+          <input [formControl]="localFile" class="form-control" type="text" placeholder="Path to local file" readonly>
+          <input #fileUpload type="file" hidden="true" id="uploadFile" (change)="onFiles()">
+          <br>
+          <button (click)="load()" type="button" class="btn btn-primary btn-md">Load File</button>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-1">
+        <button type="submit" [disabled]="!localForm.valid" class="btn btn-success btn-md btn-raised">Send</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- show/hide controled from parent component -->
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Uploading</h4>
+        <div class="loading">
+          <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+</div>
+
