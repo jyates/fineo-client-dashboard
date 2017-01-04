@@ -1,6 +1,8 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import { Router } from '@angular/router';
 
+import { DeviceDataService } from '../../deviceData.service'
+
 @Component({
   selector: 'view-all-devices',
   encapsulation: ViewEncapsulation.None,
@@ -8,11 +10,13 @@ import { Router } from '@angular/router';
 })
 export class ViewAllDevicesComponent {
 
-  constructor(private router: Router) {
+  constructor(private router: Router,
+              private devices: DeviceDataService) {
   }
 
   // user wants to create a new device
   public newDevice():void{
-    this.router.navigate(['/devices/create']);
+    console.log("creating new device");
+    this.devices.createDevice();
   }
 }

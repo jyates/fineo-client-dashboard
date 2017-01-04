@@ -60,4 +60,9 @@ export class DeviceDataService {
   public deleteKey(id:string, key_id:string):void{
     console.log(id+") deleting key: "+key_id);
   }
+
+  public createDevice():void{
+    console.log("creating a new device!");
+    this.devices.push(new DeviceInfo("dCreated", "",[]));
+  }
 }
