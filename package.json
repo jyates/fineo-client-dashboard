@@ -56,8 +56,11 @@
     "rxjs": "5.0.0-beta.12",
     "tether": "^1.2.4",
     "zone.js": "~0.7.1",
-    "stripe-as-promised": "2.1.0",
-    "aws-sdk": "2.7.21"
+    "stripe-as-promised": "2.1.0"
+    // This doesn't work - it clashes somehow with other modules and prevents loading things like lodash.
+    // Instead, we load it explicitly in index.html from assets/js... which is lame, but apparently AWS
+    // doesn't have very good support for webpack, so we pack it this way
+    // "aws-sdk": "2.7.21"
   },
   "devDependencies": {
     "angular2-router-loader": "^0.3.4",
