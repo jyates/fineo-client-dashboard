@@ -86,6 +86,12 @@ module.exports = function (options) {
      * See: http://webpack.github.io/docs/configuration.html#module
      */
     module: {
+      loaders: [
+        {
+          test: /\.json$/,
+          loader: 'json'
+        }
+      ],
 
       rules: [
         {
