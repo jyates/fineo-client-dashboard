@@ -1,4 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
+import {AwsUtil} from '../../services/aws.services'
 
 @Component({
   selector: 'dashboard',
@@ -8,7 +9,8 @@ import {Component, ViewEncapsulation} from '@angular/core';
 })
 export class Dashboard {
 
-  constructor() {
+  constructor(private aws:AwsUtil) {
+    aws.log();
   }
 
 }

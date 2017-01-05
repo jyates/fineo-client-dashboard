@@ -18,12 +18,14 @@ import { GlobalState } from './global.state';
 import { SchemaService } from './schema.service'
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
+import { AwsUtil } from './services/aws.services';
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
   GlobalState,
-  SchemaService
+  SchemaService,
+  AwsUtil
 ];
 
 type StoreType = {
@@ -31,8 +33,6 @@ type StoreType = {
   restoreInputValues: () => void,
   disposeOldHosts: () => void
 };
-
-var AWS = require('aws-sdk');
 
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
