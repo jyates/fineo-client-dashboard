@@ -32,6 +32,8 @@ type StoreType = {
   disposeOldHosts: () => void
 };
 
+var AWS = require('aws-sdk');
+
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
