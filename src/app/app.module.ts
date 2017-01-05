@@ -19,13 +19,24 @@ import { SchemaService } from './schema.service'
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 import { AwsUtil } from './services/aws.services';
+import { 
+  UserLoginService,
+  CognitoUtil,
+  UserRegistrationService,
+  UserParametersService
+} from './services/cognito.service';
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
   GlobalState,
   SchemaService,
-  AwsUtil
+  // AWS connection
+  AwsUtil,
+  CognitoUtil,
+  UserLoginService,
+  UserRegistrationService,
+  UserParametersService
 ];
 
 type StoreType = {

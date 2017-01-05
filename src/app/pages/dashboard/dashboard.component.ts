@@ -9,8 +9,5 @@ import {AwsUtil} from '../../services/aws.services'
 })
 export class Dashboard {
 
-  constructor(private aws:AwsUtil) {
-    aws.log();
-  }
-
+  constructor(){}
 }

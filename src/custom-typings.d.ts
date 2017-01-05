@@ -36,6 +36,10 @@ interface JQuery {
     easyPieChart;
 }
 
+declare var AWS:any;
+declare var AMA:any;
+declare var AWSCognito:any;
+
 declare var GoogleMapsLoader:any;
 declare var L:any;
 declare var AmCharts:any;

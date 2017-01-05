@@ -1,6 +1,12 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
+// import {AWS} from './aws.loader.ts';
+import {
+  CognitoCallback,
+  UserLoginService,
+  LoggedInCallback
+} from '../../services/cognito.service'
 
 @Component({
   selector: 'login',
@@ -8,14 +14,18 @@ import { Router } from '@angular/router';
   styles: [require('./login.scss')],
   template: require('./login.html'),
 })
-export class Login {
+export class Login implements CognitoCallback, LoggedInCallback{
 
   public form:FormGroup;
   public email:AbstractControl;
   public password:AbstractControl;
+  public errorMessage:string = null;
   public submitted:boolean = false;
 
-  constructor(fb:FormBuilder, private router: Router) {
+  constructor(private fb:FormBuilder,
+              private router: Router,
+              private users: UserLoginService) {
+    // console.log(AWS)
     this.form = fb.group({
       'email': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
       'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
@@ -29,10 +39,22 @@ export class Login {
     console.log("Submitted: "+JSON.stringify(values))
     this.submitted = true;
     if (this.form.valid) {
-      // this is how you redirect on sign-in
-      this.router.navigate(['/payment']);
-      // your code goes here
-      // console.log(values);
+      this.users.authenticate(this.email.value, this.password.value, this);
     }
+  }
+
+  cognitoCallback(message:string, result:any) {
+    this.submitted = false;
+    if (message != null) { //error
+      this.errorMessage = message;
+      console.log("result: " + this.errorMessage);
+    } else { //success
+      this.isLoggedIn(message, true);
+    }
+  }
+
+  isLoggedIn(message:string, isLoggedIn:boolean) {
+    if (isLoggedIn)
+      this.router.navigate(['/pages/dashboard']);
   }
 }
