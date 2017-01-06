@@ -73,7 +73,7 @@ export class CognitoUtil {
         if (callback == null) {
             throw("CognitoUtil: callback in getIdToken is null...returning");
         }
-        if (this.getCurrentUser() != null)
+        if (this.getCurrentUser() != null){
             this.getCurrentUser().getSession(function (err, session) {
                 if (err) {
                     console.log("CognitoUtil: Can't set the credentials:" + err);
@@ -84,11 +84,14 @@ export class CognitoUtil {
                         callback.callbackWithParam(session.getIdToken().getJwtToken());
                     } else {
                         console.log("CognitoUtil: Got the id token, but the session isn't valid");
+                        callback.sessionExpired();
                     }
                 }
             });
-        else
+        }
+        else {
             callback.callbackWithParam(null);
+        }
     }
 
     getRefreshToken(callback:Callback):void {

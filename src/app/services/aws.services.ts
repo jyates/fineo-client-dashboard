@@ -7,6 +7,7 @@ declare var AMA:any;
 export interface Callback {
     callback():void;
     callbackWithParam(result:any):void;
+    sessionExpired():void;
 }
 
 @Injectable()
