@@ -48,6 +48,9 @@ export class Login implements CognitoCallback, LoggedInCallback{
     if (message != null) { //error
       this.errorMessage = message;
       console.log("result: " + this.errorMessage);
+      if(message == "Password reset required for the user"){
+        // show the reset password information
+      }
     } else { //success
       this.isLoggedIn(message, true);
     }
@@ -62,5 +65,10 @@ export class Login implements CognitoCallback, LoggedInCallback{
     console.error("---- login#resetPassword needs to be implemented! ---");
     attributes["name"] = "demo"
     callback("1Qasdfghjkl;'", attributes)
+  }
+
+  handleMFA(codeOptions, callback):void{
+    console.log("Getting MFA info from user");
+    callback("1234");
   }
 }

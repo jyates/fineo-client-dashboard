@@ -14,7 +14,9 @@ export class RegistrationUser {
 export interface CognitoCallback {
     cognitoCallback(message:string, result:any):void;
 
-    resetPassword(attributesToUpdate, requiredAttributes, callback):void;
+    resetPassword(attributesToUpdate, requiredAttributes, callback:(password:string, updatedAttributes) => any):void;
+
+    handleMFA(codeDeliveryDetails, callback:(mfaCode:string)=>any): void;
 }
 
 export interface LoggedInCallback {
@@ -244,18 +246,24 @@ export class UserLoginService {
                 callback.cognitoCallback(err.message, null);
             },
 
+            // MFA is required to complete user authentication.
+            // Get the code from user and call
+            mfaRequired: function(codeDeliveryDetails) {
+                callback.handleMFA(codeDeliveryDetails, function(code){
+                    cognitoUser.sendMFACode(code, handler);
+                })
+            },
+
             // User was signed up by an admin and must provide new 
             // password and required attributes, if any, to complete 
             // authentication.
             newPasswordRequired: function(attributes, requiredAttributes){
                  console.log("User requires a new password to be entered.")
-                 console.log("Got existing attributes: "+JSON.stringify(attributes));
-                 console.log("Requires attributes: "+requiredAttributes);
                 // the api doesn't accept this field back
                 delete attributes.email_verified;
 
                 // Get these details
-                callback.resetPassword(attributes, requiredAttributes, function(password:string, attribute){
+                callback.resetPassword(attributes, requiredAttributes, function(password:string, attributes){
                      // and call back
                     cognitoUser.completeNewPasswordChallenge(password, attributes, handler);  
                 });
