@@ -2,22 +2,8 @@ import {Injectable, Inject} from "@angular/core";
 import {environment} from '../environment';
 import {Callback} from './aws.services';
 
-export const AWS = require('aws-sdk');
-// import {Config, CognitoIdentityCredentials} from "aws-sdk/dist/aws-sdk";
-// import {
-//   CognitoUserPool,
-//   CognitoUserAttribute
-// } from "amazon-cognito-identity-js";
-
-// Config.region = environment.region;
-// Config.credentials = new CognitoIdentityCredentials({
-//   IdentityPoolId: environment.identityPoolId
-// });
-
-// const userPool = new CognitoUserPool({
-//   UserPoolId: environment.userPoolId,
-//   ClientId: environment.clientId
-// });
+declare var AWSCognito:any;
+declare var AWS:any;
 
 export class RegistrationUser {
     name:string;
@@ -27,6 +13,8 @@ export class RegistrationUser {
 
 export interface CognitoCallback {
     cognitoCallback(message:string, result:any):void;
+
+    resetPassword(attributesToUpdate, requiredAttributes, callback):void;
 }
 
 export interface LoggedInCallback {
@@ -235,7 +223,7 @@ export class UserLoginService {
         console.log("UserLoginService: Params set...Authenticating the user");
         let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
         console.log("UserLoginService: config is " + JSON.stringify(AWS.config));
-        cognitoUser.authenticateUser(authenticationDetails, {
+        let handler = {
             onSuccess: function (result) {
                 console.log("successful auth of user: "+username);
                 
@@ -255,7 +243,25 @@ export class UserLoginService {
             onFailure: function (err) {
                 callback.cognitoCallback(err.message, null);
             },
-        });
+
+            // User was signed up by an admin and must provide new 
+            // password and required attributes, if any, to complete 
+            // authentication.
+            newPasswordRequired: function(attributes, requiredAttributes){
+                 console.log("User requires a new password to be entered.")
+                 console.log("Got existing attributes: "+JSON.stringify(attributes));
+                 console.log("Requires attributes: "+requiredAttributes);
+                // the api doesn't accept this field back
+                delete attributes.email_verified;
+
+                // Get these details
+                callback.resetPassword(attributes, requiredAttributes, function(password:string, attribute){
+                     // and call back
+                    cognitoUser.completeNewPasswordChallenge(password, attributes, handler);  
+                });
+            }
+        };
+        cognitoUser.authenticateUser(authenticationDetails, handler);
     }
 
     forgotPassword(username:string, callback:CognitoCallback) {

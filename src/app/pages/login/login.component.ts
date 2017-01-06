@@ -57,4 +57,10 @@ export class Login implements CognitoCallback, LoggedInCallback{
     if (isLoggedIn)
       this.router.navigate(['/pages/dashboard']);
   }
+
+  resetPassword(attributes, requiredAttributes, callback):void{
+    console.error("---- login#resetPassword needs to be implemented! ---");
+    attributes["name"] = "demo"
+    callback("1Qasdfghjkl;'", attributes)
+  }
 }
