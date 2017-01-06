@@ -1,6 +1,8 @@
 import {Component, ViewEncapsulation} from '@angular/core';
+import { Router } from '@angular/router';
 
 import {GlobalState} from '../../../global.state';
+import {UserLoginService} from '../../../services/cognito.service'
 
 @Component({
   selector: 'ba-page-top',
@@ -13,7 +15,9 @@ export class BaPageTop {
   public isScrolled:boolean = false;
   public isMenuCollapsed:boolean = false;
 
-  constructor(private _state:GlobalState) {
+  constructor(private _state:GlobalState,
+              private users: UserLoginService,
+              private router: Router) {
     this._state.subscribe('menu.isCollapsed', (isCollapsed) => {
       this.isMenuCollapsed = isCollapsed;
     });
@@ -27,5 +31,10 @@ export class BaPageTop {
 
   public scrolledChanged(isScrolled) {
     this.isScrolled = isScrolled;
+  }
+
+  public signOut(){
+    this.users.logout();
+    this.router.navigate(['/login']);
   }
 }
