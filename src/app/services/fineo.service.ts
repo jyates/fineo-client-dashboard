@@ -165,11 +165,15 @@ class Api{
         });
   }
 
-  public doDelete(base:string, ending:string, queries?:Map<string, string[]>):Promise<any>{
+  public doDelete(base:string, ending:string, body?:Object, queries?:Map<string, string[]>):Promise<any>{
     let api = this;
     return this.doCall(base, ending, null, {
           act: function(url, body, options){
             api.addQueryParams(options, queries);
+            // have to "trick" the query parameters to supoort a body for delete by putting it in the options
+            if (body != undefined){
+              options.body = body
+            }
             return api.http.delete(url, options)
                            .map(api.jsonBody);
           }
