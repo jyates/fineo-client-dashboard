@@ -13,9 +13,9 @@ import {Callback} from './aws.services'
 @Injectable()
 export class FineoApi {
 
-  static STREAM_URL = "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod";
-  static SCHEMA_URL = "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod";
-  static BATCH_URL =  "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod";
+  static STREAM_URL = "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod/stream";
+  static SCHEMA_URL = "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod/schema";
+  static BATCH_URL =  "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod/batch";
 
   private api:Api;
   public data:Data;
@@ -36,7 +36,7 @@ export class Data {
   }
 
   public events(...events:Object[]):Promise<any> {
-     return this.api.doPut(FineoApi.STREAM_URL, "/stream/events", events);
+     return this.api.doPut(FineoApi.STREAM_URL, "/events", events);
    }
 }
 
@@ -46,14 +46,14 @@ export class Batch {
   }
 
   public batch(fileName:string, body:Object){
-    return this.api.doPut(FineoApi.BATCH_URL, "/batch/upload/data/"+fileName, body);
+    return this.api.doPut(FineoApi.BATCH_URL, "/upload/data/"+fileName, body);
   }
 
   public batchS3(file:string):Promise<any>{
     let obj = {
       "filePath": file
     };
-    return this.api.doPost(FineoApi.BATCH_URL, "/batch/upload/file", obj);
+    return this.api.doPost(FineoApi.BATCH_URL, "/upload/file", obj);
   }
 }
 
@@ -63,35 +63,35 @@ export class Schema {
   }
 
   public getParentSchemaInfo():Promise<any>{
-    return this.api.doGet(FineoApi.SCHEMA_URL, "/schema");
+    return this.api.doGet(FineoApi.SCHEMA_URL, "");
   }
 
   public updateParentSchemaInfo(body:Object):Promise<any>{
-    return this.api.doPatch(FineoApi.SCHEMA_URL, "/schema", body); 
+    return this.api.doPatch(FineoApi.SCHEMA_URL, "", body); 
   }
 
   // Metric
   //--------
   // CREATE
   public createMetric(body:Object): Promise<any>{
-   return this.api.doPost(FineoApi.SCHEMA_URL, "/schema/metric", body); 
+   return this.api.doPost(FineoApi.SCHEMA_URL, "/metric", body); 
   }
 
   // READ
   public getMetric(metricName:string):Promise<any>{
-    return this.api.doGet(FineoApi.SCHEMA_URL, "/schema/metric", {
+    return this.api.doGet(FineoApi.SCHEMA_URL, "/metric", {
       'metricName': [metricName]
     });
   }
   
   // UPDATE
   public updateMetric(body:Object):Promise<any>{
-    return this.api.doPatch(FineoApi.SCHEMA_URL, "/schema/metric", body);
+    return this.api.doPatch(FineoApi.SCHEMA_URL, "/metric", body);
   }
 
   // DELETE
   public deleteMetric(metricName:String):Promise<any>{
-    return this.api.doDelete(FineoApi.SCHEMA_URL, "/schema/metric", {"metricName": [metricName]});
+    return this.api.doDelete(FineoApi.SCHEMA_URL, "/metric", {"metricName": [metricName]});
   }
 
   // Field
@@ -99,12 +99,12 @@ export class Schema {
 
   // CREATE
   public creatField(body:Object): Promise<any>{
-   return this.api.doPost(FineoApi.SCHEMA_URL, "/schema/field", body); 
+   return this.api.doPost(FineoApi.SCHEMA_URL, "/field", body); 
   }
 
   // READ
   public getField(metricName:string, fieldName:string):Promise<any>{
-    return this.api.doGet(FineoApi.SCHEMA_URL, "/schema/field", {
+    return this.api.doGet(FineoApi.SCHEMA_URL, "/field", {
       'metric': [metricName],
       'field': [fieldName]
     });
@@ -112,7 +112,7 @@ export class Schema {
 
   // UPDATE
   public updateField(body:Object):Promise<any>{
-    return this.api.doPatch(FineoApi.SCHEMA_URL, "/schema/field", body);
+    return this.api.doPatch(FineoApi.SCHEMA_URL, "/field", body);
   }
 
   // FIELD deletes are NOT supported
@@ -235,7 +235,7 @@ class Api{
       'x-api-key': apikey
     });
 
-    var url = base +"/user/"+ending;
+    var url = base +"/user"+ending;
     let options = new RequestOptions({ headers: headers });
     return 
   }
