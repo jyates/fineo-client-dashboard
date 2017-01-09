@@ -6,7 +6,13 @@ import {
   CognitoCallback,
   UserLoginService,
   LoggedInCallback
-} from '../../services/cognito.service'
+} from '../../services/cognito.service';
+
+import {
+  FineoApi
+} from '../../services/fineo.service';
+
+// declare var apigClientFactory:any;
 
 @Component({
   selector: 'login',
@@ -24,7 +30,8 @@ export class Login implements CognitoCallback, LoggedInCallback{
 
   constructor(private fb:FormBuilder,
               private router: Router,
-              private users: UserLoginService) {
+              private users: UserLoginService,
+              private fineo: FineoApi) {
     // console.log(AWS)
     this.form = fb.group({
       'email': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -57,8 +64,33 @@ export class Login implements CognitoCallback, LoggedInCallback{
   }
 
   isLoggedIn(message:string, isLoggedIn:boolean) {
-    if (isLoggedIn)
+    if (isLoggedIn){
+      // Fineo wrapping access
+        // this.fineo.schema.getMetrics()
+        //   .then(result => window.confirm("Got schemas:"+JSON.stringify(result)))
+        //   .catch(err => window.confirm("Error getting schemas: "+JSON.stringify(err)));
+
+        // Direct AWS generated API Gateway access
+       // this.users.withCredentials({
+       //   with:function(access, secret, session){
+       //     var apigClient = apigClientFactory.newClient({
+       //        accessKey: access,
+       //        secretKey: secret,
+       //        sessionToken: session,
+       //        apiKey: 'yLi6cd4Gpi2RsX8R1tvay6JPLFTXuyTaEFRp4A1d',
+       //        region: 'us-east-1' // OPTIONAL: The region where the API is deployed, by default this parameter is set to us-east-1
+       //    });
+       //     // window.confirm("User loggedd in with credentials\naccess: "+access+"\nsecret:"+secret+"\nsession:"+session);
+       //    apigClient.schemaGet().then(function(successResult){
+       //      window.confirm("Got schema info: "+JSON.stringify(successResult));
+       //    }).catch(function(err){
+       //      window.confirm("Failed get: "+JSON.stringify(err));
+       //    });
+       //   }
+       // })
       this.router.navigate(['/pages/dashboard']);
+    }
+      
   }
 
   resetPassword(attributes, requiredAttributes, callback):void{

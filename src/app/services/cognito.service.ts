@@ -236,8 +236,10 @@ export class UserLoginService {
                 logins['cognito-idp.us-east-1.amazonaws.com/' + environment.userPoolId] = result.getIdToken().getJwtToken();
 
                 // Add the User's Id Token to the Cognito credentials login map.
+                AWS.config.region = 'us-east-1'
                 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
                     IdentityPoolId: environment.identityPoolId,
+                    // IdentityId: AWS.config.credentials.identityId,
                     Logins: logins
                 });
 
@@ -273,6 +275,30 @@ export class UserLoginService {
             }
         };
         cognitoUser.authenticateUser(authenticationDetails, handler);
+    }
+
+  transform(value: Object): string {
+    var seen = [];
+
+    return JSON.stringify(value, function(key, val) {
+       if (val != null && typeof val == "object") {
+            if (seen.indexOf(val) >= 0) {
+                return;
+            }
+            seen.push(val);
+        }
+        return val;
+    });
+  }
+
+    withCredentials(func:WithCredentials){
+        AWS.config.credentials.get(function(err) {
+            if (err){console.log(err);}
+            else{
+                console.log("Successfully got credentials");
+                func.with(AWS.config.credentials.accessKeyId, AWS.config.credentials.secretAccessKey,AWS.config.credentials.sessionToken);
+            }
+        });
     }
 
     forgotPassword(username:string, callback:CognitoCallback) {
@@ -342,6 +368,10 @@ export class UserLoginService {
         }
     }
 
+}
+
+export interface WithCredentials{
+    with(access:string, secret:string, session:string);
 }
 
 @Injectable()

@@ -4,99 +4,158 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams} from '@angula
 import { Observable } from 'rxjs/Observable';
 
 import {
-  CognitoUtil
+  UserLoginService,
+  WithCredentials
 } from './cognito.service'
 
-import {Callback} from './aws.services'
-
+// declare var apigClientFactory:any;
+declare var apiGateway:any;
 
 @Injectable()
 export class FineoApi {
 
-  static STREAM_URL = "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod/stream";
-  static SCHEMA_URL = "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod/schema";
-  static BATCH_URL =  "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod/batch";
+  static STREAM_URL = "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod";
+  static SCHEMA_URL = "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod";
+  static BATCH_URL =  "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod";
 
   private api:Api;
   public data:Data;
   public schema:Schema;
 
-  constructor(@Inject(CognitoUtil) private cognitoUtil:CognitoUtil,
-               @Inject(Http) private http: Http) {
-     this.api = new Api(cognitoUtil, http);
-     this.data = new Data(this.api);
-     this.schema = new Schema(this.api);
+  constructor(@Inject(UserLoginService) private users:UserLoginService) {
+     this.data = new Data(this.users);
+     this.schema = new Schema(this.users);
   }
+}
+
+class BaseExec {
+
+  protected api:Api;
+  public endpoint:string;
+  public pathComponent:string;
+
+  constructor(private users:UserLoginService,
+              private url:string){
+    this.api = new Api(this);
+    // extract endpoint and path from url
+    this.endpoint = /(^https?:\/\/[^\/]+)/g.exec(this.url)[1];
+    this.pathComponent = this.url.substring(this.endpoint.length);
+  }
+
+  public makeCall(func:WithApiGatewayClient){
+    let exec = this;
+    this.users.withCredentials({
+      with: function(access:string, secret:string, session:string){
+        // setup signing the request
+        var sigV4ClientConfig = {
+            accessKey: access,
+            secretKey: secret,
+            sessionToken: session,
+            serviceName: 'execute-api',
+            region: 'us-east-1',
+            endpoint: exec.endpoint,
+            defaultContentType: 'application/json',
+            defaultAcceptType: 'application/json'
+        };
+
+        var simpleHttpClientConfig = {
+            endpoint: exec.endpoint,
+            defaultContentType: 'application/json',
+            defaultAcceptType: 'application/json'
+        };
+
+        // now we have a client
+        var apiGatewayClient = apiGateway.core.apiGatewayClientFactory.newClient(simpleHttpClientConfig, sigV4ClientConfig);
+        func.doWithClient(apiGatewayClient);
+    }
+   });
+  }
+}
+
+interface WithApiGatewayClient{
+  doWithClient(apiGatewayClient):void;
 }
 
 export class Data {
 
   public batch:Batch;
-  constructor(private api:Api){
-    this.batch = new Batch(this.api);
+  public stream:Stream;
+  constructor(users:UserLoginService){
+    this.batch = new Batch(users);
+    this.stream = new Stream(users)
   }
 
-  public events(...events:Object[]):Promise<any> {
-     return this.api.doPut(FineoApi.STREAM_URL, "/events", events);
-   }
 }
 
-export class Batch {
+export class Stream extends BaseExec {
 
-  constructor(private api:Api){
+  constructor(users: UserLoginService){
+    super(users, FineoApi.STREAM_URL);
+  }
+
+  public doPut(events:Object):Promise<any>{
+    return this.api.doPut("/stream/events", events);  
+  }  
+}
+
+export class Batch extends BaseExec {
+
+  constructor(users: UserLoginService){
+    super(users, FineoApi.BATCH_URL);
   }
 
   public batch(fileName:string, body:Object){
-    return this.api.doPut(FineoApi.BATCH_URL, "/upload/data/"+fileName, body);
+    return this.api.doPut("/batch/upload/data/"+fileName, body);
   }
 
   public batchS3(file:string):Promise<any>{
     let obj = {
       "filePath": file
     };
-    return this.api.doPost(FineoApi.BATCH_URL, "/upload/file", obj);
+    return this.api.doPost("/batch/upload/file", obj);
   }
 }
 
-export class Schema {
+export class Schema extends BaseExec {
 
-  constructor(private api:Api){
+  constructor(users: UserLoginService){
+    super(users, FineoApi.SCHEMA_URL);
   }
 
   public getParentSchemaInfo():Promise<any>{
-    return this.api.doGet(FineoApi.SCHEMA_URL, "");
+    return this.api.doGet2("/schema");
   }
 
   public updateParentSchemaInfo(body:Object):Promise<any>{
-    return this.api.doPatch(FineoApi.SCHEMA_URL, "", body); 
+    return this.api.doPatch("/schema", body); 
   }
 
   public getMetrics():Promise<any>{
-    return this.api.doGet(FineoApi.SCHEMA_URL, "/metrics");
+    return this.api.doGet2("/schema/metrics");
   }
 
   // Metric
   //--------
   // CREATE
   public createMetric(body:Object): Promise<any>{
-   return this.api.doPost(FineoApi.SCHEMA_URL, "/metric", body); 
+   return this.api.doPost("/schema/metric", body); 
   }
 
   // READ
   public getMetric(metricName:string):Promise<any>{
-    return this.api.doGet(FineoApi.SCHEMA_URL, "/metric", {
+    return this.api.doGet("/schema/metric", {
       'metricName': [metricName]
     });
   }
   
   // UPDATE
   public updateMetric(body:Object):Promise<any>{
-    return this.api.doPatch(FineoApi.SCHEMA_URL, "/metric", body);
+    return this.api.doPatch("/schema/metric", body);
   }
 
   // DELETE
   public deleteMetric(metricName:String):Promise<any>{
-    return this.api.doDelete(FineoApi.SCHEMA_URL, "/metric", {"metricName": [metricName]});
+    return this.api.doDelete("/schema/metric", {"metricName": [metricName]});
   }
 
   // Field
@@ -104,12 +163,12 @@ export class Schema {
 
   // CREATE
   public creatField(body:Object): Promise<any>{
-   return this.api.doPost(FineoApi.SCHEMA_URL, "/field", body); 
+   return this.api.doPost("/schema/field", body); 
   }
 
   // READ
   public getField(metricName:string, fieldName:string):Promise<any>{
-    return this.api.doGet(FineoApi.SCHEMA_URL, "/field", {
+    return this.api.doGet("/schema/field", {
       'metric': [metricName],
       'field': [fieldName]
     });
@@ -117,26 +176,57 @@ export class Schema {
 
   // UPDATE
   public updateField(body:Object):Promise<any>{
-    return this.api.doPatch(FineoApi.SCHEMA_URL, "/field", body);
+    return this.api.doPatch("/schema/field", body);
   }
 
   // FIELD deletes are NOT supported
 }
 
-class Api{
+export class Api {
   private apiKey:string = null;
-  constructor(private cognitoUtil:CognitoUtil,
-              private http: Http){
+  constructor(private exec:BaseExec){
   }
 
-  public doPut(base:string, ending: string, body:Object):Promise<any>{
+  public doPut(ending: string, body:Object):Promise<any>{
+    var request = {
+      verb: 'put'.toUpperCase(),
+      path: this.exec.pathComponent + ending,
+      headers: {},
+      queryParams: {},
+      body: body
+    }
+    return this.doCall2(request);
+  }
+
+  public doGet2(ending: string, queries?:Map<string, string[]>):Promise<any>{
+    if(queries === undefined || queries == null){ queries = {}; }
+    var request = {
+      verb: 'get'.toUpperCase(),
+      path: this.exec.pathComponent + ending,
+      headers: {},
+      queryParams: queries,
+      body: {},
+    }
+    return this.doCall2(request);
+  }
+
+  private doCall2(request:Object):Promise<any>{
     let api = this;
-    return this.doCall(base, ending, body, {
-          act: function(url, body, options){
-            return api.http.put(url, body, options)
-                           .map(api.jsonBody);
-          }
+    return new Promise(function(resolve, reject) {
+      api.exec.makeCall({
+        doWithClient:function(apiGatewayClient){
+          api.ensureApiKey()
+          .then(function(apikey){
+            console.log("Got client, making request!");
+            let response = apiGatewayClient.makeRequest(request, 'AWS_IAM', {}, apikey);
+            response.then(result => resolve(result)).catch(error => reject(error));
+          }).catch(function(err:Response){
+            console.log("Failed loading the aPI key! -- "+JSON.stringify(err));
+            reject(err);
         });
+        }
+      });
+    });
   }
 
  public doPost(base:string, ending: string, body:Object):Promise<any>{
@@ -149,7 +239,7 @@ class Api{
         });
   }
 
-   public doGet(base:string, ending: string, queries?:Map<string, string[]>):Promise<any>{
+  public doGet(base:string, ending: string, queries?:Map<string, string[]>):Promise<any>{
     let api = this;
     return this.doCall(base, ending, null, {
           act: function(url, body, options){
@@ -245,15 +335,13 @@ class Api{
     return 
   }
 
-  private ensureApiKey():Observable<string>{
+  private ensureApiKey():Promise<string>{
     if(this.apiKey != null){
-      return Observable.from(this.apiKey);
+      return Observable.from(this.apiKey).toPromise();
     }
     //TODO support API key look up call for user, don't just use the canary API KEY
-    return Observable.from("yLi6cd4Gpi2RsX8R1tvay6JPLFTXuyTaEFRp4A1d");
+    return new Promise(function(resolve, reject){
+      resolve("yLi6cd4Gpi2RsX8R1tvay6JPLFTXuyTaEFRp4A1d");
+    });
   }
-}
-
-interface ObservableGen{
-  act(url, body, options):Observable<any>;
 }
