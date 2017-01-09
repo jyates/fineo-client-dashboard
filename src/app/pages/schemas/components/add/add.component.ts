@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, Input } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../schema.service'
+import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../services/schema.service'
 
 @Component({
   selector: 'add-schema-component',

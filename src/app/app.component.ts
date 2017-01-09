@@ -7,7 +7,7 @@ import { layoutPaths } from './theme/theme.constants';
 import { BaThemeConfig } from './theme/theme.config';
 import { BaMenuService } from './theme';
 import {ComponentsHelper } from 'ng2-bootstrap';
-import { SchemaService } from './schema.service'
+import { SchemaService } from './services/schema.service'
 
 import { MENU } from './app.menu';
 /*

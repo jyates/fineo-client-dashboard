@@ -15,9 +15,11 @@ import { routing } from './app.routing';
 import { App } from './app.component';
 import { AppState, InternalStateType } from './app.service';
 import { GlobalState } from './global.state';
-import { SchemaService } from './schema.service'
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
+
+/* Custom Fineo components */
+// AWS Connection
 import { AwsUtil } from './services/aws.services';
 import { 
   UserLoginService,
@@ -25,18 +27,24 @@ import {
   UserRegistrationService,
   UserParametersService
 } from './services/cognito.service';
+// Wrapper to actual APIs
+import { FineoApi } from './services/fineo.service'
+// High level access to Fineo APIs
+import { SchemaService } from './services/schema.service'
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
   GlobalState,
-  SchemaService,
   // AWS connection
   AwsUtil,
   CognitoUtil,
   UserLoginService,
   UserRegistrationService,
-  UserParametersService
+  UserParametersService,
+  // Fineo
+  FineoApi,
+  SchemaService,
 ];
 
 type StoreType = {

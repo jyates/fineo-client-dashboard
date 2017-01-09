@@ -25,6 +25,7 @@ export class FineoApi {
                @Inject(Http) private http: Http) {
      this.api = new Api(cognitoUtil, http);
      this.data = new Data(this.api);
+     this.schema = new Schema(this.api);
   }
 }
 
@@ -68,6 +69,10 @@ export class Schema {
 
   public updateParentSchemaInfo(body:Object):Promise<any>{
     return this.api.doPatch(FineoApi.SCHEMA_URL, "", body); 
+  }
+
+  public getMetrics():Promise<any>{
+    return this.api.doGet(FineoApi.SCHEMA_URL, "/metrics");
   }
 
   // Metric

@@ -6,7 +6,7 @@ import {NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { ModalDirective } from 'ng2-bootstrap';
 import { AlertModule } from 'ng2-bootstrap';
 
-import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../schema.service'
+import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../services/schema.service'
 
 import { FieldSubComponent } from '../field/field.component';
 import { StringifyPipe } from '../util/stringify.pipe';

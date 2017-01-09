@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 
+import { FineoApi, Schema } from './fineo.service';
+
 @Injectable()
 export class SchemaService {
+
+  private schemaApi:Schema;
+  constructor(fineo:FineoApi){
+    this.schemaApi = fineo.schema;
+  }
 
   schema_infos = {
     "1234": {
