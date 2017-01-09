@@ -66,9 +66,13 @@ export class Login implements CognitoCallback, LoggedInCallback{
   isLoggedIn(message:string, isLoggedIn:boolean) {
     if (isLoggedIn){
       // Fineo wrapping access
-        // this.fineo.schema.getMetrics()
+        // this.fineo.schema.getParentSchemaInfo()
         //   .then(result => window.confirm("Got schemas:"+JSON.stringify(result)))
-        //   .catch(err => window.confirm("Error getting schemas: "+JSON.stringify(err)));
+        //   .catch(err => {
+        //     console.log("failed geting schemas!");
+        //     window.confirm("Error getting schemas: "+JSON.stringify(err))
+        //   }
+        //     );
 
         // Direct AWS generated API Gateway access
        // this.users.withCredentials({
