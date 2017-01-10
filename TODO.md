@@ -2,15 +2,13 @@
 
 ## Server side
 
- * schema names (GET /metrics) 
  * User Info API call
    * API key for user
    * query URL
-   * dashboard layout
+   * User list/creation/deletion
  * device management
  * payment authorization
  * environment setup
- * user query passthrough to query server (POST /user)
  * query -> results endpoint in query server (GET /query)
  
 ## UI/Frontend
