@@ -225,9 +225,7 @@ export class UserLoginService {
             Pool: this.cognitoUtil.getUserPool()
         };
 
-        console.log("UserLoginService: Params set...Authenticating the user");
         let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
-        console.log("UserLoginService: config is " + JSON.stringify(AWS.config));
         let handler = {
             // result is a simple object with two fields: idToken and accessToken (both jwt tokens)
             onSuccess: function (result) {
@@ -242,9 +240,6 @@ export class UserLoginService {
                     IdentityPoolId: environment.identityPoolId,
                     Logins: logins
                 });
-
-                console.log("UserLoginService: set the AWS credentials - " + JSON.stringify(AWS.config.credentials));
-                console.log("UserLoginService: set the AWSCognito credentials - " + JSON.stringify(AWSCognito.config.credentials));
                 callback.cognitoCallback(null, result);
             },
             onFailure: function (err) {

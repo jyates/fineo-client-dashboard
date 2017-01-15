@@ -8,20 +8,15 @@
  
 ## UI/Frontend
 
- * API Key lookup
  * access guards
- * central user info mgmt
-   * user login info
-   * api key/query url/dashboard
- * Login  
-  * password reset prompt
-  * admin reset prompt
- * profile info page
+ * add user info to application info hash
  * device mgmt backend
  * schema mgmt backend
  * data upload backend
  * schema meta management page
+ * profile info page
  * dashboarding
+   * query url lookup for user
    * SQL query creation
    * query execution
    * panel delete

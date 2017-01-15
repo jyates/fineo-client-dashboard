@@ -37,11 +37,11 @@ export interface LoggedIn {
 @Injectable()
 export class UserService {
 
-  private apikey:string;
+  public apikey:string;
   private username:string;
-  private userService:Metadata;
+  public userService:Metadata;
 
-  constructor(@Inject(UserLoginService) private loginService:UserLoginService,
+  constructor(@Inject(UserLoginService) public loginService:UserLoginService,
               @Inject(FineoApi) fineo:FineoApi){
     this.userService = fineo.meta;
   }
@@ -51,22 +51,8 @@ export class UserService {
     let mgmt = this;
 
     // when the user is logged in, look up the api key
-    let apiKeyLookup = {
-      loggedIn: function(){
-        mgmt.userService.getApiKey()
-          .then(function(success){
-            mgmt.apikey = success.data;
-            console.log("got api key response: "+ JSON.stringify(success));
-        })
-          .catch(function(err){
-            console.log("Failed to get api key because: "+err);
-            mgmt.alertFineo("Failed to download api key!");
-          });
-      },
-      loginFailed(reason){},
-      resetPasswordRequired(att, req, call){},
-      resetPasswordFailed(msg){}
-    };
+    // after the user is "setup", then allow the login to acknowledge the success
+    let apiKeyLookup = new ApiKeyLookupOnLogin(onlogin, mgmt);
 
     let startPasswordReset = function(resetCallback:StartPasswordResetCallback){
       mgmt.loginService.forgotPassword(mgmt.username, {
@@ -98,7 +84,7 @@ export class UserService {
     };
 
     // do the login process
-    this.loginService.authenticate(email, password, new LoginCallback(startPasswordReset, finishPasswordReset, [onlogin, apiKeyLookup]));
+    this.loginService.authenticate(email, password, new LoginCallback(startPasswordReset, finishPasswordReset, apiKeyLookup));
   }
 
   public logout():void{
@@ -107,8 +93,22 @@ export class UserService {
     this.loginService.logout();
   }
 
-  private alertFineo(msg:string):void{
+  public alertFineo(msg:string):void{
      alert(msg+" Please contact help@fineo.io with the output of the web console.");
+  }
+
+  transform(value: Object): string {
+    var seen = [];
+
+    return JSON.stringify(value, function(key, val) {
+       if (val != null && typeof val == "object") {
+            if (seen.indexOf(val) >= 0) {
+                return;
+            }
+            seen.push(val);
+        }
+        return val;
+    });
   }
 }
 
@@ -118,6 +118,55 @@ interface StartPasswordResetCallback{
   onFailure(message:string):void;
 }
 
+class DelegatingLoggedIn implements LoggedIn {
+  constructor(public delegate:LoggedIn){}
+
+  loggedIn():void{
+    this.delegate.loggedIn();
+  }
+  
+  loginFailed(reason:string){
+    this.delegate.loginFailed(reason);
+  }
+
+  resetPasswordRequired(attributesToUpdate:Object, requiredAttributes, callback:(password:string) => void):void{
+    this.delegate.resetPasswordRequired(attributesToUpdate, requiredAttributes, callback);
+  }
+
+  resetPasswordFailed(message):void{
+    this.delegate.resetPasswordFailed(message);
+  }
+}
+
+class ApiKeyLookupOnLogin extends DelegatingLoggedIn{
+  constructor(delegate:LoggedIn, private mgmt:UserService){
+    super(delegate);
+  }
+
+  loggedIn(){
+    let lookup = this;
+    this.mgmt.userService.getApiKey()
+      .then(function(success){
+        lookup.mgmt.apikey = success.data;
+        console.log("got api key response: "+ JSON.stringify(success));
+        // login fully complete
+        lookup.delegate.loggedIn();
+      })
+      .catch(function(err){
+        console.log("Failed to get api key because: "+ lookup.mgmt.transform(err));
+        // ensure that we can try logging in again
+        lookup.mgmt.loginService.logout();
+        lookup.mgmt.alertFineo("Failed to download api key!");
+        lookup.delegate.loginFailed("Internal server error: could not locate api key");
+      });
+  }
+}
+
+/**
+* Does the hard work of translating from the CognitoService (ripped from aws examples) into something that we can more easily understand.
+* The details of the translation are intimiately times to the implemention in CognitoService.
+* It probably would have been better to re-implement cognito service correctly, but this was faster :-(
+*/
 class LoginCallback implements CognitoCallback {
 
   /**
@@ -125,7 +174,7 @@ class LoginCallback implements CognitoCallback {
   * @param {simpleResetCallback} method to call from the LoggedIn when it acquires a new user password and wants to finish the login
   * @param {onlogins} callbacks to update when the logins completes, fails, or needs a password reset.
   */
-  constructor(private startResetPassword, private finishPasswordReset:(code:string, password:string) =>void, private onlogins:LoggedIn[]){}
+  constructor(private startResetPassword, private finishPasswordReset:(code:string, password:string) =>void, private login:LoggedIn){}
 
   cognitoCallback(message:string, result:any) {
     // error... of some sort
@@ -136,42 +185,30 @@ class LoginCallback implements CognitoCallback {
         // start the user forgot password flow
         this.startResetPassword({
           onSuccess(){
-            // for each of the "logins" attempt trigger the reset password flow
-            for(let login of callback.onlogins) {
               let attributes = {}
-              login.resetPasswordRequired(attributes, ["verificationCode"], function(password:string):void {
+              callback.login.resetPasswordRequired(attributes, ["verificationCode"], function(password:string):void {
                   callback.finishPasswordReset(attributes["verificationCode"], password);
-              });
-            }
+            });
           },
           onFailure(message:string){
             // for each of the "logins" attempt trigger the reset password flow
-            for(let login of callback.onlogins) {
-              login.resetPasswordFailed("Password needed to be reset, but it failed!\n"+message);
-            }
+            callback.login.resetPasswordFailed("Password needed to be reset, but it failed!\n"+message);
           }
         });
         
         
       } else {
-        // some other error we don't know how to handle!
-        for(let login of this.onlogins){
-          login.loginFailed(message);
-        }
+        this.login.loginFailed(message);
       }
     } 
     // success
     else { 
-      for(let login of this.onlogins){
-          login.loggedIn();
-        }
+      this.login.loggedIn();
     }
   }
 
   resetPassword(attributesToUpdate, requiredAttributes, callback:(password:string) => any):void{
-    for(let login of this.onlogins){
-      login.resetPasswordRequired(attributesToUpdate, requiredAttributes, callback);
-    }
+    this.login.resetPasswordRequired(attributesToUpdate, requiredAttributes, callback);
   }
 
 

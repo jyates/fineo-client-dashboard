@@ -16,8 +16,8 @@ export class FineoApi {
 
   static STREAM_URL = "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod";
   static SCHEMA_URL = "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod";
-  static BATCH_URL =  "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod";
-  static META_URL =  "https://ohughslpw9.execute-api.us-east-1.amazonaws.com/prod";
+  static BATCH_URL  = "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod";
+  static META_URL   = "https://q5zrhiqdx4.execute-api.us-east-1.amazonaws.com/prod";
 
   private api:Api;
   public data:Data;
