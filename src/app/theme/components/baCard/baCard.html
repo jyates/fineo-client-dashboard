@@ -1,21 +1,25 @@
 <div baCardBlur class="animated fadeIn card {{cardType}} {{baCardClass || ''}}" zoom-in>
-    <div >
-      <div *ngIf="title" class="card-header clearfix">
-        <div style="position: relative;">
-        <h3 class="card-title" style="float:left; max-width: 50%; overflow: hidden">{{title}}</h3>
-        <div style="float:right; max-width: 50%; overflow: hidden">
-          <button class="btn btn-default btn-icon btn-icon-only edit-card" 
+  <div *ngIf="title" class="card-header clearfix">
+    <div style="position: relative;">
+      <h3 class="card-title" style="float:left; max-width: 50%; overflow: hidden">{{title}}</h3>
+      <div style="float:right; max-width: 50%; overflow: hidden">
+        <button class="btn btn-default btn-icon btn-icon-only edit-card" 
           type="button" (click)="editItem(item)"><i style="vertical-align:center;" class="ion-gear-b"></i></button>
-          <button class="btn btn-xs btn-danger edit-card" 
+        <button class="btn btn-xs btn-danger edit-card" 
           type="button" (click)="onDeleteConfirm(item)"><i class="ion-close-round"></i></button>
       </div>
-      </div>
-      </div>
-      <div *ngIf="!title" class="clearfix">
-        <button style="display:none" type="button" (click)="onDeleteConfirm(item)" ngClass="{status-button btn btn-xs btn-danger"><i class="ion-close-round"></i></button>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- Drop the edit buttons in the card proper, if there is no title -->
+    <div *ngIf="!title">
+      <div style="float:right; max-width: 20%;">
+        <button class="btn btn-default btn-icon btn-icon-only edit-card" 
+          type="button" (click)="editItem(item)"><i style="vertical-align:center;" class="ion-gear-b"></i></button>
+        <button class="btn btn-xs btn-danger edit-card" 
+          type="button" (click)="onDeleteConfirm(item)"><i class="ion-close-round"></i></button>
       </div>
     </div>
-    <div class="card-body">
-        <ng-content></ng-content>
-    </div>
+    <ng-content></ng-content>
+  </div>
 </div>
