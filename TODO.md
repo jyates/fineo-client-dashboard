@@ -22,3 +22,4 @@
    * panel delete
    * panel edit
    * panel creation
+   * clickable non-titled card edit/delete buttons 
