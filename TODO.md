@@ -2,11 +2,6 @@
 
 ## Server side
 
- * User Info API call
-   * API key for user
-   * query URL
-   * User list/creation/deletion
- * device management
  * payment authorization
  * environment setup
  * query -> results endpoint in query server (GET /query)
@@ -19,7 +14,6 @@
    * user login info
    * api key/query url/dashboard
  * Login  
-  * MFA support
   * password reset prompt
   * admin reset prompt
  * profile info page

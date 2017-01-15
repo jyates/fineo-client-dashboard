@@ -1,18 +1,19 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import { Router } from '@angular/router';
-// import {AWS} from './aws.loader.ts';
-import {
-  CognitoCallback,
-  UserLoginService,
-  LoggedInCallback
-} from '../../services/cognito.service';
+// angular
+// import { Component, ViewChild, ViewEncapsulation, ElementRef, Renderer } from '@angular/core';
+// import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
+// import {Router} from '@angular/router';
 
-import {
-  FineoApi
-} from '../../services/fineo.service';
+import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
+import { FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import { Router} from '@angular/router';
 
-// declare var apigClientFactory:any;
+import { ModalDirective } from 'ng2-bootstrap';
+
+// internal libs
+import {
+  UserService,
+  LoggedIn
+} from '../../services/user.service';
 
 @Component({
   selector: 'login',
@@ -20,7 +21,7 @@ import {
   styles: [require('./login.scss')],
   template: require('./login.html'),
 })
-export class Login implements CognitoCallback, LoggedInCallback{
+export class Login implements LoggedIn {
 
   public form:FormGroup;
   public email:AbstractControl;
@@ -28,11 +29,15 @@ export class Login implements CognitoCallback, LoggedInCallback{
   public errorMessage:string = null;
   public submitted:boolean = false;
 
+  @ViewChild('childModal') passwordModal: ModalDirective;
+  public passwordAdditionalAttributes:Object;
+  public passwordAttributes:Object;
+  public newPassword:string = null;
+  private passwordCallback;
+
   constructor(private fb:FormBuilder,
               private router: Router,
-              private users: UserLoginService,
-              private fineo: FineoApi) {
-    // console.log(AWS)
+              private users: UserService) {
     this.form = fb.group({
       'email': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
       'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
@@ -46,65 +51,38 @@ export class Login implements CognitoCallback, LoggedInCallback{
     console.log("Submitted: "+JSON.stringify(values))
     this.submitted = true;
     if (this.form.valid) {
-      this.users.authenticate(this.email.value, this.password.value, this);
+      this.users.login(this.email.value, this.password.value, this);
     }
   }
 
-  cognitoCallback(message:string, result:any) {
-    this.submitted = false;
-    if (message != null) { //error
-      this.errorMessage = message;
-      console.log("result: " + this.errorMessage);
-      if(message == "Password reset required for the user"){
-        // show the reset password information
-      }
-    } else { //success
-      this.isLoggedIn(message, true);
-    }
-  }
-
-  isLoggedIn(message:string, isLoggedIn:boolean) {
-    if (isLoggedIn){
-      // Fineo wrapping access
-        // this.fineo.schema.getParentSchemaInfo()
-        //   .then(result => window.confirm("Got schemas:"+JSON.stringify(result)))
-        //   .catch(err => {
-        //     console.log("failed geting schemas!");
-        //     window.confirm("Error getting schemas: "+JSON.stringify(err))
-        //   }
-        //     );
-
-        // Direct AWS generated API Gateway access
-       // this.users.withCredentials({
-       //   with:function(access, secret, session){
-       //     var apigClient = apigClientFactory.newClient({
-       //        accessKey: access,
-       //        secretKey: secret,
-       //        sessionToken: session,
-       //        apiKey: 'yLi6cd4Gpi2RsX8R1tvay6JPLFTXuyTaEFRp4A1d',
-       //        region: 'us-east-1' // OPTIONAL: The region where the API is deployed, by default this parameter is set to us-east-1
-       //    });
-       //     // window.confirm("User loggedd in with credentials\naccess: "+access+"\nsecret:"+secret+"\nsession:"+session);
-       //    apigClient.schemaGet().then(function(successResult){
-       //      window.confirm("Got schema info: "+JSON.stringify(successResult));
-       //    }).catch(function(err){
-       //      window.confirm("Failed get: "+JSON.stringify(err));
-       //    });
-       //   }
-       // })
+  // successful login, we are done!
+  loggedIn():void {
       this.router.navigate(['/pages/dashboard']);
-    }
-      
   }
 
-  resetPassword(attributes, requiredAttributes, callback):void{
-    console.error("---- login#resetPassword needs to be implemented! ---");
-    attributes["name"] = "demo"
-    callback("1Qasdfghjkl;'", attributes)
+  loginFailed(reason:string):void {
+      this.submitted = false;
+      this.errorMessage = reason;
   }
 
-  handleMFA(codeOptions, callback):void{
-    console.log("Getting MFA info from user");
-    callback("1234");
+  resetPasswordRequired(attributesToUpdate:Object, requiredAttributes, callback:(password:string) => void){
+    // show the reset password modal, but with the necessary reset information
+    this.passwordCallback = callback;
+    this.passwordAttributes = attributesToUpdate;
+    this.passwordAdditionalAttributes = requiredAttributes;
+    this.passwordModal.show();
+  }
+
+  cancelUpdatePassword():void{
+    this.passwordModal.hide();
+  }
+
+  updatePassword():void{
+    this.passwordCallback(this.newPassword);
+    this.passwordModal.hide();
+  }
+
+  resetPasswordFailed(message:string):void {
+    alert(message)
   }
 }

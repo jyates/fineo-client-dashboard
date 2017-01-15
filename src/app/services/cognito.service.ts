@@ -14,7 +14,7 @@ export class RegistrationUser {
 export interface CognitoCallback {
     cognitoCallback(message:string, result:any):void;
 
-    resetPassword(attributesToUpdate, requiredAttributes, callback:(password:string, updatedAttributes) => any):void;
+    resetPassword(attributesToUpdate, requiredAttributes, callback:(password:string) => any):void;
 
     handleMFA(codeDeliveryDetails, callback:(mfaCode:string)=>any): void;
 }
@@ -229,6 +229,7 @@ export class UserLoginService {
         let cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
         console.log("UserLoginService: config is " + JSON.stringify(AWS.config));
         let handler = {
+            // result is a simple object with two fields: idToken and accessToken (both jwt tokens)
             onSuccess: function (result) {
                 console.log("successful auth of user: "+username);
                 
@@ -239,7 +240,6 @@ export class UserLoginService {
                 AWS.config.region = 'us-east-1'
                 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
                     IdentityPoolId: environment.identityPoolId,
-                    // IdentityId: AWS.config.credentials.identityId,
                     Logins: logins
                 });
 
@@ -268,7 +268,7 @@ export class UserLoginService {
                 delete attributes.email_verified;
 
                 // Get these details
-                callback.resetPassword(attributes, requiredAttributes, function(password:string, attributes){
+                callback.resetPassword(attributes, requiredAttributes, function(password:string){
                      // and call back
                     cognitoUser.completeNewPasswordChallenge(password, attributes, handler);  
                 });
@@ -316,8 +316,8 @@ export class UserLoginService {
             onFailure: function (err) {
                 callback.cognitoCallback(err.message, null);
             },
-            inputVerificationCode() {
-                callback.cognitoCallback(null, null);
+            inputVerificationCode: function(data) {
+                callback.cognitoCallback(data, false);
             }
         });
     }

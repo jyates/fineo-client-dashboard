@@ -17,14 +17,17 @@ export class FineoApi {
   static STREAM_URL = "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod";
   static SCHEMA_URL = "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod";
   static BATCH_URL =  "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod";
+  static META_URL =  "https://ohughslpw9.execute-api.us-east-1.amazonaws.com/prod";
 
   private api:Api;
   public data:Data;
   public schema:Schema;
+  public meta:Metadata;
 
   constructor(@Inject(UserLoginService) private users:UserLoginService) {
      this.data = new Data(this.users);
      this.schema = new Schema(this.users);
+     this.meta = new Metadata(this.users);
   }
 }
 
@@ -34,7 +37,7 @@ class BaseExec {
   public endpoint:string;
   public pathComponent:string;
 
-  constructor(private users:UserLoginService,
+  constructor(protected users:UserLoginService,
               private url:string){
     this.api = new Api(this);
     // extract endpoint and path from url
@@ -74,6 +77,19 @@ class BaseExec {
 
 interface WithApiGatewayClient{
   doWithClient(apiGatewayClient):void;
+}
+
+export class Metadata extends BaseExec {
+   constructor(users:UserLoginService){
+     super(users, FineoApi.META_URL);
+   }
+
+   public getApiKey():Promise<any>{
+      return this.api.doGet("/meta/user", {
+        // ewww, way to far into objects here... but its way easier
+        "username": this.users.cognitoUtil.getCurrentUser().getUsername()
+      });  
+   }
 }
 
 export class Data {
@@ -182,7 +198,7 @@ export class Schema extends BaseExec {
   // FIELD deletes are NOT supported
 }
 
-export class Api {
+class Api {
   private apiKey:string = null;
   constructor(private exec:BaseExec){
   }

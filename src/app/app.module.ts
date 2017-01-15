@@ -31,6 +31,8 @@ import {
 import { FineoApi } from './services/fineo.service'
 // High level access to Fineo APIs
 import { SchemaService } from './services/schema.service'
+// Wrapper around user information
+import { UserService } from './services/user.service'
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -45,6 +47,7 @@ const APP_PROVIDERS = [
   // Fineo
   FineoApi,
   SchemaService,
+  UserService
 ];
 
 type StoreType = {
