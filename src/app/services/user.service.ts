@@ -68,11 +68,15 @@ export class UserService {
       resetPasswordFailed(msg){}
     };
 
-    let startPasswordReset = function(){
+    let startPasswordReset = function(resetCallback:StartPasswordResetCallback){
       mgmt.loginService.forgotPassword(mgmt.username, {
           cognitoCallback: function(message, result){
+            console.log("Starting forgot password - message: "+message+", result: "+JSON.stringify(result));
             if(!result){
-              mgmt.alertFineo("Failed to trigger password reset!");
+              console.log(message);
+              resetCallback.onFailure(message);
+            }else{
+              resetCallback.onSuccess();
             }
           },
           resetPassword(){},
@@ -83,6 +87,7 @@ export class UserService {
     let finishPasswordReset = function(code, passsword){
       mgmt.loginService.confirmNewPassword(email, code, passsword, {
           cognitoCallback: function(message, result){
+            console.log("Finishing password reset - message: "+message+", result: "+JSON.stringify(result));
             if(!result){
               onlogin.resetPasswordFailed(message);
             }
@@ -107,6 +112,12 @@ export class UserService {
   }
 }
 
+interface StartPasswordResetCallback{
+  onSuccess():void;
+
+  onFailure(message:string):void;
+}
+
 class LoginCallback implements CognitoCallback {
 
   /**
@@ -120,16 +131,28 @@ class LoginCallback implements CognitoCallback {
     // error... of some sort
     if (message != null) {
       if(message == "Password reset required for the user"){
-        alert(message);
+        console.log("Need to reset password for user");
+        let callback = this;
         // start the user forgot password flow
-        this.startResetPassword();
-        // for each of the "logins" attempt trigger the reset password flow
-        for(let login of this.onlogins) {
-          let attributes = {}
-          login.resetPasswordRequired(attributes, ["verificationCode"], function(password:string):void {
-              this.finishPasswordReset(attributes["verificationCode"], password);
-          });
-        }
+        this.startResetPassword({
+          onSuccess(){
+            // for each of the "logins" attempt trigger the reset password flow
+            for(let login of callback.onlogins) {
+              let attributes = {}
+              login.resetPasswordRequired(attributes, ["verificationCode"], function(password:string):void {
+                  callback.finishPasswordReset(attributes["verificationCode"], password);
+              });
+            }
+          },
+          onFailure(message:string){
+            // for each of the "logins" attempt trigger the reset password flow
+            for(let login of callback.onlogins) {
+              login.resetPasswordFailed("Password needed to be reset, but it failed!\n"+message);
+            }
+          }
+        });
+        
+        
       } else {
         // some other error we don't know how to handle!
         for(let login of this.onlogins){

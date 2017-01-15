@@ -15,6 +15,8 @@ import {
   LoggedIn
 } from '../../services/user.service';
 
+import { SplitCamelCase } from './split.camelcase.pipe'
+
 @Component({
   selector: 'login',
   encapsulation: ViewEncapsulation.None,
@@ -30,10 +32,12 @@ export class Login implements LoggedIn {
   public submitted:boolean = false;
 
   @ViewChild('childModal') passwordModal: ModalDirective;
+  @ViewChild('failedReset') failedResetModal: ModalDirective;
   public passwordAdditionalAttributes:Object;
   public passwordAttributes:Object;
   public newPassword:string = null;
   private passwordCallback;
+  private passwordResetReason:string ="";
 
   constructor(private fb:FormBuilder,
               private router: Router,
@@ -57,12 +61,12 @@ export class Login implements LoggedIn {
 
   // successful login, we are done!
   loggedIn():void {
-      this.router.navigate(['/pages/dashboard']);
+    this.router.navigate(['/pages/dashboard']);
   }
 
   loginFailed(reason:string):void {
-      this.submitted = false;
-      this.errorMessage = reason;
+    this.submitted = false;
+    this.errorMessage = reason;
   }
 
   resetPasswordRequired(attributesToUpdate:Object, requiredAttributes, callback:(password:string) => void){
@@ -74,15 +78,26 @@ export class Login implements LoggedIn {
   }
 
   cancelUpdatePassword():void{
+    this.passwordCallback = null;
+    this.passwordAttributes = null;
+    this.passwordAdditionalAttributes = null;
     this.passwordModal.hide();
   }
 
-  updatePassword():void{
+  updatePasswordFromModal():void{
+    console.log("Updating password----")
     this.passwordCallback(this.newPassword);
     this.passwordModal.hide();
   }
 
   resetPasswordFailed(message:string):void {
-    alert(message)
+    console.log("Failed to reset password - "+message);
+    this.submitted = false;
+    this.passwordResetReason = message;
+    this.failedResetModal.show();
+  }
+
+  hideFailedResetModal():void{
+    this.failedResetModal.hide();
   }
 }
