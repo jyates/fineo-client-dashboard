@@ -1,8 +1,21 @@
-<div *ngIf="loading">
-  <h1>LOADING... </h1>
+<div *ngIf="loading || testing">
+  <!-- <div id="fade"></div> -->
+  <div bsModal #smModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body">
+          <img id="loader" src="assets/img/loading.gif" />
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div *ngIf="!loading">
+<div *ngIf="!loading && !testing">
   <div class="schema-block">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
       <div class="row">

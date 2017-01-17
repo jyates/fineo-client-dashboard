@@ -1,3 +1,23 @@
+
+<!-- Modal with a spinner -->
+<!-- <div *ngIf="testing"> -->
+  <!-- <div id="fade"></div> -->
+  <div bsModal #loadingModal="bs-modal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-sm">
+      <div class="modal-content" style="text-align: center; max-height: 100%; height: auto; width: auto">
+<!--         <div class="modal-header">
+        </div> -->
+        <div class="modal-body">
+          <sk-rotating-plane></sk-rotating-plane>
+          <!-- <img text-align="center" id="loader" src="assets/img/loading.gif" /> -->
+        </div>
+<!--         <div class="modal-footer">
+        </div> -->
+      </div>
+    </div>
+  </div>
+<!-- </div> -->
+
 <div class="auth-main">
   <div class="auth-block">
     <h1>Sign in to ng2-admin</h1>

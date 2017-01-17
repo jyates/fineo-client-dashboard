@@ -6,8 +6,13 @@ import {NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { ModalDirective } from 'ng2-bootstrap';
 import { AlertModule } from 'ng2-bootstrap';
 
-import { 
-  SchemaService, 
+ import {
+   BaThemePreloader,
+   BaThemeSpinner
+ } from '../../../../theme/services';
+
+import {
+  SchemaService,
   SchemaMetaInfo,
   SchemaInfo,
   TimestampFieldInfo
@@ -26,6 +31,7 @@ export class SchemaComponent {
 
   public loading:boolean = true;
   public deleting:boolean = false;
+  public testing:boolean = true;
 
   public form:FormGroup;
   private name:AbstractControl;
@@ -48,19 +54,36 @@ export class SchemaComponent {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private service: SchemaService,
-              private fb:FormBuilder){
+              private fb:FormBuilder,
+              private _spinner: BaThemeSpinner){
   }
 
   ngOnInit() {
-    let self = this;
     this.route.params.subscribe(path_info => {
       this.id = path_info["id"];
-      this.service.getSchema(this.id)
-        .then(info => {
-          self.initWithInfo(info);
-          self.loading = false;
-        })
-        .catch(error => alert(JSON.stringify(error)));
+      this.loadSchema();
+    });
+  }
+
+  private loadSchema(){
+    // // show a spinner
+    // this._spinner.show();
+
+    // register the "schema loading" work
+    this.loading = true;
+    let self = this;
+    BaThemePreloader.registerLoader(
+        // add a loading spinner 
+        this.service.getSchema(this.id)
+          .then(info => {
+            self.initWithInfo(info);
+          })
+          .catch(error => alert(JSON.stringify(error))));
+
+    // hide spinner once schema loading has completed
+    BaThemePreloader.load().then((values) => {
+      self.loading = false;
+      // this._spinner.hide();
     });
   }
 
