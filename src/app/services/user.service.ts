@@ -1,4 +1,7 @@
 import {Injectable, Inject} from "@angular/core";
+
+import {GlobalState} from '../global.state'
+
 import {
   CognitoCallback,
   LoggedInCallback,
@@ -37,12 +40,14 @@ export interface LoggedIn {
 @Injectable()
 export class UserService {
 
+  public static API_KEY_STATE:string = "fineo.schema.apikey";
   public apikey:string;
   private username:string;
   public userService:Metadata;
 
   constructor(@Inject(UserLoginService) public loginService:UserLoginService,
-              @Inject(FineoApi) fineo:FineoApi){
+              @Inject(FineoApi) private fineo:FineoApi,
+              @Inject(GlobalState) private state:GlobalState){
     this.userService = fineo.meta;
   }
 
@@ -90,10 +95,17 @@ export class UserService {
   public logout():void{
     // reset the internal user information and then logout the user (so credentials are invalidated)
     this.apikey = null;
+    this.fineo.setApiKey(null);
     this.loginService.logout();
   }
 
-  public alertFineo(msg:string):void{
+  public setApiKey(key:string):void {
+    this.apikey = key;
+    this.fineo.setApiKey(key);
+    this.state.notifyDataChanged(UserService.API_KEY_STATE, key);
+  }
+
+  public alertFineo(msg:string):void {
      alert(msg+" Please contact help@fineo.io with the output of the web console.");
   }
 
@@ -145,10 +157,11 @@ class ApiKeyLookupOnLogin extends DelegatingLoggedIn{
 
   loggedIn(){
     let lookup = this;
+    console.log("Starting api key lookup");
     this.mgmt.userService.getApiKey()
       .then(function(success){
-        lookup.mgmt.apikey = success.data;
         console.log("got api key response: "+ JSON.stringify(success));
+        lookup.mgmt.setApiKey(success.apiKey);
         // login fully complete
         lookup.delegate.loggedIn();
       })

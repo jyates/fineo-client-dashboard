@@ -6,7 +6,12 @@ import {NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { ModalDirective } from 'ng2-bootstrap';
 import { AlertModule } from 'ng2-bootstrap';
 
-import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../services/schema.service'
+import { 
+  SchemaService, 
+  SchemaMetaInfo,
+  SchemaInfo,
+  TimestampFieldInfo
+} from '../../../../services/schema.service'
 
 import { FieldSubComponent } from '../field/field.component';
 import { StringifyPipe } from '../util/stringify.pipe';
@@ -19,6 +24,7 @@ import { StringifyPipe } from '../util/stringify.pipe';
 })
 export class SchemaComponent {
 
+  public loading:boolean = true;
   public deleting:boolean = false;
 
   public form:FormGroup;
@@ -30,8 +36,8 @@ export class SchemaComponent {
   private added_fields_control:AbstractControl;
 
   private id:string;
-  private schema_info:Object;
-  private schema_properties:SchemaMetaInfo;
+  private schema_info:SchemaInfo;
+  // private schema_properties:SchemaInfo;
   private added_fields:Field[] = [];
   public addField:Field;
   private timestamp:TimestampFieldInfo;
@@ -43,37 +49,46 @@ export class SchemaComponent {
               private router: Router,
               private service: SchemaService,
               private fb:FormBuilder){
-    // this.childModal = new AddFieldModalComponent();
-    // this.addField = new Field(this.randomString(5));
   }
 
   ngOnInit() {
+    let self = this;
     this.route.params.subscribe(path_info => {
       this.id = path_info["id"];
-      this.schema_info = this.service.getSchema(this.id);
-      this.schema_properties = this.service.getSchemaProperties(this.id)
-      this.timestamp = this.schema_info["fields"].filter(elem => elem.id == "timestamp")[0];
+      this.service.getSchema(this.id)
+        .then(info => {
+          self.initWithInfo(info);
+          self.loading = false;
+        })
+        .catch(error => alert(JSON.stringify(error)));
+    });
+  }
 
-      // build the form information based on the retrieved schema properties
-      var group = {
-        'name': [this.schema_properties.name, Validators.compose([Validators.required, Validators.minLength(4)])],
-        'aliases': [this.schema_properties.aliases, []],
-        'ts_aliases': [this.timestamp.aliases, []],
-        'ts_formats': [this.timestamp.formats, []],
-        'fields': this.fb.array([]),
-        'added_fields': this.fb.array([])
-      }
+  private initWithInfo(info:SchemaInfo){
+    this.schema_info = info;
+    console.log("Initializing schema info for: "+JSON.stringify(info));
+    this.timestamp = <TimestampFieldInfo> this.schema_info["fields"].filter(elem => elem.name == "timestamp")[0];
+    if(!this.timestamp){ alert("Internal server error - missing timestamp field. Please notify help@fineo.io"); }
 
-      this.form = this.fb.group(group);
-      this.name = this.form.controls['name']
-      this.aliases = this.form.controls['aliases']
-      this.ts_aliases = this.form.controls['ts_aliases']
-      this.ts_formats = this.form.controls['ts_formats']
+    // build the form information based on the retrieved schema properties
+    var group = {
+      'name': [this.schema_info.name, Validators.compose([Validators.required, Validators.minLength(4)])],
+      'aliases': [this.schema_info.aliases, []],
+      'ts_aliases': [this.timestamp.aliases, []],
+      'ts_formats': [this.timestamp.formats, []],
+      'fields': this.fb.array([]),
+      'added_fields': this.fb.array([])
+    }
 
-      this.initFields();
-      this.fields = this.form.controls['fields']
-      this.added_fields_control = this.form.controls['added_fields']
-    })
+    this.form = this.fb.group(group);
+    this.name = this.form.controls['name'];
+    this.aliases = this.form.controls['aliases'];
+    this.ts_aliases = this.form.controls['ts_aliases'];
+    this.ts_formats = this.form.controls['ts_formats'];
+
+    this.initFields();
+    this.fields = this.form.controls['fields'];
+    this.added_fields_control = this.form.controls['added_fields'];
   }
 
   private initFields(){

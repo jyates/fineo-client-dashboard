@@ -52,6 +52,10 @@ export class Login implements LoggedIn {
   }
 
   public onSubmit(values:Object):void {
+    if(this.submitted){
+      console.log("Already submitted... going to wait instead.")
+      return;
+    }
     console.log("Submitted: "+JSON.stringify(values))
     this.submitted = true;
     if (this.form.valid) {
@@ -62,11 +66,12 @@ export class Login implements LoggedIn {
   // successful login, we are done!
   loggedIn():void {
     this.router.navigate(['/pages/dashboard']);
+    this.submitted = false;
   }
 
   loginFailed(reason:string):void {
-    this.submitted = false;
     this.errorMessage = reason;
+    this.submitted = false;
   }
 
   resetPasswordRequired(attributesToUpdate:Object, requiredAttributes, callback:(password:string) => void){
@@ -81,23 +86,26 @@ export class Login implements LoggedIn {
     this.passwordCallback = null;
     this.passwordAttributes = null;
     this.passwordAdditionalAttributes = null;
+    this.submitted = false;
     this.passwordModal.hide();
   }
 
   updatePasswordFromModal():void{
     console.log("Updating password----")
     this.passwordCallback(this.newPassword);
+    this.submitted = false;
     this.passwordModal.hide();
   }
 
   resetPasswordFailed(message:string):void {
     console.log("Failed to reset password - "+message);
-    this.submitted = false;
     this.passwordResetReason = message;
     this.failedResetModal.show();
+    this.submitted = false;
   }
 
   hideFailedResetModal():void{
+    this.submitted = false;
     this.failedResetModal.hide();
   }
 }

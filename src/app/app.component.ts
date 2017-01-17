@@ -8,6 +8,7 @@ import { BaThemeConfig } from './theme/theme.config';
 import { BaMenuService } from './theme';
 import {ComponentsHelper } from 'ng2-bootstrap';
 import { SchemaService } from './services/schema.service'
+import { UserService } from './services/user.service'
 
 import { MENU } from './app.menu';
 /*
@@ -37,7 +38,7 @@ export class App {
               private viewContainerRef: ViewContainerRef,
               private schemaService: SchemaService) {
 
-    var routes = this.updateMenuForSchemas(<Routes>MENU, schemaService)
+    var routes = this.updateMenuForSchemas(<Routes>MENU);
     this._menuService.updateMenuByRoutes(routes);
 
     this._fixModals();
@@ -83,34 +84,69 @@ export class App {
     };
   }
 
-  private updateMenuForSchemas(menu:Route[], schemaService:SchemaService):Route[]{
+  private updateMenuForSchemas(menu:Route[]):Route[]{
     var schemaMenu = menu[0]["children"].filter(function(route){
       return route.path == "schemas";
     })[0];
     var schemas = [];
-    schemaService.schemas().forEach(function(schema){
-      schemas.push({
-        path: ["schemas", "inst", schema["id"]],
+    // start by setting the children to 'loading'
+    schemas.push({
+        path: ["schemas", "loading"],
         data: {
           menu: {
-            title: schema["name"]
+            title: "LOADING..."
+          }
+        }
+    });
+    schemaMenu["children"] = schemas
+
+    // add a listener for when we set the api key to ensure that we update the schema
+    let self = this;
+    this._state.subscribe(UserService.API_KEY_STATE, (key) =>{
+      self.updateSchemas(menu, schemas);
+    });
+    return menu;
+  }
+
+  private updateSchemas(menu:Route[], schemas:any[]):void{
+    let self = this;
+    console.log("Updating schemas!");
+    this.schemaService.schemas().then(schemaMeta =>{
+      console.log("Making menu update");
+      // reset the schemas array
+      schemas.length = 0;
+      // add all the schemas that we hear about
+      schemaMeta.forEach(function(schema){
+        schemas.push({
+          path: ["schemas", "inst", schema["id"]],
+          data: {
+            menu: {
+              title: schema["name"]
+            }
+          }
+        })
+      });
+
+        // add a 'plus' schema with no name
+      schemas.push({
+        path: "create",
+        data: {
+          menu:{
+            title: "",
+            icon: 'ion-plus-circled',
           }
         }
       })
-    });
-    // add a 'plus' schema with no name
-    schemas.push({
-      path: "create",
-      data: {
-        menu:{
-          title: "",
-          icon: 'ion-plus-circled',
-        }
-      }
+
+      // finally, update the actual menu
+      self._menuService.updateMenuByRoutes(menu);
     })
-
-    schemaMenu["children"] = schemas
-
-    return menu;
+    // reading failed!
+    .catch(error =>{
+      let err = JSON.stringify(error);
+      console.log("Failed to load schema...");
+      console.log(err)
+      alert("Failed to load schema information. Please login again and send console information to help@fineo.io");
+    });
   }
 }

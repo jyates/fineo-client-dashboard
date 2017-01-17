@@ -19,7 +19,6 @@ export class FineoApi {
   static BATCH_URL  = "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod";
   static META_URL   = "https://q5zrhiqdx4.execute-api.us-east-1.amazonaws.com/prod";
 
-  private api:Api;
   public data:Data;
   public schema:Schema;
   public meta:Metadata;
@@ -28,6 +27,12 @@ export class FineoApi {
      this.data = new Data(this.users);
      this.schema = new Schema(this.users);
      this.meta = new Metadata(this.users);
+  }
+
+  public setApiKey(key:string):void{
+    this.data.setApiKey(key);
+    this.schema.setApiKey(key);
+    this.meta.setApiKey(key);
   }
 }
 
@@ -73,6 +78,10 @@ class BaseExec {
     }
    });
   }
+
+  setApiKey(key:string){
+    this.api.apiKey = key;
+  }
 }
 
 interface WithApiGatewayClient{
@@ -85,10 +94,13 @@ export class Metadata extends BaseExec {
    }
 
    public getApiKey():Promise<any>{
+     // skip using an api key for this - we are getting the api key!
+     let opts = new FineoRequestOptions();
+     opts.skipApiKey = true;
       return this.api.doGet("/meta/user", {
         // ewww, way to far into objects here... but its way easier
         "username": this.users.cognitoUtil.getCurrentUser().getUsername()
-      });  
+      }, opts);
    }
 }
 
@@ -101,6 +113,10 @@ export class Data {
     this.stream = new Stream(users)
   }
 
+  public setApiKey(key:string){
+    this.batch.setApiKey(key);
+    this.stream.setApiKey(key);
+  }
 }
 
 export class Stream extends BaseExec {
@@ -178,7 +194,7 @@ export class Schema extends BaseExec {
   //--------
 
   // CREATE
-  public creatField(body:Object): Promise<any>{
+  public createField(body:Object): Promise<any>{
    return this.api.doPost("/schema/field", body); 
   }
 
@@ -198,8 +214,13 @@ export class Schema extends BaseExec {
   // FIELD deletes are NOT supported
 }
 
+class FineoRequestOptions{
+  public skipApiKey:boolean = false;
+  constructor(){}
+}
+
 class Api {
-  private apiKey:string = null;
+  public apiKey:string = null;
   constructor(private exec:BaseExec){
   }
 
@@ -215,7 +236,7 @@ class Api {
     return this.sendBody("patch", ending, body);
   }
 
-  public doGet(ending: string, queries?:Object):Promise<any>{
+  public doGet(ending: string, queries?:Object, options?:FineoRequestOptions):Promise<any>{
     if(queries === undefined || queries == null){ queries = {}; }
     var request = {
       verb: 'get'.toUpperCase(),
@@ -224,7 +245,7 @@ class Api {
       queryParams: queries,
       body: {},
     }
-    return this.doCall(request);
+    return this.doCall(request, options);
   }
 
   public doDelete( ending:string, body?:Object, queries?:Object):Promise<any>{
@@ -251,32 +272,38 @@ class Api {
     return this.doCall(request);
   }
 
-  private doCall(request:Object):Promise<any>{
+  private doCall(request:Object, options?:FineoRequestOptions):Promise<any>{
     let api = this;
     return new Promise(function(resolve, reject) {
       api.exec.makeCall({
         doWithClient:function(apiGatewayClient){
-          api.ensureApiKey()
-          .then(function(apikey){
+          let promise = null;
+          if(options != null && options.skipApiKey){
+            console.log("Skipping api key lookup.");
+            promise = Promise.resolve("");
+          }else{
+            promise = api.ensureApiKey();
+          }
+          promise.then(function(apikey){
             console.log("Got client, making request!");
             let response = apiGatewayClient.makeRequest(request, 'AWS_IAM', {}, apikey);
             response.then(result => resolve(result.data || {})).catch(error => reject(error));
-          }).catch(function(err:Response){
-            console.log("Failed loading the aPI key! -- "+JSON.stringify(err));
+          }).catch(err =>{
+            console.log("Failed loading the api key! -- "+JSON.stringify(err));
             reject(err);
-        });
+          });
         }
       });
     });
   }
 
   private ensureApiKey():Promise<string>{
-    if(this.apiKey != null){
-      return Observable.from(this.apiKey).toPromise();
-    }
-    //TODO support API key look up call for user, don't just use the canary API KEY
-    return new Promise(function(resolve, reject){
-      resolve("yLi6cd4Gpi2RsX8R1tvay6JPLFTXuyTaEFRp4A1d");
+    return new Promise((resolve, reject) =>{
+      if(this.apiKey != null){
+        resolve(this.apiKey);
+      } else {
+        reject("Missing API Key!");
+      }
     });
   }
 }
