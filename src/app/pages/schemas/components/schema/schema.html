@@ -1,21 +1,14 @@
-<div *ngIf="loading || testing">
-  <!-- <div id="fade"></div> -->
-  <div bsModal #smModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-        </div>
-        <div class="modal-body">
-          <img id="loader" src="assets/img/loading.gif" />
-        </div>
-        <div class="modal-footer">
-        </div>
+<div *ngIf="loading">
+   <div class="schema-spin-main" >
+    <div class="schema-spin-block" >
+      <div class="spinner" *ngIf="submitted">
+        <sk-three-bounce></sk-three-bounce>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="!loading && !testing">
+<div *ngIf="!loading">
   <div class="schema-block">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
       <div class="row">

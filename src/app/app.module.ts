@@ -5,6 +5,9 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 
+/** Spinner styles */
+import {ThreeBounceComponent} from 'ng2-spin-kit/spinners'
+
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -62,7 +65,8 @@ type StoreType = {
 @NgModule({
   bootstrap: [App],
   declarations: [
-    App
+    App,
+    ThreeBounceComponent,
   ],
   imports: [ // import Angular's modules
     BrowserModule,

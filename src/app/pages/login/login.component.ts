@@ -8,7 +8,7 @@ import { FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/for
 import { Router} from '@angular/router';
 
 import { ModalDirective } from 'ng2-bootstrap';
-import { RotatingPlaneComponent } from 'ng2-spin-kit/app/spinner/rotating-plane.component'
+import { ThreeBounceComponent } from 'ng2-spin-kit'
 
 // internal libs
 import {
@@ -25,9 +25,6 @@ import { SplitCamelCase } from './split.camelcase.pipe'
   template: require('./login.html'),
 })
 export class Login implements LoggedIn {
-
-  public testing:boolean = true;
-
   public form:FormGroup;
   public email:AbstractControl;
   public password:AbstractControl;
@@ -36,7 +33,6 @@ export class Login implements LoggedIn {
 
   @ViewChild('childModal') passwordModal: ModalDirective;
   @ViewChild('failedReset') failedResetModal: ModalDirective;
-  @ViewChild('loadingModal') loadingModal: ModalDirective;
 
   public passwordAdditionalAttributes:Object;
   public passwordAttributes:Object;
@@ -57,16 +53,15 @@ export class Login implements LoggedIn {
   }
 
   public onSubmit(values:Object):void {
-    this.loadingModal.show();
     if(this.submitted){
       console.log("Already submitted... going to wait instead.")
       return;
     }
     console.log("Submitted: "+JSON.stringify(values))
 
-    this.submitted = true;
     if (this.form.valid) {
-      // this.users.login(this.email.value, this.password.value, this);
+      this.submitted = true;
+      this.users.login(this.email.value, this.password.value, this);
     }
   }
 

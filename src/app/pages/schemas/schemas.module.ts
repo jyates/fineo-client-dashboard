@@ -6,6 +6,8 @@ import { AlertModule } from 'ng2-bootstrap';
 import { NgaModule } from '../../theme/nga.module';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
+// import * as spinner from 'ng2-spin-kit/app/spinners';
+
 import { AddSchemaComponent }  from './components/add/add.component'
 import { AddFieldComponent }   from './components/add-field/add-field.component'
 import { FieldSubComponent }   from './components/field/field.component'
@@ -25,6 +27,7 @@ import { routing }             from './schemas.routing';
     routing
   ],
   declarations: [
+    // spinner.ThreeBounceComponent,
     Schemas,
     SchemaComponent,
     FieldSubComponent,

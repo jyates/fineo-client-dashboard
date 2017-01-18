@@ -6,6 +6,8 @@ import {NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { ModalDirective } from 'ng2-bootstrap';
 import { AlertModule } from 'ng2-bootstrap';
 
+import { ThreeBounceComponent } from 'ng2-spin-kit/app/spinner/three-bounce.component'
+
  import {
    BaThemePreloader,
    BaThemeSpinner
@@ -82,6 +84,7 @@ export class SchemaComponent {
 
     // hide spinner once schema loading has completed
     BaThemePreloader.load().then((values) => {
+      console.log("Done loading schema!")
       self.loading = false;
       // this._spinner.hide();
     });
