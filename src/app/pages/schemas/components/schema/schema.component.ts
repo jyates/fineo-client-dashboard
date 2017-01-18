@@ -8,6 +8,8 @@ import { AlertModule } from 'ng2-bootstrap';
 
 import { ThreeBounceComponent } from 'ng2-spin-kit/app/spinner/three-bounce.component'
 
+import {GlobalState} from '../../../../global.state';
+
  import {
    BaThemePreloader,
    BaThemeSpinner
@@ -33,7 +35,6 @@ export class SchemaComponent {
 
   public loading:boolean = true;
   public deleting:boolean = false;
-  public testing:boolean = true;
 
   public form:FormGroup;
   private name:AbstractControl;
@@ -57,7 +58,7 @@ export class SchemaComponent {
               private router: Router,
               private service: SchemaService,
               private fb:FormBuilder,
-              private _spinner: BaThemeSpinner){
+              private state:GlobalState){
   }
 
   ngOnInit() {
@@ -68,9 +69,6 @@ export class SchemaComponent {
   }
 
   private loadSchema(){
-    // // show a spinner
-    // this._spinner.show();
-
     // register the "schema loading" work
     this.loading = true;
     let self = this;
@@ -86,7 +84,6 @@ export class SchemaComponent {
     BaThemePreloader.load().then((values) => {
       console.log("Done loading schema!")
       self.loading = false;
-      // this._spinner.hide();
     });
   }
 
@@ -156,13 +153,22 @@ export class SchemaComponent {
      // delete the schema
      console.log("Deleteing schema!");
      this.deleting = true;
-     this.service.delete_schema(this.id);
-     this.deleting = false;
-     this.returnHome();
+     this.service.delete_schema(this.id).then(response =>{
+       // first update the menu that we deleted a schema and it should reload
+       this.state.notifyDataChanged(SchemaService.SCHEMA_CHANGE_STATE, "delete - "+this.id+": ("+this.schema_info.name+")");
+
+       // return home
+       this.deleting = false;
+       this.returnHome();
+   }).catch(err =>{
+     console.log("Failed to delete schema \n", JSON.stringify(err));
+      alert("Failed to delete schema. Please send console output to help@fineo.io");
+   });
+     
   }
 
   private returnHome():void{
-    var target = '/'
+    var target = '/pages/dashboard'
     console.log("redirecting to: "+target);
     this.router.navigate([target]);
   }
@@ -186,7 +192,6 @@ export class SchemaComponent {
       // clear the old state
       this.addField = null;
     }
-    // this.childModal.hide(save);
   }
 
   private randomString(len:number):string{
