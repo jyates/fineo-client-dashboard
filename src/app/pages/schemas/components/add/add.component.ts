@@ -2,7 +2,12 @@ import { Component, ViewEncapsulation, Input } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { SchemaService, SchemaMetaInfo, TimestampFieldInfo } from '../../../../services/schema.service'
+import {
+  SchemaService,
+  SchemaMetaInfo,
+  TimestampFieldInfo
+} from '../../../../services/schema.service'
+import {GlobalState} from '../../../../global.state';
 
 @Component({
   selector: 'add-schema-component',
@@ -18,10 +23,12 @@ export class AddSchemaComponent {
   private ts_aliases:AbstractControl;
   private ts_formats:AbstractControl;
   private fields:FormArray;
+  private submitted:boolean = false;
 
   constructor(private router: Router,
               private service: SchemaService,
-              private fb:FormBuilder){
+              private fb:FormBuilder,
+              private state:GlobalState){
     var group = {
         'name': ['', Validators.compose([Validators.required])],
         'aliases': ['', []],
@@ -47,7 +54,17 @@ export class AddSchemaComponent {
     }));
   }
 
+  public deleteField(index:number):void {
+    this.fields.removeAt(index);
+  }
+
   public onSubmit(form, valid):void{
+    if(this.submitted){
+      console.log("Waiting for server response...");
+      return;
+    }
+
+    this.submitted = true;
     // save the changes
     console.log("Submitted: "+JSON.stringify(form));
     var name = this.name.value;
@@ -74,10 +91,14 @@ export class AddSchemaComponent {
       }
     }
 
+    // notify the menu builder that we created a new schema
+    this.state.notifyDataChanged(SchemaService.SCHEMA_CHANGE_STATE, "add - "+name);
+
     // DONE! Now, go to the schema page for the created schema
     var target = '/pages/schemas/inst/'+id;
     console.log("redirecting to: "+target);
     this.router.navigate([target]);
+    this.submitted = false;
   }
 
   private checkArraySet(val:string):string[]{

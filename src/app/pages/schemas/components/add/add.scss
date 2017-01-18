@@ -1,1 +1,55 @@
 @import '../../../../theme/sass/conf/conf';
+
+$text-color: $default;
+
+.schema-block{
+  margin: 0 auto;
+  border-radius: 5px;
+  color: #fff;
+
+  h1 {
+    font-weight: $font-light;
+    margin-bottom: 28px;
+  }
+  p {
+    font-size: 16px;
+  }
+  a {
+    text-decoration: none;
+    outline: none;
+    transition: all 0.2s ease;
+    color: $primary;
+    &:hover {
+      color: $primary-dark;
+    }
+  }
+
+  .control-label {
+    padding-top: 11px;
+    color: $text-color;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+}
+
+/* Showing the loading spinner */
+.schema-spin-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.schema-spin-block {
+  width: 540px;
+  margin: 0 auto;
+  border-radius: 5px;
+  /*@include bg-translucent-dark(0.55);
+  color: #fff; */
+  padding: 32px;
+}

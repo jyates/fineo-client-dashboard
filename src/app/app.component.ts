@@ -103,6 +103,12 @@ export class App {
     // add a listener for when we set the api key to ensure that we update the schema
     let self = this;
     this._state.subscribe(UserService.API_KEY_STATE, (key) =>{
+      console.log("Updating schema for initial api key load");
+      self.updateSchemas(menu, schemas);
+    });
+
+    this._state.subscribe(SchemaService.SCHEMA_CHANGE_STATE, (key) =>{
+      console.log("Updating schema for "+key);
       self.updateSchemas(menu, schemas);
     });
     return menu;

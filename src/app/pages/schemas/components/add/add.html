@@ -2,9 +2,17 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit(form.value, form.validate)" class="form-horizontal">
     <div class="row">
       <div class="col-md-1">
-        <button type="submit" [disabled]="!form.valid" class="btn btn-success btn-md btn-raised">Save</button>
+        <button type="submit" [disabled]="(!form.valid) && (!submitted)" class="btn btn-success btn-md btn-raised">Save</button>
       </div>
     </div>
+
+    <!-- Show the spinner if we are waiting for a submission to go through -->
+    <div *ngIf="submitted">
+      <div class="spinner">
+        <sk-three-bounce></sk-three-bounce>
+      </div>
+    </div>
+
     <br/>
     <div class="form-group row">
       <div class="col-lg-10">
@@ -48,6 +56,8 @@
     <div formArrayName="fields">
       <div *ngIf="addField != undefined">
         <div *ngFor="let control of form.controls['fields'].controls; let i = index">
+        <button align="right" class="btn btn-xs btn-danger edit-card" 
+          type="button" (click)="deleteField(i)"><i class="ion-close-round"></i></button>
           <add-field-component [index]="i" [fieldForm]="control"></add-field-component>
         </div>
       </div>

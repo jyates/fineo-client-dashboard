@@ -5,6 +5,8 @@ import { FineoApi, Schema } from './fineo.service';
 @Injectable()
 export class SchemaService {
 
+  public static SCHEMA_CHANGE_STATE:string = "fineo.schema.change";
+
   private schemaApi:Schema;
   constructor(fineo:FineoApi){
     this.schemaApi = fineo.schema;
