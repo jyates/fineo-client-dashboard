@@ -70,52 +70,79 @@ export class AddSchemaComponent {
     var name = this.name.value;
     
     let self = this;
-    this.service.createSchema(name, this.aliases.value).then(id =>{
-      // add timestamp aliases, if any
+    this.service.createSchema(name, this.aliases.value)
+    // start with adding the fields - those are the most annoying to get back
+    .then(id =>{
+        // add any fields
+        let fieldPromises = []
+        self.fields.controls.forEach(f =>{
+          let field = <FormGroup>f;
+          let fname = field.controls['name'].value;
+          let ftype =  field.controls['type'].value;
+          let faliases = field.controls['aliases'].value;
+          console.log("Adding field: ",fname,",", ftype+",", faliases);
+          fieldPromises.push(self.service.addField(name, fname, ftype, faliases));
+        })
+        if(fieldPromises.length > 0){
+          console.log("Adding some fields...");
+          return Promise.all(fieldPromises).then(result =>{ console.log("resolving with id: ", id); return Promise.resolve(id)});
+        } else {
+          console.log("resolving with id: ", id); 
+          return Promise.resolve(id);
+        }
+    })
+     // add timestamp aliases, if any
+    .then(id =>{
+      console.log("Starting with id: ", id);
+      console.log("trying timestamp aliases:", self.ts_aliases.value)
       var arr = <string[]>self.checkArraySet(self.ts_aliases.value)
       if(arr != null){
-        return self.service.setTimestampAliases(name, self.ts_aliases.value).then(result =>{ return Promise.resolve(id)});  
-      }else{
+        console.log("Adding timestamp aliases:", arr);
+        return self.service.setTimestampAliases(name, self.ts_aliases.value).then(result =>{ console.log("resolving with id: ", id); return Promise.resolve(id)});  
+      } else {
+        console.log("resolving with id: ", id); 
         return Promise.resolve(id)
       }
     }).then(id =>{
        // add timestamp patterns
-      var arr = <string[]>self.checkArraySet(self.ts_formats.value);
-      if(arr != null){ 
-        return self.service.setMetricTimestampPatterns(name, arr).then(result =>{ return Promise.resolve(id)});
-      }else{
-        return Promise.resolve(id);
-      }
-    }).then(id =>{
-      // add any fields
-      let fieldPromises = []
-      self.fields.controls.forEach(f =>{
-        let field = <FormGroup>f;
-        let fname = field.controls['name'].value;
-        let ftype =  field.controls['type'].value;
-        let faliases = field.controls['aliases'].value;
-        console.log("Adding field: ",fname,",", ftype+",", faliases);
-        fieldPromises.push(self.service.addField(name, fname, ftype, faliases));
-      })
-      if(fieldPromises.length > 0){
-        console.log("Adding some fields...");
-        return Promise.all(fieldPromises).then(result =>{ return Promise.resolve(id)});
+       console.log("trying timestamp patterns:", self.ts_formats.value)
+      var tsArr = <string[]>self.checkArraySet(self.ts_formats.value);
+      var aliases = <string[]>self.checkArraySet(self.aliases.value);
+
+      if(tsArr != null || aliases != null){ 
+        console.log("Adding timestamp patterns: ", tsArr, " and aliases: ", aliases);
+        return self.service.setMetricAliasesAndTimestampPatterns(name, aliases, tsArr).then(result =>{ console.log("resolving with id: ", id); return Promise.resolve(id)});
       } else {
+        console.log("resolving with id: ", id); 
         return Promise.resolve(id);
       }
     }).then(id =>{
+      console.log("resolving with id: ", id); 
       // notify the menu builder that we created a new schema
       self.state.notifyDataChanged(SchemaService.SCHEMA_CHANGE_STATE, "add - "+id+": ("+name+")");
       return Promise.resolve(id);
     }).then(id =>{
+      console.log("DONE with id: ", id); 
        // DONE! Now, go to the schema page for the created schema
       var target = '/pages/schemas/inst/'+id;
       console.log("redirecting to: "+target);
       this.router.navigate([target]);
       this.submitted = false;
     }).catch(err =>{
+      // still notify a state change for failure - we might have got partially through it, in which case the client can manage on their own
+      this.state.notifyDataChanged(SchemaService.SCHEMA_CHANGE_STATE, "add - unknown: "+name);
+
       console.log(JSON.stringify(err));
-      alert("Failed to completely save schema! Please send the console output to help@fineo.io");
+      if( err.error.data.type != undefined){
+        switch(err.error.data.type){
+          case "Bad Request":
+            alert("Some parts of the schema did not update because of bad data:\n"+err.error.data.message);
+            break;
+          default:
+            alert("Failed to completely save schema! Please send the console output to help@fineo.io");
+        }
+      }
+      
       // go back to the dashboard
       this.router.navigate(["/pages/dashboard"])
     })
@@ -124,6 +151,7 @@ export class AddSchemaComponent {
   private checkArraySet(val:string):string[]{
     if(val != undefined && val != null){
       let arr = val.split(",");
+      return arr;
     } 
     return null;
   }

@@ -9,9 +9,8 @@
 ## UI/Frontend
 
  * access guards
- * add user info to application info hash
- * device mgmt backend
  * schema mgmt backend
+ * device mgmt backend
  * data upload backend
  * schema meta management page
  * profile info page

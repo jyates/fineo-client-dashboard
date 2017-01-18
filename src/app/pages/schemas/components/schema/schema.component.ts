@@ -41,8 +41,8 @@ export class SchemaComponent {
   private aliases:AbstractControl;
   private ts_aliases:AbstractControl;
   private ts_formats:AbstractControl;
-  private fields:AbstractControl;
-  private added_fields_control:AbstractControl;
+  private fields:FormArray;
+  private added_fields_control:FormArray;
 
   private id:string;
   private schema_info:SchemaInfo;
@@ -110,8 +110,8 @@ export class SchemaComponent {
     this.ts_formats = this.form.controls['ts_formats'];
 
     this.initFields();
-    this.fields = this.form.controls['fields'];
-    this.added_fields_control = this.form.controls['added_fields'];
+    this.fields = <FormArray>this.form.controls['fields'];
+    this.added_fields_control = <FormArray>this.form.controls['added_fields'];
   }
 
   private initFields(){
@@ -133,9 +133,10 @@ export class SchemaComponent {
 
   private newFieldGroup(field:Field){
     return this.fb.group({
-      name: [field.name, []],
+      name: [field.name, [Validators.required]],
+      originalName:[field.name, [Validators.required]],
       aliases: [field.aliases, []],
-      type: [field.type, []]
+      type: [field.type, [Validators.required]]
     });
   }
 
@@ -147,6 +148,78 @@ export class SchemaComponent {
   public onSubmit(form):void{
     // save the changes
     console.log("Submitted: "+JSON.stringify(form));
+    // this.name = this.form.controls['name'];
+    // this.aliases = this.form.controls['aliases'];
+    // this.ts_formats = this.form.controls['ts_formats'];
+    var promise = null;
+    if(this.name.dirty || this.aliases.dirty || this.ts_formats.dirty){
+      promise = this.service.setSchemaMetadata(this.schema_info.name, this.name.value, this.aliases.value, this.ts_formats.value)
+        // update the schema name that we display
+        .then(result => this.schema_info.name = this.name.value)
+        // and notify that we changed state
+        .then(result =>  this.updateStateChange("updateName"));
+    }
+    // this.ts_aliases = this.form.controls['ts_aliases'];
+    if(this.ts_aliases.dirty){
+      if(promise == null){
+        promise = this.service.setTimestampAliases(this.schema_info.name, this.ts_aliases.value);
+      } else {
+        promise.then(result =>{ return this.service.setTimestampAliases(this.schema_info.name, this.ts_aliases.value);});
+      }
+    }
+    // fields/added fields are a little more complex b/c we need to handle them in sequence - concurrent modifications are challenging for the system
+
+    // field updates
+    // this.fields = this.form.controls['fields'];
+    var fields = [];
+    this.fields.controls.forEach((control:FormGroup) =>{
+      let controls = control.controls;
+      let nameControl = controls['name'];
+      let aliasControl = controls['aliases'];
+      if(nameControl.dirty || aliasControl.dirty){
+        fields.push(() =>{ return this.service.updateField(this.schema_info.name, controls['originalName'].value, nameControl.value, aliasControl.value);})
+      }
+    });
+    if(fields.length > 0){
+      if(promise == null){
+        promise = this.pseries(fields);
+      } else {
+        promise = promise.then(result => { return this.pseries(fields); });
+      }
+    }
+
+    // new fields
+    // this.added_fields_control = this.form.controls['added_fields'];
+    let added_fields = []
+    this.added_fields_control.controls.forEach((control:FormGroup) =>{
+      let controls = control.controls;
+      let nameControl = controls['name'];
+      let aliasControl = controls['aliases'];
+      let typeControl = controls['type'];
+      added_fields.push(() =>{ return this.service.addField(this.schema_info.name, nameControl.value, typeControl.value, aliasControl.value);});
+    });
+
+    if(added_fields.length > 0){
+      if(promise == null){
+        promise = this.pseries(added_fields);
+      } else {
+        promise = promise.then(result => { return this.pseries(added_fields); });
+      }
+    }
+  }
+
+  /**
+   * Exexcute a series of "promise-factories" in series. Note: calling Promise.then() executes it immediately.
+  */
+  private pseries(list):Promise<any> {  
+    var p = Promise.resolve();
+    return list.reduce(function(pacc, fn) {
+      return pacc = pacc.then(fn);
+    }, p);
+  }
+
+  private updateStateChange(type:string){
+    this.state.notifyDataChanged(SchemaService.SCHEMA_CHANGE_STATE, type+" - "+this.id+": ("+this.schema_info.name+")");
   }
 
   public delete_schema(){
@@ -155,7 +228,7 @@ export class SchemaComponent {
      this.deleting = true;
      this.service.delete_schema(this.id).then(response =>{
        // first update the menu that we deleted a schema and it should reload
-       this.state.notifyDataChanged(SchemaService.SCHEMA_CHANGE_STATE, "delete - "+this.id+": ("+this.schema_info.name+")");
+       this.updateStateChange("delete");
 
        // return home
        this.deleting = false;
@@ -222,8 +295,8 @@ export class Field{
   error:string = null;
   name:string;
   aliases:string[];
-  type:string[] = [];
-  constructor(private id:string){}
+  type:string = null;
+  constructor(public id:string){}
 
   public validate():boolean{
     this.error = null;
@@ -236,15 +309,14 @@ export class Field{
     return this.error == null;
   }
 
-  private validType(t:string[]):boolean {
+  private validType(t:string):boolean {
     if (t === undefined || t == null || t.length == 0) {
       this.error = "Must specify a type!"
       return false;
     }
-    var type = t[0];
-
-    type = type.toLowerCase()
-    switch(type){
+    var type = t;
+    console.log("Got type: ", type);
+    switch(type.toLowerCase()){
       case "varchar":
       case "integer":
       case "long":
@@ -254,7 +326,7 @@ export class Field{
       case "boolean":
         return true;
       default:
-        this.error = "Not a valid type! Valid types are: varchar, integer, long, double, float, binary & boolean";
+        this.error = "Not a valid type! Valid types are: Varchar, Integer, Long, Double, Float, Binary & Boolean";
     }
     return false;
   }

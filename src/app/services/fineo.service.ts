@@ -287,9 +287,11 @@ class Api {
             promise = api.ensureApiKey();
           }
           promise.then(function(apikey){
-            console.log("Got client, making request!");
             let response = apiGatewayClient.makeRequest(request, 'AWS_IAM', {}, apikey);
-            response.then(result => resolve(result.data || {})).catch(error => reject(error));
+            response.then(result => resolve(result.data || {})).catch(error => reject({
+              request: request,
+              error: error
+            }));
           }).catch(err =>{
             console.log("Failed loading the api key! -- "+JSON.stringify(err));
             reject(err);

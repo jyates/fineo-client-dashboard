@@ -290,7 +290,6 @@ export class UserLoginService {
         AWS.config.credentials.get(function(err) {
             if (err){console.log(err);}
             else{
-                console.log("Successfully got credentials");
                 func.with(AWS.config.credentials.accessKeyId, AWS.config.credentials.secretAccessKey,AWS.config.credentials.sessionToken);
             }
         });

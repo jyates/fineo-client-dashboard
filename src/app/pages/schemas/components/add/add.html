@@ -56,8 +56,9 @@
     <div formArrayName="fields">
       <div *ngIf="addField != undefined">
         <div *ngFor="let control of form.controls['fields'].controls; let i = index">
-        <button align="right" class="btn btn-xs btn-danger edit-card" 
-          type="button" (click)="deleteField(i)"><i class="ion-close-round"></i></button>
+          <!-- delete button for uncreated field -->
+          <button class="btn btn-xs btn-danger" type="button" (click)="deleteField(i)"><i class="ion-close-round"></i></button>
+          <!-- actual field component -->
           <add-field-component [index]="i" [fieldForm]="control"></add-field-component>
         </div>
       </div>
@@ -65,7 +66,6 @@
     <div class="row">
       <div class="col-lg-3"></div>
       <div class="col-xs-1">
-        <!-- <button (click)="lgModal.show()" type="button" class="btn btn-success">Add Field</button> -->
         <button (click)="addField()" type="button" class="btn btn-success">Add Field</button>
       </div>
     </div>

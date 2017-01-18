@@ -121,6 +121,18 @@ export class SchemaService {
   }
 
   /*
+  * Set the timestamp patterns for a metric
+  */
+  public setMetricAliasesAndTimestampPatterns(name:string, aliases:string[], patterns:string[]):Promise<any> {
+    return this.schemaApi.updateMetric({
+      metricName: name,
+      aliases: aliases,
+      timestampPatterns: patterns
+    });
+  }
+
+
+  /*
   * Set the aliases for the timestmap field in a metric
   */
   public setTimestampAliases(name:string, aliases:string[]):Promise<any> {
@@ -131,17 +143,12 @@ export class SchemaService {
     });
   }
 
-  /*
-  * Set the timestamp patterns for a metric
-  */
-  public setMetricTimestampPatterns(name:string, patterns:string[]):Promise<any> {
-    let self = this;
-    return this.getSchemaInfo(name).then(info =>{
-      self.schemaApi.updateMetric({
-        name: name,
-        aliases: info.aliases,
-        timestampPatterns: patterns
-      })
+  public setSchemaMetadata(oldName:string, displayname:string, aliases:string[], timestampPatterns:string):Promise<any>{
+    return this.schemaApi.updateMetric({
+      metricName: oldName,
+      newDisplayName: displayname,
+      aliases: aliases,
+      timestampPatterns: timestampPatterns
     });
   }
 
@@ -165,6 +172,15 @@ export class SchemaService {
        return null;
     }
     return meta[0];
+  }
+
+  public updateField(schema:string, field:string, displayName: string, aliases:string[]):Promise<any>{
+    return this.schemaApi.updateField({
+      metricName: schema,
+      fieldName: field,
+      newDisplayName: displayName,
+      aliases: aliases
+    });
   }
 }
 
