@@ -68,42 +68,62 @@ export class AddSchemaComponent {
     // save the changes
     console.log("Submitted: "+JSON.stringify(form));
     var name = this.name.value;
-    // TODO: submit the schema creation to the server
-    var id = this.service.createSchema(name, this.aliases.value);
-
-    // add timestamp aliases, if any
-    var arr = <string[]>this.checkArraySet(this.ts_aliases.value)
-    if(arr != null){
-      this.service.setTimestampAliases(name, this.ts_aliases.value);  
-    }
-
-    // add timestamp patterns
-    var arr = <string[]>this.checkArraySet(this.ts_formats.value);
-    if(arr != null){ 
-      this.service.setMetricTimestampPatterns(name, arr);
-    }
     
-    // add any fields
-    if(this.fields.length > 0){
-      for (var i = 0; i < this.fields.length; i++) {
-        var field = <FormGroup>this.fields.at(i)
-        this.service.addField(name, field.controls['name'].value, field.controls['type'].value, field.controls['aliases'].value);
+    let self = this;
+    this.service.createSchema(name, this.aliases.value).then(id =>{
+      // add timestamp aliases, if any
+      var arr = <string[]>self.checkArraySet(self.ts_aliases.value)
+      if(arr != null){
+        return self.service.setTimestampAliases(name, self.ts_aliases.value).then(result =>{ return Promise.resolve(id)});  
+      }else{
+        return Promise.resolve(id)
       }
-    }
-
-    // notify the menu builder that we created a new schema
-    this.state.notifyDataChanged(SchemaService.SCHEMA_CHANGE_STATE, "add - "+name);
-
-    // DONE! Now, go to the schema page for the created schema
-    var target = '/pages/schemas/inst/'+id;
-    console.log("redirecting to: "+target);
-    this.router.navigate([target]);
-    this.submitted = false;
+    }).then(id =>{
+       // add timestamp patterns
+      var arr = <string[]>self.checkArraySet(self.ts_formats.value);
+      if(arr != null){ 
+        return self.service.setMetricTimestampPatterns(name, arr).then(result =>{ return Promise.resolve(id)});
+      }else{
+        return Promise.resolve(id);
+      }
+    }).then(id =>{
+      // add any fields
+      let fieldPromises = []
+      self.fields.controls.forEach(f =>{
+        let field = <FormGroup>f;
+        let fname = field.controls['name'].value;
+        let ftype =  field.controls['type'].value;
+        let faliases = field.controls['aliases'].value;
+        console.log("Adding field: ",fname,",", ftype+",", faliases);
+        fieldPromises.push(self.service.addField(name, fname, ftype, faliases));
+      })
+      if(fieldPromises.length > 0){
+        console.log("Adding some fields...");
+        return Promise.all(fieldPromises).then(result =>{ return Promise.resolve(id)});
+      } else {
+        return Promise.resolve(id);
+      }
+    }).then(id =>{
+      // notify the menu builder that we created a new schema
+      self.state.notifyDataChanged(SchemaService.SCHEMA_CHANGE_STATE, "add - "+id+": ("+name+")");
+      return Promise.resolve(id);
+    }).then(id =>{
+       // DONE! Now, go to the schema page for the created schema
+      var target = '/pages/schemas/inst/'+id;
+      console.log("redirecting to: "+target);
+      this.router.navigate([target]);
+      this.submitted = false;
+    }).catch(err =>{
+      console.log(JSON.stringify(err));
+      alert("Failed to completely save schema! Please send the console output to help@fineo.io");
+      // go back to the dashboard
+      this.router.navigate(["/pages/dashboard"])
+    })
   }
 
   private checkArraySet(val:string):string[]{
     if(val != undefined && val != null){
-      return val.split(",");
+      let arr = val.split(",");
     } 
     return null;
   }

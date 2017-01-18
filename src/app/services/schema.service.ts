@@ -109,6 +109,7 @@ export class SchemaService {
   */
   public createSchema(name:string, aliases:string[]):Promise<string> {
     let self = this;
+    console.log("Creating schema...")
     return this.schemaApi.createMetric({
       metricName: name,
       aliases: aliases
@@ -120,11 +121,12 @@ export class SchemaService {
   }
 
   /*
-  * Set the aliases for the timestmap field for a metric
+  * Set the aliases for the timestmap field in a metric
   */
   public setTimestampAliases(name:string, aliases:string[]):Promise<any> {
     return this.schemaApi.updateField({
-      name: name,
+      metricName: name,
+      fieldName: "timestamp",
       aliases: aliases
     });
   }

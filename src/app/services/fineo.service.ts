@@ -195,6 +195,7 @@ export class Schema extends BaseExec {
 
   // CREATE
   public createField(body:Object): Promise<any>{
+    console.log("Attempting to create field with request: "+JSON.stringify(body));
    return this.api.doPost("/schema/field", body); 
   }
 
@@ -208,6 +209,7 @@ export class Schema extends BaseExec {
 
   // UPDATE
   public updateField(body:Object):Promise<any>{
+    console.log("Attempting to update field with request: "+JSON.stringify(body));
     return this.api.doPatch("/schema/field", body);
   }
 
