@@ -90,7 +90,7 @@ $text-color: $default;
   width: 540px;
   margin: 0 auto;
   border-radius: 5px;
-  @include bg-translucent-dark(0.55);
-  color: #fff;
+  /*@include bg-translucent-dark(0.55);
+  color: #fff; */
   padding: 32px;
 }

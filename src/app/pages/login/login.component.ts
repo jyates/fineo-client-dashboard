@@ -8,7 +8,6 @@ import { FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/for
 import { Router} from '@angular/router';
 
 import { ModalDirective } from 'ng2-bootstrap';
-import { ThreeBounceComponent } from 'ng2-spin-kit'
 
 // internal libs
 import {

@@ -25,7 +25,8 @@ import {
   BaMultiCheckbox,
   BaPageTop,
   BaPictureUploader,
-  BaSidebar
+  BaSidebar,
+  ThreeBounceComponent
 } from './components';
 
 import { BaCardBlur } from './components/baCard/baCardBlur.directive';
@@ -68,7 +69,8 @@ const NGA_COMPONENTS = [
   BaMultiCheckbox,
   BaPageTop,
   BaPictureUploader,
-  BaSidebar
+  BaSidebar,
+  ThreeBounceComponent
 ];
 
 const NGA_DIRECTIVES = [

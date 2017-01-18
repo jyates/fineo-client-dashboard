@@ -1,12 +1,11 @@
 import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AlertModule } from 'ng2-bootstrap';
 
-import { NgaModule } from '../../theme/nga.module';
+import { AlertModule } from 'ng2-bootstrap';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
-// import * as spinner from 'ng2-spin-kit/app/spinners';
+import { NgaModule } from '../../theme/nga.module';
 
 import { AddSchemaComponent }  from './components/add/add.component'
 import { AddFieldComponent }   from './components/add-field/add-field.component'
@@ -27,7 +26,6 @@ import { routing }             from './schemas.routing';
     routing
   ],
   declarations: [
-    // spinner.ThreeBounceComponent,
     Schemas,
     SchemaComponent,
     FieldSubComponent,
