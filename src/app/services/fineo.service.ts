@@ -89,13 +89,15 @@ interface WithApiGatewayClient{
 }
 
 export class Metadata extends BaseExec {
-   constructor(users:UserLoginService){
-     super(users, FineoApi.META_URL);
-   }
+  constructor(users:UserLoginService){
+    super(users, FineoApi.META_URL);
+  }
 
-   public getApiKey():Promise<any>{
-     // skip using an api key for this - we are getting the api key!
-     let opts = new FineoRequestOptions();
+  // user metadata
+  // -------------
+  public getApiKey():Promise<any>{
+    // skip using an api key for this - we are getting the api key!
+    let opts = new FineoRequestOptions();
      opts.skipApiKey = true;
       return this.api.doGet("/meta/user", {
         // ewww, way to far into objects here... but its way easier
@@ -103,15 +105,51 @@ export class Metadata extends BaseExec {
       }, opts);
    }
 
-   public createDevice():Promise<any>{
-     return this.api.doPut("/meta/device", {})
-   }
+  // devices
+  // -------
+  public createDevice():Promise<any>{
+    return this.api.doPut("/meta/device", {})
+  }
 
-   public deleteDevice(id:string):Promise<any> {
+  public deleteDevice(id:string):Promise<any> {
      return this.api.doDelete("/meta/device", {
        id: id
      });
    }
+
+   public getDeviceInfo(id:string):Promise<any>{
+    return this.api.doGet("/meta/device", {deviceId: id});
+   }
+
+  public getDeviceIds():Promise<any> {
+    return this.api.doGet("/meta/devices");
+  }
+
+  public updateDevice(id:string, description:string):Promise<any>{
+    return this.api.doPatch("/meta/device", {
+      id:id,
+     description: description
+    });
+  }
+
+  // device key(s)
+  // -------------
+  public getDeviceKeys(id:string):Promise<any>{
+    return this.api.doGet("/meta/device/key")
+  }
+
+  public createKey(id:string):Promise<any>{
+    return this.api.doPut("/meta/device/key",{
+      id: id
+    });
+  }
+
+  public deleteKey(id:string, keyId:string):Promise<any>{
+    return this.api.doDelete("/meta/device/key",{
+      id: id,
+      key: keyId
+    });
+  }
 }
 
 export class Data {

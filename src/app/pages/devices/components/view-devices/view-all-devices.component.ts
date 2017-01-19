@@ -1,7 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import { Router } from '@angular/router';
 
-import { DeviceDataService } from '../../deviceData.service'
+import { DeviceDataService } from '../../../../services/deviceData.service'
 
 @Component({
   selector: 'view-all-devices',

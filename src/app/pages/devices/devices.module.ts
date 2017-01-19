@@ -7,9 +7,9 @@ import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { routing } from './devices.routing';
 
-import { DeviceDataService }        from './deviceData.service';
+import { DeviceDataService }        from './../../services/deviceData.service';
 
-import { DeviceHoverTable }         from './components/basicTables/components/hoverTable';
+import { DeviceHoverTable }         from './components/deviceTable/deviceTable.component';
 import { ViewDeviceComponent }      from './components/view/view-device.component';
 import { ViewAllDevicesComponent }  from './components/view-devices/view-all-devices.component';
 import { ViewKeysComponent }        from './components/keys/view-keys.component';
@@ -23,6 +23,7 @@ import { Devices } from './devices.component';
     ReactiveFormsModule,
     NgaModule,
     ModalModule,
+    DeviceDataService,
     routing
   ],
   declarations: [
@@ -31,9 +32,6 @@ import { Devices } from './devices.component';
     ViewAllDevicesComponent,
     ViewDeviceComponent,
     ViewKeysComponent
-  ],
-  providers: [
-    DeviceDataService
   ]
 })
 export default class DevicesModule {}

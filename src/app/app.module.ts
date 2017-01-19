@@ -33,7 +33,8 @@ import { FineoApi } from './services/fineo.service'
 import { SchemaService } from './services/schema.service'
 // Wrapper around user information
 import { UserService } from './services/user.service'
-
+// Device Service
+import { DeviceDataService } from './services/deviceData.service'
 import { DataUploadService } from './services/data.upload.service'
 
 // Application wide providers
@@ -50,7 +51,8 @@ const APP_PROVIDERS = [
   FineoApi,
   SchemaService,
   UserService,
-  DataUploadService
+  DataUploadService,
+  DeviceDataService
 ];
 
 type StoreType = {
