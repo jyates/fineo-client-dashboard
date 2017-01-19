@@ -1,18 +1,15 @@
 import { Component, ViewChild, ViewEncapsulation, ElementRef, Renderer } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 
-// import {Ng2Uploader} from 'ng2-uploader/ng2-uploader';
-// import {NgProgressService} from "ng2-progressbar";
 import { ModalDirective }     from 'ng2-bootstrap';
 
-import { DataUploadService } from '../../dataUpload.service';
+import { DataUploadService } from '../../../../services/dataUpload.service';
 
 @Component({
   selector: 'stream-component',
   encapsulation: ViewEncapsulation.None,
   template: require('./stream.html'),
   styles: [require('./stream.scss')],
-  // providers: [Ng2Uploader]
 })
 export class StreamComponent {
 
@@ -23,10 +20,7 @@ export class StreamComponent {
 
   constructor(private service: DataUploadService,
               private fb:FormBuilder,
-              // private pService: NgProgressService,
-              private renderer:Renderer,
-              // protected uploader:Ng2Uploader
-              ){
+              private renderer:Renderer){
       this.form = this.fb.group({
           'content': ['',  Validators.compose([Validators.required, Validators.minLength(9), this.checkJson])]
       });
@@ -51,13 +45,13 @@ export class StreamComponent {
     this.content.reset();
 
     // make the request
-    // this.pservice.start();
-    this.service.stream(val);
-    //.subscribe(result =>{
-      // request complete!
-      // this.pservice.done();
-    // });
-    this.modal.hide();
+    this.service.stream(val).then(result =>{
+      this.modal.hide();
+    })
+    .catch(err =>{
+      console.log("Error uploading data!", JSON.stringify(err));
+      alert("Failed to upload data! Please send console information to help@fineo.io");
+    });
   }
 
   public load():boolean{

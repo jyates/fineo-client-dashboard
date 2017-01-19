@@ -7,7 +7,7 @@ import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { NgaModule } from '../../theme/nga.module';
 
-import { DataUploadService } from './dataUpload.service';
+import { DataUploadService } from '../../services/dataUpload.service';
 
 import { StreamComponent }   from './components/stream/stream.component';
 import { BatchComponent }    from './components/batch/batch.component';
@@ -22,16 +22,13 @@ import { routing }           from './data.routing';
     ReactiveFormsModule,
     NgaModule,
     ModalModule,
-    // NgProgressModule,
+    DataUploadService,
     routing
   ],
   declarations: [
     DataComponent,
     StreamComponent,
     BatchComponent,
-  ],
-  providers:[
-      DataUploadService,
   ]
 })
 export default class DataModule {

@@ -3,7 +3,7 @@ import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators } from '
 
 import { ModalDirective }     from 'ng2-bootstrap';
 
-import { DataUploadService } from '../../dataUpload.service';
+import { DataUploadService } from '../../../../services/dataUpload.service';
 
 @Component({
   selector: 'bach-component',
@@ -15,6 +15,7 @@ export class BatchComponent {
 
   public s3Form:FormGroup;
   private s3Location:AbstractControl;
+  private fileName:string;
 
   public localForm:FormGroup;
   private localFile:AbstractControl;
@@ -25,10 +26,7 @@ export class BatchComponent {
 
   constructor(private service: DataUploadService,
               private fb:FormBuilder,
-              // private pService: NgProgressService,
-              private renderer:Renderer,
-              // protected uploader:Ng2Uploader
-              ){
+              private renderer:Renderer){
       this.s3Form = this.fb.group({
           's3Location': ['',  Validators.compose([Validators.required, , Validators.minLength(2)])]
       });
@@ -43,7 +41,10 @@ export class BatchComponent {
   }
 
   private submitLocal(form_value):void{
-    this.submit(this.localFileContent, this.service.batchLocal);
+    let self = this;
+    this.submit(this.localFileContent, function(content){
+      return this.service.batchLocal(self.fileName, content)
+    });
     this.localFile.reset();
   }
 
@@ -59,14 +60,14 @@ export class BatchComponent {
 
     // make the request
     // this.pservice.start();
-    method(val);
-    //.subscribe(result =>{
-      // request complete!
-      // this.pservice.done();
-    // });
-    this.modal.hide();
+    method(val).then(result =>{
+          this.modal.hide();
+    })
+    .catch(err =>{
+      console.log("Error uploading data!", JSON.stringify(err));
+      alert("Failed to upload data! Please send console information to help@fineo.io");
+    });
   }
-
 
   public load():boolean{
     this.renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
@@ -80,6 +81,7 @@ export class BatchComponent {
       const file = files[0];
       console.log("Selected file: "+file.name);
       this.readFile(file);
+      this.fileName = file.name;
     }
   }
 

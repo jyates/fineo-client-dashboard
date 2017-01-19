@@ -125,7 +125,7 @@ export class Stream extends BaseExec {
     super(users, FineoApi.STREAM_URL);
   }
 
-  public doPut(events:Object):Promise<any>{
+  public send(events:Object):Promise<any>{
     return this.api.doPut("/stream/events", events);  
   }  
 }
@@ -136,7 +136,7 @@ export class Batch extends BaseExec {
     super(users, FineoApi.BATCH_URL);
   }
 
-  public batch(fileName:string, body:Object){
+  public batch(fileName:string, body:Object):Promise<any>{
     return this.api.doPut("/batch/upload/data/"+fileName, body);
   }
 
