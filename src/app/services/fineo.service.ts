@@ -102,6 +102,16 @@ export class Metadata extends BaseExec {
         "username": this.users.cognitoUtil.getCurrentUser().getUsername()
       }, opts);
    }
+
+   public createDevice():Promise<any>{
+     return this.api.doPut("/meta/device", {})
+   }
+
+   public deleteDevice(id:string):Promise<any> {
+     return this.api.doDelete("/meta/device", {
+       id: id
+     });
+   }
 }
 
 export class Data {
