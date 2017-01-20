@@ -53,6 +53,10 @@ export class DeviceDataService {
   public devices():Promise<DeviceInfo[]>{
     return this.deviceService.getDeviceIds().then(result =>{
       let info = []
+      if(result.devices === undefined){
+        return Promise.resolve([]);
+      }
+
       result.devices.forEach(id =>{
         info.push(this.getDeviceInfo(id));
       });
@@ -92,6 +96,9 @@ export class DeviceDataService {
   public createDevice():Promise<DeviceInfo>{
     console.log("creating a new device!");
     return this.deviceService.createDevice().then(result =>{
+      if(result.errorMessage != undefined){
+        return Promise.reject(result);
+      }
       return Promise.resolve(new DeviceInfo(result.id, "", []));
     });
   }

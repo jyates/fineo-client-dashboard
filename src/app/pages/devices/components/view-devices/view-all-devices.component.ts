@@ -1,7 +1,11 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 
-import { DeviceDataService } from '../../../../services/deviceData.service'
+import {
+  DeviceDataService,
+  DeviceInfo
+} from '../../../../services/deviceData.service'
+import { DeviceHoverTable } from '../deviceTable/deviceTable.component'
 
 @Component({
   selector: 'view-all-devices',
@@ -10,13 +14,20 @@ import { DeviceDataService } from '../../../../services/deviceData.service'
 })
 export class ViewAllDevicesComponent {
 
+  @ViewChild('deviceTable') deviceTable: DeviceHoverTable;
+
   constructor(private router: Router,
               private devices: DeviceDataService) {
   }
 
-  // user wants to create a new device
   public newDevice():void{
     console.log("creating new device");
-    this.devices.createDevice();
+    this.devices.createDevice().then((result:DeviceInfo) =>{
+      this.deviceTable.addDevice(result);
+    }).catch(err =>{
+      console.log("Failed to create a new device:");
+      console.log(JSON.stringify(err));
+      alert("Failed to create a new device! Please send console output to help@fineo.io");
+    })
   }
 }

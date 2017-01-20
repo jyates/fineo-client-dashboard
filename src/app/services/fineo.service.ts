@@ -108,7 +108,9 @@ export class Metadata extends BaseExec {
   // devices
   // -------
   public createDevice():Promise<any>{
-    return this.api.doPut("/meta/device", {})
+    // have to include some content in the body ("some":"body"), otherwise the request gets converted into
+    // Content-Type:text/plain;charset=UTF-8, which breaks the application/json API expectation.
+    return this.api.doPut("/meta/device", {"s":"b"});
   }
 
   public deleteDevice(id:string):Promise<any> {
@@ -286,6 +288,10 @@ class Api {
     return this.sendBody("patch", ending, body);
   }
 
+  public doDelete( ending:string, body?:Object, queries?:Object):Promise<any>{
+    return this.sendBody("delete", ending, body, queries);
+  }
+
   public doGet(ending: string, queries?:Object, options?:FineoRequestOptions):Promise<any>{
     if(queries === undefined || queries == null){ queries = {}; }
     var request = {
@@ -298,25 +304,14 @@ class Api {
     return this.doCall(request, options);
   }
 
-  public doDelete( ending:string, body?:Object, queries?:Object):Promise<any>{
+  private sendBody(method:string, path:string, body?:Object, queries?:Object):Promise<any>{
     if(body === undefined || body == null){body = {}};
     if(queries === undefined || queries == null){ queries = {}; }
-    var request = {
-      verb: 'delete'.toUpperCase(),
-      path: this.exec.pathComponent + ending,
-      headers: {},
-      queryParams: queries,
-      body: body,
-    }
-    return this.doCall(request);
-  }
-
-  private sendBody(method:string, path:string, body:Object):Promise<any>{
     var request = {
       verb: method.toUpperCase(),
       path: this.exec.pathComponent + path,
       headers: {},
-      queryParams: {},
+      queryParams: queries,
       body: body
     }
     return this.doCall(request);

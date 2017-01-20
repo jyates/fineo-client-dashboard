@@ -2,15 +2,14 @@
 
   <div class="row">
     <div class="col-lg-12 col-md-12">
-      <ba-card baCardClass="with-scroll table-panel" [deletable]=false>
-        <device-table></device-table>
+      <ba-card baCardClass="with-scroll table-panel" [deletable]=false [editable]=false>
+        <device-table #deviceTable></device-table>
+        <div class="row">
+          <div class="col-md-11"></div>
+          <div class="col-sm-1" align="right" style="padding-top: 2px">
+            <button (click)="newDevice()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
+          </div>
+        </div>
       </ba-card>
     </div>
-</div>
-
-<div class="row">
-  <div class="col-md-11"></div>
-  <div class="col-sm-1" align="right">
-    <button (click)="newDevice()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
-  </div>
 </div>

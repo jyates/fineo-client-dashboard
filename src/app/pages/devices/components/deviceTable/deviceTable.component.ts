@@ -1,6 +1,9 @@
 import {Component} from '@angular/core';
 
-import {DeviceDataService} from '../../../../services/deviceData.service'
+import {
+  DeviceDataService,
+  DeviceInfo
+} from '../../../../services/deviceData.service'
 
 @Component({
   selector: 'device-table',
@@ -8,7 +11,7 @@ import {DeviceDataService} from '../../../../services/deviceData.service'
 })
 export class DeviceHoverTable {
 
-  metricsTableData:Array<any>;
+  public metricsTableData:DeviceInfo[] = [];
 
   constructor(private device_service: DeviceDataService) {
    this.device_service.devices().then(result =>{
@@ -37,6 +40,9 @@ export class DeviceHoverTable {
        console.log(JSON.stringify(err));
        alert("Failed to delete device "+ device_info.id+". Please send console to help@fineo.io");
      });
-     
+  }
+
+  public addDevice(device:DeviceInfo){
+    this.metricsTableData.push(device);
   }
 }
