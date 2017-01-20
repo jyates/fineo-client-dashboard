@@ -34,7 +34,7 @@ import { SchemaService } from './services/schema.service'
 // Wrapper around user information
 import { UserService } from './services/user.service'
 
-import { DataUploadService } from './services/dataUpload.service'
+import { DataUploadService } from './services/data.upload.service'
 
 // Application wide providers
 const APP_PROVIDERS = [

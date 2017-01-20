@@ -3,7 +3,7 @@ import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators } from '
 
 import { ModalDirective }     from 'ng2-bootstrap';
 
-import { DataUploadService } from '../../../../services/dataUpload.service';
+import { DataUploadService } from '../../../../services/data.upload.service';
 
 @Component({
   selector: 'bach-component',

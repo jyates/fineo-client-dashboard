@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 
 import {
   FineoApi,
@@ -12,7 +12,7 @@ export class DataUploadService {
 
   private streamService:Stream;
   private batchService:Batch;
-  constructor(fineo:FineoApi){
+  constructor(@Inject(FineoApi) fineo:FineoApi){
     this.streamService = fineo.data.stream;
     this.batchService = fineo.data.batch;
   }

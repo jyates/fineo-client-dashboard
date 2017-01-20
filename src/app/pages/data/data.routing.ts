@@ -10,9 +10,8 @@ const routes: Routes = [
     path: '',
     component: DataComponent,
     children: [
-      { path: 'batch', component: BatchComponent },
+      // { path: 'batch', component: BatchComponent },
       { path: 'stream', component: StreamComponent }
-      // { path: 'schemas/1234', component: SchemaComponent }
     ]
   }
 ];

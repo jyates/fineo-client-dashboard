@@ -3,7 +3,8 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
     <div class="form-group row">
       <div class="col-sm-10">
-          <textarea [formControl]="content" class="form-control" placeholder="JSON request"></textarea>
+          <textarea [formControl]="content" class="form-control" placeholder="JSON request"
+          tooltip="All events that do not have a 'timestamp' field will have one added with the value as the current time."></textarea>
       </div>
     </div>
     <br/>
@@ -24,20 +25,12 @@
   </form>
 </div>
 
-<!-- show/hide controled from parent component -->
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Uploading</h4>
-        <div class="loading">
-          <div class="spinner">
-            <div class="double-bounce1"></div>
-            <div class="double-bounce2"></div>
-          </div>
-        </div>
+<div *ngIf="submitting">
+   <div class="schema-spin-main" >
+    <div class="schema-spin-block" >
+      <div class="spinner">
+        <sk-three-bounce></sk-three-bounce>
       </div>
     </div>
   </div>
 </div>
-

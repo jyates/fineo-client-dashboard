@@ -3,7 +3,7 @@ import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators } from '
 
 import { ModalDirective }     from 'ng2-bootstrap';
 
-import { DataUploadService } from '../../../../services/dataUpload.service';
+import { DataUploadService } from '../../../../services/data.upload.service';
 
 @Component({
   selector: 'stream-component',
@@ -13,10 +13,10 @@ import { DataUploadService } from '../../../../services/dataUpload.service';
 })
 export class StreamComponent {
 
+  public submitting:boolean = false;
   public form:FormGroup;
   private content:AbstractControl;
   @ViewChild('fileUpload') protected _fileUpload:ElementRef;
-  @ViewChild('childModal') modal: ModalDirective;
 
   constructor(private service: DataUploadService,
               private fb:FormBuilder,
@@ -39,19 +39,39 @@ export class StreamComponent {
 
   private onSubmit(form_value):void{
     var val = this.content.value;
-    this.modal.show();
-    console.log("submittting")
+    val = JSON.parse(val);
+
     // also disables the form validity
     this.content.reset();
 
+    this.submitting = true;
+
+    // update the data to send to ensure there is a timestamp, if there isn't one already
+    var timeInMs = Date.now();
+    if (Array.isArray(val)){
+      val.forEach(obj =>{
+        this.addTimestampIfNecessary(obj);
+      })
+    } else {
+      this.addTimestampIfNecessary(val);
+    }
+
+    console.log("Submitting: ", JSON.stringify(val));
+
     // make the request
     this.service.stream(val).then(result =>{
-      this.modal.hide();
+      this.submitting = false;
     })
     .catch(err =>{
       console.log("Error uploading data!", JSON.stringify(err));
       alert("Failed to upload data! Please send console information to help@fineo.io");
     });
+  }
+
+  private addTimestampIfNecessary(obj:Object):void{
+    if (obj['timestamp'] === undefined){
+      obj['timestamp'] = Date.now();
+    }
   }
 
   public load():boolean{

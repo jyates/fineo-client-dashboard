@@ -50,14 +50,14 @@ export const PAGES_MENU = [
           }
         },
         children: [
-          {
-            path: 'batch',
-            data: {
-              menu: {
-                title: 'Batch',
-              }
-            }
-          },
+          // {
+          //   path: 'batch',
+          //   data: {
+          //     menu: {
+          //       title: 'Batch',
+          //     }
+          //   }
+          // },
           {
             path: 'stream',
             data: {

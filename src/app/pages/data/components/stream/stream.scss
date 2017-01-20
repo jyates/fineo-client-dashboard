@@ -34,22 +34,22 @@
   align-items: center;
 }
 
-.spinner {
-  width: 60px;
-  height: 60px;
-  position: relative;
+/* Showing the loading spinner */
+.schema-spin-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 
-.double-bounce1, .double-bounce2 {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: #fff;
-  opacity: 0.6;
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
-  animation: sk-bounce 2.0s infinite ease-in-out;
+.schema-spin-block {
+  width: 540px;
+  margin: 0 auto;
+  border-radius: 5px;
+  /*@include bg-translucent-dark(0.55);
+  color: #fff; */
+  padding: 32px;
 }
