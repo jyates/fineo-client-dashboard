@@ -1,0 +1,20 @@
+
+/* Showing the loading spinner */
+.devices-spin-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.devices-spin-block {
+  width: 540px;
+  margin: 0 auto;
+  border-radius: 5px;
+  /*@include bg-translucent-dark(0.55);
+  color: #fff; */
+  padding: 32px;
+}

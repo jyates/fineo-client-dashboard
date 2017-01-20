@@ -61,7 +61,7 @@ export class DeviceDataService {
         info.push(this.getDeviceInfo(id));
       });
       return Promise.all(info);
-    })
+    });
   }
 
   public updateDeviceName(id:string, name:string):Promise<any>{
