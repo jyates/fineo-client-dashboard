@@ -96,9 +96,6 @@ export class DeviceDataService {
   public createDevice():Promise<DeviceInfo>{
     console.log("creating a new device!");
     return this.deviceService.createDevice().then(result =>{
-      if(result.errorMessage != undefined){
-        return Promise.reject(result);
-      }
       return Promise.resolve(new DeviceInfo(result.id, "", []));
     });
   }

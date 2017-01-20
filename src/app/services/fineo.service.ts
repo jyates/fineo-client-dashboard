@@ -331,12 +331,26 @@ class Api {
           }
           promise.then(function(apikey){
             let response = apiGatewayClient.makeRequest(request, 'AWS_IAM', {}, apikey);
-            response.then(result => resolve(result.data || {})).catch(error => reject({
-              request: request,
-              error: error
-            }));
+            response.then(result =>{
+                    // handle the internal request. It may be that we got a 200 response, but
+                    // the deployed function is actually returning an error message (e.g function
+                    // was WAY wrong configured).
+                      let data = result.data;
+                      if (data === undefined) {
+                        resolve({});
+                      }
+                      else if(data.errorMessage != undefined) {
+                        console.log("rejecting result - it has an error message!")
+                        reject(data);
+                      } else{
+                        resolve(data);
+                      }
+                    }).catch(error => reject({
+                      request: request,
+                      error: error
+                    }));
           }).catch(err =>{
-            console.log("Failed loading the api key! -- "+JSON.stringify(err));
+            console.log("Failed loading the api key! -- ", JSON.stringify(err));
             reject(err);
           });
         }
