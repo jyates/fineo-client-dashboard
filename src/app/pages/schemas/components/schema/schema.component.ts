@@ -43,11 +43,10 @@ export class SchemaComponent {
   private ts_formats:AbstractControl;
   private fields:FormArray;
   private added_fields_control:FormArray;
+  private removedFields:AbstractControl[] = [];
 
   private id:string;
   private schema_info:SchemaInfo;
-  // private schema_properties:SchemaInfo;
-  private added_fields:Field[] = [];
   public addField:Field;
   private timestamp:TimestampFieldInfo;
 
@@ -288,6 +287,11 @@ export class SchemaComponent {
         }
         return val;
     });
+  }
+
+  public deleteAddedField(item){
+    console.log("remove field: ", this.stringify(item));
+    this.added_fields_control.removeAt(item);
   }
 }
 

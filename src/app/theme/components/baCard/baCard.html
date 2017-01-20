@@ -1,23 +1,23 @@
 <div baCardBlur class="animated fadeIn card {{cardType}} {{baCardClass || ''}}" zoom-in>
-  <div *ngIf="title && deletable" class="card-header clearfix">
+  <div *ngIf="title" class="card-header clearfix">
     <div style="position: relative;">
       <h3 class="card-title" style="float:left; max-width: 50%; overflow: hidden">{{title}}</h3>
       <div style="float:right; max-width: 50%; overflow: hidden">
-        <button class="btn btn-default btn-icon btn-icon-only edit-card" 
-          type="button" (click)="editItem(item)"><i style="vertical-align:center;" class="ion-gear-b"></i></button>
-        <button class="btn btn-xs btn-danger edit-card" 
-          type="button" (click)="onDeleteConfirm(item)"><i class="ion-close-round"></i></button>
+        <button *ngIf="editable" class="btn btn-default btn-icon btn-icon-only edit-card" 
+          type="button" (click)="editItem()"><i style="vertical-align:center;" class="ion-gear-b"></i></button>
+        <button *ngIf="deletable" class="btn btn-xs btn-danger edit-card" 
+          type="button" (click)="deleteItem()"><i class="ion-close-round"></i></button>
       </div>
     </div>
   </div>
   <div class="card-body">
     <!-- Drop the edit buttons in the card proper, if there is no title -->
-    <div *ngIf="(!title)  && deletable">
+    <div *ngIf="(!title)">
       <div style="float:right; max-width: 20%;">
-        <button class="btn btn-default btn-icon btn-icon-only edit-card" 
-          type="button" (click)="editItem(item)"><i style="vertical-align:center;" class="ion-gear-b"></i></button>
-        <button class="btn btn-xs btn-danger edit-card" 
-          type="button" (click)="onDeleteConfirm(item)"><i class="ion-close-round"></i></button>
+        <button *ngIf="editable" class="btn btn-default btn-icon btn-icon-only edit-card" 
+          type="button" (click)="editItem()"><i style="vertical-align:center;" class="ion-gear-b"></i></button>
+        <button *ngIf="deletable" class="btn btn-xs btn-danger edit-card" 
+          type="button" (click)="deleteItem()"><i class="ion-close-round"></i></button>
       </div>
     </div>
     <ng-content></ng-content>
