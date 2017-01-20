@@ -22,6 +22,7 @@ import {
   TimestampFieldInfo
 } from '../../../../services/schema.service'
 
+import { AddFieldComponent } from '../add-field/add-field.component';
 import { FieldSubComponent } from '../field/field.component';
 import { StringifyPipe } from '../util/stringify.pipe';
 
@@ -47,7 +48,6 @@ export class SchemaComponent {
 
   private id:string;
   private schema_info:SchemaInfo;
-  public addField:Field;
   private timestamp:TimestampFieldInfo;
 
   @ViewChild('childModal') childModal: ModalDirective;
@@ -120,9 +120,9 @@ export class SchemaComponent {
     });
   }
 
-  private addNewField(field:Field){
+  private addNewField(){
     const arrayControl = <FormArray>this.form.controls['added_fields'];
-    this.addFieldToControl(field, arrayControl);
+    this.addFieldToControl({}, arrayControl);
   }
 
   private addFieldToControl(field, arrayControl:FormArray){
@@ -243,27 +243,6 @@ export class SchemaComponent {
     var target = '/pages/dashboard'
     console.log("redirecting to: "+target);
     this.router.navigate([target]);
-  }
-
-  public showFieldCreateModal(): void {
-    console.log("showing modal")
-    this.addField = new Field(this.randomString(5));
-    this.childModal.show();
-    // this.childModal.show(this.addField);
-  }
-
-  public hideFieldCreateModal(save:boolean): void {
-    console.log("Current field state: "+JSON.stringify(this.addField));
-    // not saving, so just close
-    if(!save){
-      this.childModal.hide();
-    }
-    else if(this.addField.validate()){
-      this.addNewField(this.addField)
-      this.childModal.hide();
-      // clear the old state
-      this.addField = null;
-    }
   }
 
   private randomString(len:number):string{

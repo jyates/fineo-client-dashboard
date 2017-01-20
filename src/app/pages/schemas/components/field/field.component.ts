@@ -9,7 +9,6 @@ import { FormGroup } from '@angular/forms';
 })
 export class FieldSubComponent {
     @Input() fieldForm: FormGroup; // This component is passed a FormGroup from the base component template
-    @Input() deletable:boolean;
     @Input() index: number;
 
     public deleteItem = new EventEmitter();

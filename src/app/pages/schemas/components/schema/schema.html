@@ -68,90 +68,25 @@
           <div *ngIf="!checkTimestamp(control)">
             <field-sub-component
               [index]=i
-              [fieldForm]="control"
-              [deletable]=false>
+              [fieldForm]="control">
             </field-sub-component>
           </div>
         </div>
       </div>
       <div formArrayName="added_fields">
         <div *ngFor="let control of form.controls['added_fields'].controls; let i = index">
-          <field-sub-component
+          <add-field-component
             [index]=i
             [fieldForm]="form.controls.added_fields.controls[i]"
-            [deletable]=true
             (deleteItem)="deleteAddedField($event)">
-          </field-sub-component>
+          </add-field-component>
         </div>
       </div>
     </form>
   </div>
   <div class="row">
     <div class="col-sm-1" align="left">
-      <button (click)="showFieldCreateModal()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
+      <button (click)="addNewField()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
     </div>
   </div>
 </div> <!-- End loading -->
-
-<!-- control modal from parent component -->
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button class="close" aria-label="Close" (click)="hideFieldCreateModal(false)">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Add Field</h4>
-      </div>
-      <div class="modal-body">
-        <!-- field may not have a value, which breaks things hard. -->
-        <div *ngIf="addField != null" class="form-horizontal">
-          <div class="row">
-            <div class="col-lg-6">
-              <label class="col-sm-2 control-label">Name</label>
-              <div class="col-sm-10">
-                <input type="text" [(ngModel)]="addField.name" class="form-control-modal">
-              </div>  
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-lg-6">
-              <label class="col-sm-2 control-label">Aliases</label>
-              <div class="col-sm-10">
-                <input type="text" [(ngModel)]="addField.aliases" class="form-control-modal">
-              </div>  
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-lg-6">
-              <div>
-                <label for="selectType">Type</label>
-                <div class="col-sm-10">
-                  <select class="form-control-modal bootstrap-select" id="selectType" [(ngModel)]="addField.type">
-                    <option>Varchar</option>
-                    <option>Integer</option>
-                    <option>Long</option>
-                    <option>Double</option>
-                    <option>Float</option>
-                    <option>Binary</option>
-                    <option>Boolean</option>
-                  </select>
-                </div>
-              </div>
-
-            </div>
-          </div>
-          <div *ngIf="addField.error != null">
-            <alert type="danger">{{addField.error}}</alert>
-          </div>
-        </div> <!-- end if -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary confirm-btn" (click)="hideFieldCreateModal(true)">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
