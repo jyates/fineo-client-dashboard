@@ -35,6 +35,7 @@ import { SchemaService } from './services/schema.service'
 import { UserService } from './services/user.service'
 // Device Service
 import { DeviceDataService } from './services/deviceData.service'
+// Sending data
 import { DataUploadService } from './services/data.upload.service'
 
 // Application wide providers

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 
 import {
   FineoApi,
@@ -25,7 +25,7 @@ export class DeviceInfo{
 export class DeviceDataService {
 
   private deviceService:Metadata;
-  constructor(fineo:FineoApi){
+  constructor(@Inject(FineoApi) fineo:FineoApi){
     this.deviceService = fineo.meta;
   }
 
