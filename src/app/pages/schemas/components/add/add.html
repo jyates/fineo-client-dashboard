@@ -1,15 +1,19 @@
+<!-- Show the spinner if we are waiting for a submission to go through -->
+<div *ngIf="submitted">
+   <div class="schema-spin-main" >
+    <div class="schema-spin-block" >
+      <div class="spinner">
+        <sk-three-bounce></sk-three-bounce>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="schema-block">
   <form [formGroup]="form" (ngSubmit)="onSubmit(form.value, form.validate)" class="form-horizontal">
     <div class="row">
       <div class="col-md-1">
-        <button type="submit" [disabled]="(!form.valid) && (!submitted)" class="btn btn-success btn-md btn-raised">Save</button>
-      </div>
-    </div>
-
-    <!-- Show the spinner if we are waiting for a submission to go through -->
-    <div *ngIf="submitted">
-      <div class="spinner">
-        <sk-three-bounce></sk-three-bounce>
+        <button type="submit" [disabled]="!form.valid || submitted" class="btn btn-success btn-md btn-raised">Save</button>
       </div>
     </div>
 
@@ -56,17 +60,18 @@
     <div formArrayName="fields">
       <div *ngIf="addField != undefined">
         <div *ngFor="let control of form.controls['fields'].controls; let i = index">
-          <!-- delete button for uncreated field -->
-          <button class="btn btn-xs btn-danger" type="button" (click)="deleteField(i)"><i class="ion-close-round"></i></button>
           <!-- actual field component -->
-          <add-field-component [index]="i" [fieldForm]="control"></add-field-component>
+          <add-field-component
+            [index]=i
+            [fieldForm]="control"
+            (deleteItem)="deleteField($event)">
+          </add-field-component>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-3"></div>
-      <div class="col-xs-1">
-        <button (click)="addField()" type="button" class="btn btn-success">Add Field</button>
+      <div class="col-sm-1" align="left">
+        <button (click)="addField()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
       </div>
     </div>
   </form>

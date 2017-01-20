@@ -1,4 +1,4 @@
-<div *ngIf="loading">
+<div *ngIf="loading || deleting">
    <div class="schema-spin-main" >
     <div class="schema-spin-block" >
       <div class="spinner">
@@ -16,7 +16,7 @@
           <button (click)="delete_schema()" [disabled]="deleting" type="button" class="btn btn-danger btn-md">Delete</button>
         </div>
         <div class="col-md-1">
-          <button type="submit" [disabled]="!form.valid" class="btn btn-success btn-md btn-raised">Save</button>
+          <button type="submit" [disabled]="!form.valid || submitting || deleting" class="btn btn-success btn-md btn-raised">Save</button>
         </div>
       </div>
       <br/>
