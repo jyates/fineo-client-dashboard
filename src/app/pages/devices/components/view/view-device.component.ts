@@ -67,9 +67,8 @@ export class ViewDeviceComponent {
     // save the changes
     this.saving = true;
     this.service.updateDeviceName(this.id, this.name.value).then(result =>{
-      // DONE! Now, go to the main device page
+      console.log("Done updating device name");
       this.saving = false;
-      this.returnHome();
     })
     .catch(err =>{
       this.saving = false;
