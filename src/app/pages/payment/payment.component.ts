@@ -39,10 +39,10 @@ export class Payment {
       }
       ])],
       'month_year': ['', Validators.compose([Validators.required, Validators.minLength(2), function(control:AbstractControl){
-        let parts = control.value.split["/"]
+        let parts = control.value.split("/")
         // no value yet
         if(parts === undefined){
-          return null;
+          return {"invalidCardDate": "Not a proper format"}
         }
         let year_month = parts.reverse().join("-");
         if(!Stripe.card.validateExpiry(year_month)){
