@@ -4,7 +4,9 @@ import { Router } from '@angular/router';
 
 import {
   UserSignupService,
-  CCInfo
+  CCInfo,
+  FullStripeResponse,
+  StripeResponse
 } from '../../services/user.signup.service';
 
 @Component({
@@ -81,8 +83,8 @@ export class Payment {
       return this.create_user(result);
     }).then(created =>{
       this.submitted = false;
-      console.log("going back to dashboard");
-      // this.router.navigate(['/pages/dashboard']);  
+      console.log("Done creating user! Need to confirm the user.");
+       this.router.navigate(["/confirm"]);
     })
     .catch(response =>{
       console.log("Credit card information was invalid", JSON.stringify(response));
@@ -104,7 +106,7 @@ export class Payment {
     return this.signup.submitCreditCardInfo(cc);
   }
 
-  private create_user(result:Object):Promise<any>{
-    return Promise.resolve({});
+  private create_user(result:StripeResponse):Promise<any>{
+    return this.signup.createUser(result.id);
   }
 }

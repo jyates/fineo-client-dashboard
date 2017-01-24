@@ -109,7 +109,7 @@ export class UserService {
      alert(msg+" Please contact help@fineo.io with the output of the web console.");
   }
 
-  transform(value: Object): string {
+  public static transform(value: Object): string {
     var seen = [];
 
     return JSON.stringify(value, function(key, val) {
@@ -166,7 +166,7 @@ class ApiKeyLookupOnLogin extends DelegatingLoggedIn{
         lookup.delegate.loggedIn();
       })
       .catch(function(err){
-        console.log("Failed to get api key because: "+ lookup.mgmt.transform(err));
+        console.log("Failed to get api key because: "+ UserService.transform(err));
         // ensure that we can try logging in again
         lookup.mgmt.loginService.logout();
         lookup.mgmt.alertFineo("Failed to download api key!");

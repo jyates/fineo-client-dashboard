@@ -9,6 +9,7 @@ export class RegistrationUser {
     name:string;
     email:string;
     password:string;
+    stripeToken:string;
 }
 
 export interface CognitoCallback {
@@ -152,8 +153,13 @@ export class UserRegistrationService {
             Name: 'nickname',
             Value: user.name
         };
+        let dataStripeToken = {
+            Name: 'stripeToken',
+            Value: user.stripeToken
+        }
         attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail));
         attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataNickname));
+        attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataStripeToken));
 
         this.cognitoUtil.getUserPool().signUp(user.email, user.password, attributeList, null, function (err, result) {
             if (err) {

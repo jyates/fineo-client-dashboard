@@ -4,8 +4,8 @@ import {GlobalState} from '../global.state'
 
 import {
   CognitoCallback,
-  LoggedInCallback,
-  UserLoginService
+  RegistrationUser,
+  UserRegistrationService,
 } from './cognito.service'
 
 import {
@@ -22,7 +22,7 @@ export class UserSignupService {
   private email:string;
   private password:string;
 
-  constructor(@Inject(UserLoginService) public loginService:UserLoginService,
+  constructor(@Inject(UserRegistrationService) public registration: UserRegistrationService,
               @Inject(FineoApi) private fineo:FineoApi,
               @Inject(GlobalState) private state:GlobalState){
   }
@@ -43,11 +43,79 @@ export class UserSignupService {
         if(response.error){
           reject(response);
         }else{
-          resolve({status: status, response:response});
+          resolve(new FullStripeResponse(status, response));
         }
       });
     });
   }
+
+  public createUser(stripeToken:string):Promise<any>{
+    // start by creating the user in stripe
+    return new Promise((resolve, reject) =>{
+      // see https://stripe.com/docs/api#create_customer
+      (<any>window).Stripe.customers.create({
+        email: this.email,
+        source: stripeToken,
+      }, function(status, customer) {
+        if (status.code == 200 || customer.error){
+          reject(customer);
+        } else {
+          resolve(new FullStripeResponse(status, customer));
+        }
+      });
+    })
+    // now create the user in Fineo
+    .then((result:FullStripeResponse) => {
+      // id of the user from stripe user creation
+      let id = result.response.id;
+      return this.signUp(this.name, this.email, this.password, id);
+    });
+  }
+
+  private signUp(name:string, email:string, password:string, stripeId:string):Promise<StripeResponse>{
+    let user = new RegistrationUser();
+    user.name = name;
+    user.email = email;
+    user.password = password;
+    user.stripeToken = stripeId;
+
+    let self = this;
+    return new Promise((resolve, reject) =>{
+      this.registration.register(user, new SimpleSuccessFailureCallback(resolve, reject, "Successfully signed up user"));  
+    });
+  }
+
+  /**
+   * New users must be confirmed via a codde in their email.
+   */ 
+  public confirmUser(username:string, code:string):Promise<any>{
+    let self = this;
+    return new Promise((resolve, reject) =>{
+      this.registration.confirmRegistration(username, code, new SimpleSuccessFailureCallback(resolve, reject, "Successfully confirmed user"));
+    });
+  }
+
+  public static transform(value: Object): string {
+    var seen = [];
+
+    return JSON.stringify(value, function(key, val) {
+       if (val != null && typeof val == "object") {
+            if (seen.indexOf(val) >= 0) {
+                return;
+            }
+            seen.push(val);
+        }
+        return val;
+    });
+  }
+}
+
+export class FullStripeResponse{
+ constructor(public status:Object, public response:StripeResponse){}
+}
+
+export class StripeResponse{
+  public id:string
 }
 
 export class CCInfo{
@@ -56,4 +124,23 @@ export class CCInfo{
   public exp_year:number;
   public cvc:number;
   public zipcode:number;
+}
+
+/**
+* Simple CognitoCallback that just handles success/failure on called to #cognitoCallback()
+*/
+class SimpleSuccessFailureCallback implements CognitoCallback {
+  constructor(private resolve, private reject, private message){}
+  
+  cognitoCallback(errMessage, result){
+    if(errMessage != null){
+      this.reject(errMessage);
+    } else {
+      console.log(this.message,": ", UserSignupService.transform(result));
+      this.resolve(result);
+    }
+  }
+  // don't do these!
+  resetPassword: null
+  handleMFA: null
 }
