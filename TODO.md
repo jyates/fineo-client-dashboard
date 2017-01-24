@@ -8,12 +8,6 @@
  
 ## UI/Frontend
 
- * access guards
- * schema mgmt backend
- * device mgmt backend
- * data upload backend
- * schema meta management page
- * profile info page
  * dashboarding
    * query url lookup for user
    * SQL query creation
@@ -22,3 +16,7 @@
    * panel edit
    * panel creation
    * clickable non-titled card edit/delete buttons 
+
+ * access guards
+ * profile info page
+ * schema meta management page
