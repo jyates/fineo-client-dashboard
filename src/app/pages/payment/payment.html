@@ -47,4 +47,10 @@
         <a routerLink="/register" class="auth-link">Back</a>
       </div>
   </div>
+
+    <div class="row" >
+      <div class="spinner" *ngIf="submitted">
+        <sk-three-bounce></sk-three-bounce>
+      </div>
+    </div>
 </div>
