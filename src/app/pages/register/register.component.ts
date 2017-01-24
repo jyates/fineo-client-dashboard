@@ -1,6 +1,9 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import {EmailValidator, EqualPasswordsValidator} from '../../theme/validators';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+
+import { UserSignupService } from '../../services/user.signup.service';
 
 @Component({
   selector: 'register',
@@ -19,7 +22,9 @@ export class Register {
 
   public submitted:boolean = false;
 
-  constructor(fb:FormBuilder) {
+  constructor(fb:FormBuilder,
+              private router: Router,
+              private signup: UserSignupService) {
 
     this.form = fb.group({
       'name': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -39,9 +44,14 @@ export class Register {
 
   public onSubmit(values:Object):void {
     this.submitted = true;
-    if (this.form.valid) {
-      // your code goes here
-      // console.log(values);
+    if (!this.form.valid) {
+      console.log("Somehow submitted, but the form was invalid!");
+      return;
     }
+    this.signup.startSignUp(this.name.value, this.email.value, this.password.value);
+
+    var target = '/payment'
+    console.log("redirecting to: "+target);
+    this.router.navigate([target]);
   }
 }

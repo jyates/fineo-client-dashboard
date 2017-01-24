@@ -1,1 +1,18 @@
 @import '../../theme/sass/auth';
+.small-date {
+  width: 24%;
+  margin-top: 3px;
+  font-size: 12px;
+  padding-bottom: 5px;
+}
+
+.cvc {
+  padding-bottom: 5px;
+  padding-top: 5px;
+  margin-top: 2px;
+}
+
+.zipcode{
+  padding-right: 6px;
+  padding-left: 10px;
+}

@@ -37,6 +37,8 @@ import { UserService } from './services/user.service'
 import { DeviceDataService } from './services/deviceData.service'
 // Sending data
 import { DataUploadService } from './services/data.upload.service'
+// Signing up
+import { UserSignupService } from './services/user.signup.service'
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -53,7 +55,8 @@ const APP_PROVIDERS = [
   SchemaService,
   UserService,
   DataUploadService,
-  DeviceDataService
+  DeviceDataService,
+  UserSignupService
 ];
 
 type StoreType = {
