@@ -1,1 +1,27 @@
 @import "../../theme/sass/conf/conf";
+
+@media (max-width: $resM) {
+
+  .card.medium-card.device-panel {
+    height: auto;
+  }
+
+/*
+Copied from trafficChart
+-------------------------
+  div.channels-info {
+    display: block;
+    width: calc(100% - 88px);
+    margin-top: -65px;
+    margin-bottom: 10px;
+  }
+  .device-chart {
+    position: inherit;
+    float: none;
+    margin: 0 auto;
+  }
+  .chart-bg {
+    left: calc(50% - 90px);
+  }
+*/
+}

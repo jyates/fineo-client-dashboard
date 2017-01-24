@@ -1,7 +1,7 @@
 <div class="widgets">
   <div class="row">
     <div class="col-lg-12 col-md-12">
-      <ba-card baCardClass="with-scroll table-panel" [deletable]=false [editable]=false>
+      <ba-card baCardClass="with-scroll table-panel device-panel" [deletable]=false [editable]=false>
         <device-table #deviceTable
           (loaded)="doneLoading($event)"
           (deleting)="deletingItem($event)">
@@ -14,13 +14,14 @@
         </div>
       </ba-card>
     </div>
-</div>
+  </div>
 
-<div *ngIf="loading">
-   <div class="schema-spin-main" >
-    <div class="schema-spin-block" >
-      <div class="spinner">
-        <sk-three-bounce></sk-three-bounce>
+  <div *ngIf="loading">
+     <div class="schema-spin-main" >
+      <div class="schema-spin-block" >
+        <div class="spinner">
+          <sk-three-bounce></sk-three-bounce>
+        </div>
       </div>
     </div>
   </div>
