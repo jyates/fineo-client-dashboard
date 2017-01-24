@@ -4,36 +4,36 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
   <!-- <span class="payment-errors"></span> -->
 
-  <div class="form-row row">
+  <div class="form-row row" [ngClass]="{'has-error': hasError(number), 'has-success': hasSuccess(number)}">
     <label for="numberInput" class="col-sm-3 control-label">Card Number</label>
     <div class="col-sm-9">
-      <input [formControl]="number" type="text" class="form-control" id="numberInput" placeholder="4242...." data-stripe="number"/>
+      <input [formControl]="number" type="text" class="form-control" id="numberInput" placeholder="4242...."/>
     </div>
   </div>
 
-  <div class="form-row row">
-      <label class="col-sm-3 control-label">Expiration</label>
+  <div class="form-row row" [ngClass]="{'has-error': hasError(month_year), 'has-success': hasSuccess(month_year)}">
+      <label for="inputMonthYear" class="col-sm-3 control-label">Expiration</label>
       <div class="col-sm-9">
-        <input class="small-date form-control" [formControl]="month" type="text" id="inputMonth3" placeholder="MM/YYYY" data-stripe="exp_month"/>
+        <input class="small-date form-control" [formControl]="month_year" type="text" id="inputMonthYear" placeholder="MM/YYYY"/>
       </div>
   </div>
 
-  <div class="form-row row">
-    <label class="col-sm-3 control-label">Billing Zip</label>
+  <div class="form-row row" [ngClass]="{'has-error': hasError(zipcode), 'has-success': hasSuccess(zipcode)}">
+    <label for="inputZip" class="col-sm-3 control-label">Billing Zip</label>
     <div class="col-sm-3" style="width: 18%">
-      <input [formControl]="zipcode" type="text" class="zipcode form-control" id="inputZip3" placeholder="11111" data-stripe="address_zip"/>
+      <input [formControl]="zipcode" type="text" class="zipcode form-control" id="inputZip" placeholder="11111"/>
     </div>
   </div>
 
-  <div class="form-row row">
-    <label class="col-sm-3 control-label">CVC</label>
+  <div class="form-row row" [ngClass]="{'has-error': hasError(cvc), 'has-success': hasSuccess(cvc)}">
+    <label for="inputCvc" class="col-sm-3 control-label">CVC</label>
     <div class="col-sm-2">
-      <input [formControl]="cvc" type="text" class="form-control cvc" id="inputCvc3" placeholder="000" data-stripe="cvc"/>
+      <input [formControl]="cvc" type="text" class="form-control cvc" id="inputCvc" placeholder="000"/>
     </div>
   </div>
 
    <div class="form-group row" align="center">
-      <button type="submit" class="btn btn-default btn-auth">Submit</button>
+      <button type="submit" [disabled]="!form.valid || submitted" class="btn btn-default btn-auth">Submit</button>
   </div>
   
     <div class="form-group row">
