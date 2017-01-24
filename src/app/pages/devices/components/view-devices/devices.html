@@ -2,7 +2,10 @@
   <div class="row">
     <div class="col-lg-12 col-md-12">
       <ba-card baCardClass="with-scroll table-panel" [deletable]=false [editable]=false>
-        <device-table #deviceTable (loaded)="doneLoading($event)"></device-table>
+        <device-table #deviceTable
+          (loaded)="doneLoading($event)"
+          (deleting)="deletingItem($event)">
+        </device-table>
         <div class="row">
           <div class="col-md-11"></div>
           <div class="col-sm-1" align="right" style="padding-top: 2px">

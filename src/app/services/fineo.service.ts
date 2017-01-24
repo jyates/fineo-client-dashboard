@@ -115,7 +115,7 @@ export class Metadata extends BaseExec {
 
   public deleteDevice(id:string):Promise<any> {
      return this.api.doDelete("/meta/device", {
-       id: id
+       deviceId: id
      });
    }
 
@@ -129,15 +129,15 @@ export class Metadata extends BaseExec {
 
   public updateDevice(id:string, description:string):Promise<any>{
     return this.api.doPatch("/meta/device", {
-      id:id,
-     description: description
+      deviceId:id,
+      description: description
     });
   }
 
   // device key(s)
   // -------------
   public getDeviceKeys(id:string):Promise<any>{
-    return this.api.doGet("/meta/device/key")
+    return this.api.doGet("/meta/device/key", {deviceId: id});
   }
 
   public createKey(id:string):Promise<any>{

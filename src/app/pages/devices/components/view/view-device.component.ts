@@ -1,19 +1,27 @@
-import { Component, ViewEncapsulation, Input } from '@angular/core';
+import { Component, ViewEncapsulation, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import { DeviceDataService, DeviceInfo, DeviceKeyInfo } from '../../../../services/deviceData.service'
-import { ViewKeysComponent } from '../keys/view-keys.component'
+import { ModalDirective } from 'ng2-bootstrap';
+
+import {
+  DeviceDataService,
+  DeviceInfo,
+  DeviceKeyInfo,
+  CreatedDeviceKeyInfo
+} from '../../../../services/deviceData.service'
 
 @Component({
   selector: 'view-device',
   encapsulation: ViewEncapsulation.None,
   template: require('./view-device.html'),
-  styles: []//require('./view-device.scss')
+  styles: [require('./view-device.scss')]
 })
 export class ViewDeviceComponent {
 
   public form:FormGroup;
+  // start out loading.
+  public loading:boolean = true;
   public deleting:boolean = false;
   public saving:boolean = false;
 
@@ -21,6 +29,10 @@ export class ViewDeviceComponent {
   private device_info:DeviceInfo;
   private keys:DeviceKeyInfo[];
   private id:string;
+
+  // handle creating a new key for the device
+  public latest_key:CreatedDeviceKeyInfo;
+  @ViewChild('childModal') childModal: ModalDirective;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -31,7 +43,9 @@ export class ViewDeviceComponent {
   ngOnInit() {
     this.route.params.subscribe(path_info => {
       this.id = path_info["id"];
+      console.log("Getting device info for: ", this.id);
       this.service.getDeviceInfo(this.id).then(result =>{
+        console.log("RECEIVED device info for: ", this.id);
         this.device_info = result;
         this.keys = this.device_info['keys'];
 
@@ -39,14 +53,18 @@ export class ViewDeviceComponent {
           'name': [this.device_info['name'], []]
         });
         this.name = this.form.controls['name']
-      });// end promise
+        this.loading = false;
+        console.log("Loading device: ", this.loading);
+      }).catch(err =>{
+        this.alertError("Failed to load device: "+this.id, err);
+        this.returnHome();
+      }
+      );
     })
   }
 
-
   public onSubmit(form, valid):void{
     // save the changes
-    console.log("Submitted: "+JSON.stringify(form));
     this.saving = true;
     this.service.updateDeviceName(this.id, this.name.value).then(result =>{
       // DONE! Now, go to the main device page
@@ -73,11 +91,37 @@ export class ViewDeviceComponent {
     });
   }
 
-  private checkArraySet(val:string):string[]{
-    if(val != undefined && val != null){
-      return val.split(",");
-    } 
-    return null;
+  public createKey():void{
+    console.log("creating new key for device: "+this.id)
+    this.loading = true;
+    this.service.createKey(this.id).then(key_info =>{
+      this.loading = false;
+      this.keys.push(key_info);
+      this.latest_key = key_info;
+      this.childModal.show();
+    }).catch(err => {
+      this.loading = false;
+      this.alertError("Error creating key", err);
+    })
+  }
+
+  public onDeleteKeyConfirm(key:DeviceKeyInfo):void{
+    if (window.confirm('Are you sure you want to delete key '+key.id+'?')) {
+      this.deleting = true;
+      this.service.deleteKey(this.id, key.id).then(result =>{
+        var index = this.keys.indexOf(key);
+        this.keys.splice(index, 1);
+        this.deleting = false;
+      }).catch(err =>{
+        this.deleting = false;
+        this.alertError("Error deleting key: "+key.id, err);
+      })
+    }
+  }
+
+  public hideModal():void {
+    this.childModal.hide();
+    this.latest_key = null;
   }
 
   private returnHome():void{

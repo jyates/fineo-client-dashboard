@@ -32,7 +32,18 @@ export class ViewAllDevicesComponent {
     })
   }
 
-  public doneLoading(event): void{
+  public doneLoading(event:boolean): void{
+    console.log("Done loading: ", event);
     this.loading = false;
+  }
+
+  public deletingItem(device):void{
+    if(device == null){
+      console.log("Done deleting device!");
+      this.loading = false;
+    }else{
+      console.log("Waiting for device delete!");
+      this.loading = true;
+    }
   }
 }

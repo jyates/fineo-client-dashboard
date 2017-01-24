@@ -4,11 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { TooltipModule } from 'ng2-bootstrap';
-// import { NgProgressModule } from 'ng2-progressbar';
 
 import { NgaModule } from '../../theme/nga.module';
-
-// import { DataUploadService } from '../../services/data.upload.service';
 
 import { StreamComponent }   from './components/stream/stream.component';
 import { BatchComponent }    from './components/batch/batch.component';

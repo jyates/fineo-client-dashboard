@@ -10,7 +10,6 @@ import { routing } from './devices.routing';
 import { DeviceHoverTable }         from './components/deviceTable/deviceTable.component';
 import { ViewDeviceComponent }      from './components/view/view-device.component';
 import { ViewAllDevicesComponent }  from './components/view-devices/view-all-devices.component';
-import { ViewKeysComponent }        from './components/keys/view-keys.component';
 
 import { Devices } from './devices.component';
 
@@ -28,7 +27,6 @@ import { Devices } from './devices.component';
     DeviceHoverTable,
     ViewAllDevicesComponent,
     ViewDeviceComponent,
-    ViewKeysComponent
   ]
 })
 export default class DevicesModule {}
