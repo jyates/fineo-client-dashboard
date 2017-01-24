@@ -86,7 +86,7 @@
   </div>
   <div class="row">
     <div class="col-sm-1" align="left">
-      <button (click)="addNewField()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
+      <button (click)="addNewField()" [disabled]="submitting || deleting" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
     </div>
   </div>
 </div> <!-- End loading -->
