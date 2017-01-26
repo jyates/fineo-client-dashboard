@@ -1,10 +1,7 @@
 @import '../../theme/sass/auth';
 
 .small-date {
-  width: 24%;
-  margin-top: 3px;
-  font-size: 12px;
-  padding-bottom: 5px;
+  width: 26%;
 }
 
 .cvc {
@@ -16,6 +13,11 @@
 .zipcode{
   padding-right: 6px;
   padding-left: 10px;
+}
+
+.auth-link.back-link{
+  margin-bottom: 0px;
+  margin-top: 7px
 }
 
 .auth-main.three-bounce-spinner{

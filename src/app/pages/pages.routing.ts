@@ -15,6 +15,10 @@ const routes: Routes = [
     loadChildren: () => System.import('./payment/payment.module')
   },
   {
+    path: 'confirm',
+    loadChildren: () => System.import('./confirm/confirm.module')
+  },
+  {
     path: 'pages',
     component: Pages,
     children: [

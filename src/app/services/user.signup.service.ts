@@ -1,6 +1,7 @@
 import {Injectable, Inject} from "@angular/core";
 
 import {GlobalState} from '../global.state'
+import {environment} from '../environment'
 
 import {
   CognitoCallback,
@@ -19,12 +20,13 @@ import {
 export class UserSignupService {
 
   private name:string;
-  private email:string;
+  public email:string;
   private password:string;
 
   constructor(@Inject(UserRegistrationService) public registration: UserRegistrationService,
               @Inject(FineoApi) private fineo:FineoApi,
               @Inject(GlobalState) private state:GlobalState){
+    Stripe.setPublishableKey(environment.stripeToken);
   }
 
   public startSignUp(name:string, email:string, password:string):void{
@@ -50,36 +52,14 @@ export class UserSignupService {
   }
 
   public createUser(stripeToken:string):Promise<any>{
-    // start by creating the user in stripe
-    return new Promise((resolve, reject) =>{
-      // see https://stripe.com/docs/api#create_customer
-      (<any>window).Stripe.customers.create({
-        email: this.email,
-        source: stripeToken,
-      }, function(status, customer) {
-        if (status.code == 200 || customer.error){
-          reject(customer);
-        } else {
-          resolve(new FullStripeResponse(status, customer));
-        }
-      });
-    })
-    // now create the user in Fineo
-    .then((result:FullStripeResponse) => {
-      // id of the user from stripe user creation
-      let id = result.response.id;
-      return this.signUp(this.name, this.email, this.password, id);
-    });
-  }
-
-  private signUp(name:string, email:string, password:string, stripeId:string):Promise<StripeResponse>{
     let user = new RegistrationUser();
-    user.name = name;
-    user.email = email;
-    user.password = password;
-    user.stripeToken = stripeId;
+    user.name = this.name;
+    user.email = this.email;
+    user.password = this.password;
+    user.stripeToken = stripeToken;
 
     let self = this;
+    // create the user in cognito
     return new Promise((resolve, reject) =>{
       this.registration.register(user, new SimpleSuccessFailureCallback(resolve, reject, "Successfully signed up user"));  
     });
@@ -130,7 +110,9 @@ export class CCInfo{
 * Simple CognitoCallback that just handles success/failure on called to #cognitoCallback()
 */
 class SimpleSuccessFailureCallback implements CognitoCallback {
-  constructor(private resolve, private reject, private message){}
+  constructor(private resolve, private reject, private message){
+    console.log("Creating callback with message: ", message);
+  }
   
   cognitoCallback(errMessage, result){
     if(errMessage != null){

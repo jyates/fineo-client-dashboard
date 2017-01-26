@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 
 import {
   UserSignupService,
@@ -30,7 +30,7 @@ export class Payment {
               private signup: UserSignupService) {
     let self = this;
     this.form = fb.group({
-      'number': ['', Validators.compose([Validators.required, Validators.minLength(4), function(control:AbstractControl){
+      'number': ['', Validators.compose([Validators.required, Validators.minLength(16), function(control:AbstractControl){
         if(!Stripe.card.validateCardNumber(control.value)){
           return {"invalidCardNumber": "Invalid card number!"};
         }
@@ -77,18 +77,25 @@ export class Payment {
     }
 
     // submit the payment information to Stripe to get a token
+    let self = this;
     this.get_token().then(result =>{
       console.log("successfully got stripe token: ", JSON.stringify(result));
       // and create a user with that token information
       return this.create_user(result);
     }).then(created =>{
       this.submitted = false;
-      console.log("Done creating user! Need to confirm the user.");
-       this.router.navigate(["/confirm"]);
+      let url = "/confirm"
+      let extras: NavigationExtras = {
+         queryParams: {"user" : self.signup.email}
+       }
+      console.log("Done creating user! Need to confirm the user: ", url);
+      this.router.navigate([url], extras);
     })
     .catch(response =>{
-      console.log("Credit card information was invalid", JSON.stringify(response));
-      alert(response.error.message);
+      console.log("Credit card information was invalid", response);
+      alert(response);
+      // alert(response.error.message);
+      this.submitted = false;
     })
   }
 
