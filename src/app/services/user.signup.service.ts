@@ -59,7 +59,7 @@ export class UserSignupService {
     user.stripeToken = stripeToken;
 
     let self = this;
-    // create the user in cognito
+    // create the user in cognito. This will trigger a lambda function that creates the user, api key, etc.
     return new Promise((resolve, reject) =>{
       this.registration.register(user, new SimpleSuccessFailureCallback(resolve, reject, "Successfully signed up user"));  
     });
