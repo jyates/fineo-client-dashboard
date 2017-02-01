@@ -30,7 +30,6 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
 
 module.exports = function (env) {
   return webpackMerge(commonConfig({env: ENV}), {
-
     /**
      * Developer tool to enhance debugging
      *
@@ -223,6 +222,11 @@ module.exports = function (env) {
           output: {
             path: helpers.root('dist')
           },
+
+          /**
+           * See https://github.com/akveo/ng2-admin/issues/604
+           */
+          postcss: {},
 
           /**
            * Static analysis linter for TypeScript advanced options configuration
