@@ -145,7 +145,6 @@
     "pretest": "npm run lint",
     "docs": "npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./src/",
     "gh-pages": "wintersmith build -C docs && gh-pages -d docs/build",
-    "start": "npm run server:dev",
     "start:hmr": "npm run server:dev:hmr",
     "version": "npm run build",
     "postversion": "git push && git push --tags",
@@ -155,7 +154,10 @@
     "postbuild:electron.full": "npm run electron:start",
     "build:electron.renderer": "npm run webpack -- --config config/electron/webpack.renderer.prod.js",
     "build:electron.main": "npm run webpack -- --config config/electron/webpack.electron.prod.js",
-    "electron:start": "electron build"
+    "electron:start": "electron build",
+
+    "heroku-postbuild": "npm run build:prod",
+    "start": "npm run server:prod"
   },
   "repository": {
     "type": "git",
