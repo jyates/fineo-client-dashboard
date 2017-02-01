@@ -12,7 +12,9 @@ import { ModalDirective } from 'ng2-bootstrap';
 // internal libs
 import {
   UserService,
-  LoggedIn
+  LoggedIn,
+  PasswordResetCallback,
+  ConfirmPasswordCallback
 } from '../../services/user.service';
 
 import { SplitCamelCase } from './split.camelcase.pipe'
@@ -108,5 +110,53 @@ export class Login implements LoggedIn {
   hideFailedResetModal():void{
     this.submitted = false;
     this.failedResetModal.hide();
+  }
+
+  forgotPassword():void{
+    console.log("starting forgot password")
+    let self = this;
+    this.users.resetPassword(this.email.value, {
+      verificationCodeSent: function (location, confirm:ConfirmPasswordCallback){
+        console.log("Verification code sent to: ", JSON.stringify(location));
+
+        let msg = "Verification code sent to: "+location.CodeDeliveryDetails.Destination + "\nPlease enter code:";
+
+        var code = self.doPrompt(msg);
+        if(code == null){
+          return;
+        }
+
+        var newPassword = self.doPrompt('Enter new password');
+        if(newPassword == null){
+          return;
+        }
+        confirm.confirm(code, newPassword).then((result) =>{
+          alert("Successfully reset password! Please try logging in again");
+        }).catch(err =>{
+          console.log("Failed to reset password! \n", JSON.stringify(err));
+          alert("Failed to reset password! \nReason: "+err+"\n\nPlease try again.");
+        });
+      },
+
+      resetFailed: function(reason:string){
+        console.log("Failed to reset password: ", JSON.stringify(reason));
+        if(reason.includes("Member must have length greater than or equal to 1")){
+          alert("Please enter an email address for which to reset the password.");
+        } else {
+          alert("Failed to reset password! "+self.lc(reason));
+        }
+      }
+    });
+  }
+
+  private doPrompt(msg):any{
+    var result = "";
+    while(result == ""){
+      result = prompt(msg,'');
+      if (result == null){
+        return null;
+      }
+    }
+    return result;
   }
 }

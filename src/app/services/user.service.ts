@@ -34,6 +34,20 @@ export interface LoggedIn {
   resetPasswordFailed(message):void;
 }
 
+export interface ConfirmPasswordCallback{
+  confirm(verificationCode: string, password:string):Promise<any>;
+}
+
+/**
+ * Implement this to be notified about resets
+ */
+export interface PasswordResetCallback {
+
+  verificationCodeSent(location, confirm:ConfirmPasswordCallback):void;
+
+  resetFailed(reason:string):void;
+}
+
 /**
 * A central place to manage user state. Encapsulates logging a user in/out, as well as metadata information about the user, like what their API Key is.
 */
@@ -60,36 +74,51 @@ export class UserService {
     let apiKeyLookup = new ApiKeyLookupOnLogin(onlogin, mgmt);
 
     let startPasswordReset = function(resetCallback:StartPasswordResetCallback){
-      mgmt.loginService.forgotPassword(mgmt.username, {
-          cognitoCallback: function(message, result){
-            console.log("Starting forgot password - message: "+message+", result: "+JSON.stringify(result));
-            if(!result){
-              console.log(message);
-              resetCallback.onFailure(message);
-            }else{
-              resetCallback.onSuccess();
-            }
-          },
-          resetPassword(){},
-          handleMFA(){}
-      });
+      let cc = new SuccessFailureCallback(
+        (message, result) => { resetCallback.onSuccess(); },
+        (message, result) => {
+          console.log(message);
+          resetCallback.onFailure(message);
+        });
+      mgmt.loginService.forgotPassword(mgmt.username, cc);
     };
 
-    let finishPasswordReset = function(code, passsword){
-      mgmt.loginService.confirmNewPassword(email, code, passsword, {
-          cognitoCallback: function(message, result){
-            console.log("Finishing password reset - message: "+message+", result: "+JSON.stringify(result));
-            if(!result){
-              onlogin.resetPasswordFailed(message);
-            }
-          },
-          resetPassword(){},
-          handleMFA(){}
-      });
+    let finishPasswordReset = function(code, passsword) {
+      mgmt.loginService.confirmNewPassword(email, code, passsword,
+        new SuccessFailureCallback(null, (message, result) => {
+            console.log(message);
+            onlogin.resetPasswordFailed(message);
+          })
+      );
     };
 
     // do the login process
     this.loginService.authenticate(email, password, new LoginCallback(startPasswordReset, finishPasswordReset, apiKeyLookup));
+  }
+
+  public resetPassword(username:string, callback:PasswordResetCallback) {
+    let self = this;
+    this.loginService.forgotPassword(username, new SuccessFailureCallback(
+      // success
+      (message, result) => {
+        callback.verificationCodeSent(message, {
+          confirm: function(verificationCode: string, password:string) {
+            return new Promise((resolve, reject) => {
+              // basic mapping of resolve/success - reject/failure, based on message != null
+              let cognitoCallback = new SuccessFailureCallback(
+                (message, result) => {resolve(result);},
+                (message, result) => {reject(message);});
+
+              self.loginService.confirmNewPassword(username, verificationCode, password, cognitoCallback);
+            });
+          }
+        });
+      },
+      // failure
+     (message, result) => {
+        callback.resetFailed(message);
+      })
+    );
   }
 
   public logout():void{
@@ -229,5 +258,38 @@ class LoginCallback implements CognitoCallback {
     // noop - we don't support MFA right now because we don't have a secondary input mechanism for users
     // when they use their username/password on a third party tool (e.g. BI tool)
   }
+}
 
+class SuccessFailureCallback implements CognitoCallback {
+
+  constructor(private success:(message:any, result:any) => void,
+              private failure:(message:any, result:any) => void,
+              private decider?:(message:any, result:any) => boolean) {
+    if(this.decider == null) {
+      this.decider = function(message, result){
+          return result != null;
+        };
+    }
+  }
+
+  cognitoCallback(message, result){
+    if(this.decider(message, result)) {
+      if(this.success != null){
+        this.success(message, result);
+      }
+    }else {
+      if(this.failure != null){
+        this.failure(message, result);
+      }
+    }
+  }
+
+  resetPassword(attributesToUpdate, requiredAttributes, callback:(password:string) => any):void{
+    // noop
+  }
+
+
+  handleMFA(codeDeliveryDetails, callbackWithCode:(mfa:string) => any):void{
+    // noop
+  }
 }

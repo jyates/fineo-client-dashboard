@@ -2,8 +2,6 @@
 
 ## Server side
 
- * payment authorization
- * environment setup
  * query -> results endpoint in query server (GET /query)
  
 ## UI/Frontend
