@@ -1,10 +1,50 @@
 [![Build Status](https://travis-ci.org/akveo/ng2-admin.svg?branch=master)](https://travis-ci.org/akveo/ng2-admin)
-[![Join the chat at https://gitter.im/ng2-admin/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ng2-admin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Dependency Status](https://david-dm.org/akveo/ng2-admin.svg)](https://david-dm.org/akveo/ng2-admin)
 
 # Admin panel framework based on Angular 2, Bootstrap 4 and Webpack
 
 Admin template made with :heart:  by [Akveo team](http://akveo.com/). Follow us on [Twitter](https://twitter.com/akveo_inc) to get latest news about this template first!
+
+## Building and Running
+
+Get started by installing the dependencies
+```
+$ npm install
+```
+
+### Development
+
+Start the development (local) server.
+```
+$ npm run server:dev
+```
+
+Supports hot-module-replacement and watches the `src/` directory for continuous updates.
+
+### Production
+
+This is entirely a static app powered by backend API. Therefore, we just need to run a simple httpserver to serve the content.
+
+```
+npm start
+```
+
+### Heroku
+
+Building with Heroku (or in a Heroku-like environment) requires the following environment variables:
+
+```
+NODE_ENV=production
+NPM_CONFIG_PRODUCTION=production
+```
+
+Then you can build the static distribution with:
+
+```
+npm run heroku-postbuild
+```
+
+Hint: this is is kicked off by heroku in without any extra configuration.
 
 ### Demo
 

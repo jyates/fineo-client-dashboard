@@ -134,7 +134,11 @@ module.exports = function (options) {
             emitErrors: false,
             failOnHint: false,
             resourcePath: 'src'
-          }
+          },
+          /**
+           * See https://github.com/akveo/ng2-admin/issues/604
+           */
+          postcss: {},
         }
       })
     ],
