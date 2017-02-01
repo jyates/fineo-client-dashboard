@@ -152,7 +152,9 @@
     "build:electron.main": "npm run webpack -- --config config/electron/webpack.electron.prod.js",
     "electron:start": "electron build",
 
+    "//": "Build kicked off by heroku after install",
     "heroku-postbuild": "npm run build:prod",
+        "//": "Don't forget, any step will attempt to run steps named [pre/post][step]",
         "prebuild:prod": "npm run clean:dist",
             "clean:dist": "npm run rimraf -- dist",
             "rimraf": "rimraf",
