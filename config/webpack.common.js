@@ -255,7 +255,7 @@ module.exports = function (options) {
         { from: 'src/assets', to: 'assets' },
         { from: 'src/meta'},
         // Include the LetsEncrypt target file
-        { from: 'src/.well-known/', to: '.well-known'}
+        { from: 'src/.lets_encrypt/', to: '.well-known'}
       ]),
 
       /*

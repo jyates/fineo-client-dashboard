@@ -29,7 +29,7 @@ This is entirely a static app powered by backend API. Therefore, we just need to
 npm start
 ```
 
-### Heroku
+#### Heroku
 
 Building with Heroku (or in a Heroku-like environment) requires the following environment variables:
 
@@ -45,6 +45,38 @@ npm run heroku-postbuild
 ```
 
 Hint: this is is kicked off by heroku in without any extra configuration.
+
+#### SSL Certificate
+
+An SSL certificate can be obtained from Let's Encrypt. This is achieved by simply adding the correct file path under `src/.lets_encrypt`. That path is then output as `.well-known` in the resulting distribution.
+
+Start by creating a new certificate with:
+```
+$ certbot certonly --manual
+```
+
+Which will shortly bring you to a screen that says something like:
+```
+Make sure your web server displays the following content at
+http://inchworm.io/.well-known/acme-challenge/ya6k1ed-SOME-LONG-URL before continuing:
+
+ya6k1edW38z-your-value-here
+```
+**Don't continue yet!!**
+
+Now you need to update/create the correct file under `src/.lets_encrypt` with the correct content.
+
+Now commit, build, and deploy the application. You should be able to browse to the expected Let's Encrypt file and see the correct output.
+
+See [this post](http://collectiveidea.com/blog/archives/2016/01/12/lets-encrypt-with-a-rails-app-on-heroku/) on how Let's Encrypt can work on Heroku and Rails (hint: this is only slightly different).
+
+##### Updates
+
+When you are ready to update the certificate, do:
+
+```
+$ certbot certonly --manual -d inchworm.io
+```
 
 ### Demo
 
