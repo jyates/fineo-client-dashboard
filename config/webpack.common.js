@@ -253,7 +253,9 @@ module.exports = function (options) {
        */
       new CopyWebpackPlugin([
         { from: 'src/assets', to: 'assets' },
-        { from: 'src/meta'}
+        { from: 'src/meta'},
+        // Include the LetsEncrypt target file
+        { from: 'src/.well-known/', to: '.well-known'}
       ]),
 
       /*
