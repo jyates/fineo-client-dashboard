@@ -92,8 +92,11 @@ export class Payment {
       this.router.navigate([url], extras);
     })
     .catch(response =>{
-      console.log("Credit card information was invalid", response);
-      alert(response);
+      console.log("Credit card information was invalid", JSON.stringify(response));
+      if((response.error != undefined) && (response.error.message != undefined)){
+        response = response.error.message;
+      }
+      alert("Credit card information was invalid: "+ response);
       // alert(response.error.message);
       this.submitted = false;
     })

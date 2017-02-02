@@ -143,7 +143,7 @@ export class Login implements LoggedIn {
         if(reason.includes("Member must have length greater than or equal to 1")){
           alert("Please enter an email address for which to reset the password.");
         } else {
-          alert("Failed to reset password! "+self.lc(reason));
+          alert("Failed to reset password! "+reason);
         }
       }
     });

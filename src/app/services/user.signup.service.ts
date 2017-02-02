@@ -40,6 +40,8 @@ export class UserSignupService {
       return Promise.reject({error:{message: "You must complete the registration form before submitting a credit card!"}});
     }
 
+    // apparently stripe doesn't actually care about this, though they use(d?) it in their examples
+    delete card.zipcode;
     return new Promise((resolve, reject) =>{
       (<any>window).Stripe.card.createToken(card, (status: number, response: any) => {
         if(response.error){

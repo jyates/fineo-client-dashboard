@@ -52,8 +52,8 @@ export const ENV_PROVIDERS = [
 // AWS environment information
 export const environment = {
   region: 'us-east-1',
-  userPoolId: 'us-east-1_B5WQVmvFb',
-  clientId: '5bam5cpdbppt4gob8voumq0aq6',
+  userPoolId: 'us-east-1_nK9lmbtmz',
+  clientId: '5gaaqldcqbc3ea00l745673om',
   identityPoolId: 'us-east-1:f0f95abf-97ad-454b-8e3c-6e905d68f6c9',
   // fineo's live, publishable key
   stripeToken: 'pk_live_qISv2nPFzdZkrDVdjrutvRpV'

@@ -141,35 +141,34 @@ export class UserRegistrationService {
     }
 
     register(user:RegistrationUser, callback:CognitoCallback):void {
-        console.log("UserRegistrationService: user is " + user);
+        console.log("UserRegistrationService: user is " + JSON.stringify(user));
 
-        let attributeList = [];
-
-        let dataEmail = {
+        let attributes = [];
+        this.addAttrib(attributes, {
             Name: 'email',
             Value: user.email
-        };
-        let dataNickname = {
-            Name: 'nickname',
+        });
+       this.addAttrib(attributes, {
+            Name: 'name',
             Value: user.name
-        };
-        let dataStripeToken = {
-            Name: 'stripeToken',
+        });
+       this.addAttrib(attributes, {
+            Name: 'custom:stripeToken',
             Value: user.stripeToken
-        }
-        attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail));
-        attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataNickname));
-        attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataStripeToken));
+        });
 
-        this.cognitoUtil.getUserPool().signUp(user.email, user.password, attributeList, null, function (err, result) {
+        this.cognitoUtil.getUserPool().signUp(user.email, user.password, attributes, null, function (err, result) {
             if (err) {
                 callback.cognitoCallback(err.message, null);
             } else {
-                console.log("UserRegistrationService: registered user is " + result);
+                console.log("UserRegistrationService: registered user is " + JSON.stringify(result));
                 callback.cognitoCallback(null, result);
             }
         });
+    }
 
+    private addAttrib(attributes:any[], attribute:any){
+        attributes.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(attribute));
     }
 
     confirmRegistration(username:string, confirmationCode:string, callback:CognitoCallback):void {

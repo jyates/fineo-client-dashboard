@@ -6,7 +6,6 @@
  
 ## UI/Frontend
 
- * forgot password flow
  * dashboarding
    * query url lookup for user
    * SQL query creation
