@@ -95,11 +95,7 @@ export class UserSignupService {
 }
 
 export class FullStripeResponse{
- constructor(public status:Object, public response:StripeResponse){}
-}
-
-export class StripeResponse{
-  public id:string
+ constructor(public status:Object, public response:any){}
 }
 
 export class CCInfo{

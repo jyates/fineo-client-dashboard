@@ -5,8 +5,7 @@ import { Router, NavigationExtras } from '@angular/router';
 import {
   UserSignupService,
   CCInfo,
-  FullStripeResponse,
-  StripeResponse
+  FullStripeResponse
 } from '../../services/user.signup.service';
 
 @Component({
@@ -116,7 +115,7 @@ export class Payment {
     return this.signup.submitCreditCardInfo(cc);
   }
 
-  private create_user(result:StripeResponse):Promise<any>{
-    return this.signup.createUser(result.id);
+  private create_user(result:any):Promise<any>{
+    return this.signup.createUser(result.response.id);
   }
 }

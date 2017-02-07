@@ -8,8 +8,7 @@ import 'rxjs/add/operator/map';
 import {
   UserSignupService,
   CCInfo,
-  FullStripeResponse,
-  StripeResponse
+  FullStripeResponse
 } from '../../services/user.signup.service';
 
 @Component({
