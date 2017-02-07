@@ -58,10 +58,8 @@
       </div>
     </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="spinner" *ngIf="submitted">
-    <sk-three-bounce></sk-three-bounce>
-  </div>
+  <small-spinner
+    [visible]="submitted">
+  </small-spinner>
 </div>

@@ -13,3 +13,4 @@ export * from './baPictureUploader';
 export * from './baCheckbox';
 export * from './baMultiCheckbox';
 export * from './spinners';
+export * from './small-spinner';

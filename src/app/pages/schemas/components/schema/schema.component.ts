@@ -6,8 +6,6 @@ import {NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { ModalDirective } from 'ng2-bootstrap';
 import { AlertModule } from 'ng2-bootstrap';
 
-import { ThreeBounceComponent } from 'ng2-spin-kit/app/spinner/three-bounce.component'
-
 import {GlobalState} from '../../../../global.state';
 
  import {
