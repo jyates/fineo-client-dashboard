@@ -55,6 +55,20 @@ export const environment = {
   userPoolId: 'us-east-1_nK9lmbtmz',
   clientId: '5gaaqldcqbc3ea00l745673om',
   identityPoolId: 'us-east-1:f0f95abf-97ad-454b-8e3c-6e905d68f6c9',
-  // fineo's live, publishable key
-  stripeToken: 'pk_live_qISv2nPFzdZkrDVdjrutvRpV'
+  // fineo's test key
+  stripeToken: 'pk_test_MObz3yYND5vPL1pp09pjawWy',
+
+  // urls for fineo services
+  urls: {
+    stream: "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod",
+    schema: "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod",
+    batch: "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod",
+    meta: "https://q5zrhiqdx4.execute-api.us-east-1.amazonaws.com/prod"
+  }
 };
+
+if ('production' === ENV ) {
+  // fineo's live, publishable, production key
+  environment.stripeToken =  'pk_live_qISv2nPFzdZkrDVdjrutvRpV'
+}
+

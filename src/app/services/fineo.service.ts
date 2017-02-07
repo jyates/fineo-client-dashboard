@@ -8,16 +8,13 @@ import {
   WithCredentials
 } from './cognito.service'
 
+import {environment} from '../environment'
+
 // declare var apigClientFactory:any;
 declare var apiGateway:any;
 
 @Injectable()
 export class FineoApi {
-
-  static STREAM_URL = "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod";
-  static SCHEMA_URL = "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod";
-  static BATCH_URL  = "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod";
-  static META_URL   = "https://q5zrhiqdx4.execute-api.us-east-1.amazonaws.com/prod";
 
   public data:Data;
   public schema:Schema;
@@ -90,7 +87,7 @@ interface WithApiGatewayClient{
 
 export class Metadata extends BaseExec {
   constructor(users:UserLoginService){
-    super(users, FineoApi.META_URL);
+    super(users, environment.urls.meta);
   }
 
   // user metadata
@@ -172,7 +169,7 @@ export class Data {
 export class Stream extends BaseExec {
 
   constructor(users: UserLoginService){
-    super(users, FineoApi.STREAM_URL);
+    super(users, environment.urls.stream);
   }
 
   public send(events:Object):Promise<any>{
@@ -183,7 +180,7 @@ export class Stream extends BaseExec {
 export class Batch extends BaseExec {
 
   constructor(users: UserLoginService){
-    super(users, FineoApi.BATCH_URL);
+    super(users, environment.urls.batch);
   }
 
   public batch(fileName:string, body:Object):Promise<any>{
@@ -201,7 +198,7 @@ export class Batch extends BaseExec {
 export class Schema extends BaseExec {
 
   constructor(users: UserLoginService){
-    super(users, FineoApi.SCHEMA_URL);
+    super(users, environment.urls.schema);
   }
 
   public getParentSchemaInfo():Promise<any>{
