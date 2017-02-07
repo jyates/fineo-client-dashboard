@@ -50,7 +50,7 @@ export class Register {
     }
     this.signup.startSignUp(this.name.value, this.email.value, this.password.value);
 
-    var target = '/payment'
+    var target = '/select-package'
     console.log("redirecting to: "+target);
     this.router.navigate([target]);
   }
