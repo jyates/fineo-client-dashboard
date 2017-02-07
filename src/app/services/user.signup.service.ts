@@ -22,6 +22,7 @@ export class UserSignupService {
   private name:string;
   public email:string;
   private password:string;
+  public package:string;
 
   constructor(@Inject(UserRegistrationService) public registration: UserRegistrationService,
               @Inject(FineoApi) private fineo:FineoApi,
@@ -59,6 +60,7 @@ export class UserSignupService {
     user.email = this.email;
     user.password = this.password;
     user.stripeToken = stripeToken;
+    user.plan = this.package;
 
     let self = this;
     // create the user in cognito. This will trigger a lambda function that creates the user, api key, etc.

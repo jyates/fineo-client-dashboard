@@ -10,6 +10,7 @@ export class RegistrationUser {
     email:string;
     password:string;
     stripeToken:string;
+    plan:string;
 }
 
 export interface CognitoCallback {
@@ -155,6 +156,10 @@ export class UserRegistrationService {
        this.addAttrib(attributes, {
             Name: 'custom:stripeToken',
             Value: user.stripeToken
+        });
+        this.addAttrib(attributes, {
+            Name: 'custom:plan',
+            Value: user.plan
         });
 
         this.cognitoUtil.getUserPool().signUp(user.email, user.password, attributes, null, function (err, result) {

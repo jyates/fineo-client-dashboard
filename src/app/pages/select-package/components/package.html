@@ -1,0 +1,9 @@
+<div class="col-sm-2 package-box" [class.package-selected]="selected(title)" (click)="select()">
+  <div *ngIf="enterprise" class="enterprise-header">Enterprise</div>
+  <div *ngIf="(!enterprise)" class="empty-header"></div>
+  <div class="package-content">
+    <div class="package-header">{{title}}</div>
+    <div class="package-info">{{info}}</div>
+    <div class="package-price">${{price}}/month</div>
+  </div>
+</div>

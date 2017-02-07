@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => System.import('./register/register.module')
   },
   {
+    path: 'select-package',
+    loadChildren: () => System.import('./select-package/select-package.module')
+  },
+  {
     path: 'payment',
     loadChildren: () => System.import('./payment/payment.module')
   },

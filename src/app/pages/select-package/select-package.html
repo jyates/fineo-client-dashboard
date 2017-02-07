@@ -1,0 +1,67 @@
+<div class="auth-main">
+  <div class="auth-block package-block">
+    <h1>Select Package</h1>
+
+    <!-- Actual packages -->
+    <div class="row" align="center">
+      <package-card
+        title="Free"
+        info="Try out the platform with a single device and one user"
+        price="0"
+        [selected]="isSelected()"
+        (selectEvent)="handleSelect($event)">
+      </package-card>
+
+      <package-card 
+        title="Hobby"
+        info="Great for small personal projects and IoT hobbists"
+        price="10"
+        [selected]="isSelected()"
+        (selectEvent)="handleSelect($event)">
+      </package-card>
+
+      <package-card
+        [enterprise]=true
+        title="Medium"
+        info="Get started scaling. Includes advanced features and support"
+        price="100"
+        [selected]="isSelected()"
+        (selectEvent)="handleSelect($event)">
+      </package-card>
+
+      <package-card
+        [enterprise]=true
+        title="Large"
+        info="Ready to scale. Includes advanced features and support"
+        price="500"
+        [selected]="isSelected()"
+        (selectEvent)="handleSelect($event)">
+      </package-card>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <a href="http://fineo.io/pricing" class="auth-link price-link">Find out more about pricing</a>
+      </div>
+    </div>
+    <div class="row select">
+      <div class="col-sm-12" align="center">
+        <button [disabled]="signup.package == null || submitted" (click)="submit()" class="btn btn-default btn-auth">Select</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12" align="center">
+        <progress value="50" max="100"></progress>
+        <a routerLink="/register" class="auth-link back-link"><i class="ion-ios-arrow-back"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spinner" *ngIf="submitted">
+    <sk-three-bounce></sk-three-bounce>
+  </div>
+</div>
