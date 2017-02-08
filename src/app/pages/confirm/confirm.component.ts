@@ -31,16 +31,30 @@ export class Confirm implements OnInit {
               private signup: UserSignupService) {
     let self = this;
     this.form = fb.group({
-      'code': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
+      'code': ['', Validators.compose([Validators.required, Validators.minLength(6)])]
     });
 
     this.code = this.form.controls['code'];
+    this.username = signup.email;
   }
 
   public ngOnInit() {
     this.route
       .queryParams
-      .map(params => params['user']).subscribe(user => this.username = user);
+      .map(params => params['user']).subscribe(user => {
+        if(user) {
+          this.username = user
+        }
+      });
+
+   this.route
+      .queryParams
+      .map(params => params['code']).subscribe(code => {
+        if(code) {
+          this.code.setValue(code);
+          this.code.markAsTouched();
+        }
+      });
   }
 
   public onSubmit(values:FormGroup):void {
