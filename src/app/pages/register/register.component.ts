@@ -30,8 +30,8 @@ export class Register {
       'name': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
       'email': ['', Validators.compose([Validators.required, EmailValidator.validate])],
       'passwords': fb.group({
-        'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
-        'repeatPassword': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
+        'password': ['', Validators.compose([Validators.required, Validators.minLength(8), this.validatePassword])],
+        'repeatPassword': ['', Validators.compose([Validators.required, Validators.minLength(8)])]
       }, {validator: EqualPasswordsValidator.validate('password', 'repeatPassword')})
     });
 
@@ -40,6 +40,21 @@ export class Register {
     this.passwords = <FormGroup> this.form.controls['passwords'];
     this.password = this.passwords.controls['password'];
     this.repeatPassword = this.passwords.controls['repeatPassword'];
+  }
+
+  public validatePassword(control:AbstractControl): {[key: string]: any} {
+    let letters = /[a-z]+/i;
+    let numbers = /[0-9]+/i;
+    let special = /[!@#$%&';:\(\)*+\/=?^_`{|}~.-\/\\\]\[<>\",]+/i;
+    return (letters.test(control.value) &&
+            numbers.test(control.value) &&
+            special.test(control.value)) ?
+      null :
+      {
+        validatePassword: {
+          valid: false
+        }
+      };
   }
 
   public onSubmit(values:Object):void {
@@ -53,5 +68,24 @@ export class Register {
     var target = '/select-package'
     console.log("redirecting to: "+target);
     this.router.navigate([target]);
+  }
+
+  public passwordMessage():string{
+    let message = "Passwords must contain numbers, letters, special characters and be at least 8 characters";
+    if(!this.passwordError() || (this.password.value == "" && this.repeatPassword.value == "")){
+      return message;
+    }
+    console.log("getting error!");
+    let top = this.passwords.errors
+    if(top != undefined && top["passwordsEqual"]){
+      return "Passwords don't match!"
+    }
+
+    // they match, so the error must be in the original password
+    return message;
+  }
+
+  public passwordError():boolean{
+    return !this.passwords.valid && (this.repeatPassword.touched && this.password.touched)
   }
 }
