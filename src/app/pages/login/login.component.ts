@@ -70,7 +70,7 @@ export class Login implements LoggedIn {
 
   // successful login, we are done!
   loggedIn():void {
-    this.router.navigate(['/pages/dashboard']);
+    this.router.navigate(['/pages/devices']);
     this.submitted = false;
   }
 

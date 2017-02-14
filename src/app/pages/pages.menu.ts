@@ -2,18 +2,18 @@ export const PAGES_MENU = [
   {
     path: 'pages',
     children: [
-      {
-        path: 'dashboard',
-        data: {
-          menu: {
-            title: 'Dashboard',
-            icon: 'ion-android-home',
-            selected: false,
-            expanded: false,
-            order: 0
-          }
-        }
-      },
+      // {
+      //   path: 'dashboard',
+      //   data: {
+      //     menu: {
+      //       title: 'Dashboard',
+      //       icon: 'ion-android-home',
+      //       selected: false,
+      //       expanded: false,
+      //       order: 0
+      //     }
+      //   }
+      // },
       {
         // using a non-array version here makes the link under the parent path (e.g. pages/devices/view)
         // but still matches when we check 'is selected' in baMenuService.
