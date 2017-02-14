@@ -40,8 +40,8 @@
   </small-spinner>
 </div>
 
-<!-- control modal from parent component -->
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<!-- Modal for a forced reset -->
+<div bsModal #resetModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
@@ -74,6 +74,44 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary confirm-btn" (click)="updatePasswordFromModal()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for a forgot password -->
+<div bsModal #forgotModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" aria-label="Close" (click)="cancelForgotPassword()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Reset Password</h4>
+      </div>
+      <div class="modal-body">
+        <span>{{forgotPasswordMessage}}</span>
+        <div *ngIf="doForgotPassword" class="form-horizontal">
+          <div class="row">
+            <div class="col-lg-6">
+              <label class="control-label">Verification Code</label>
+              <div>
+                <input type="text" [(ngModel)]="forgotVerificationCode" class="form-control-modal">
+              </div>  
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <label class="control-label">New Password</label>
+              <div>
+                <input type="password" [(ngModel)]="forgotPasswordReplacement" class="form-control-modal">
+              </div>  
+            </div>
+          </div>
+        </div> <!-- end if -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary confirm-btn" (click)="forgotPasswordCallback()">Submit</button>
       </div>
     </div>
   </div>

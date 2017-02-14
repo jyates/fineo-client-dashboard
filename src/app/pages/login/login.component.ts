@@ -1,8 +1,3 @@
-// angular
-// import { Component, ViewChild, ViewEncapsulation, ElementRef, Renderer } from '@angular/core';
-// import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
-// import {Router} from '@angular/router';
-
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import { FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router} from '@angular/router';
@@ -32,7 +27,8 @@ export class Login implements LoggedIn {
   public errorMessage:string = null;
   public submitted:boolean = false;
 
-  @ViewChild('childModal') passwordModal: ModalDirective;
+  @ViewChild('resetModal') passwordModal: ModalDirective;
+  @ViewChild('forgotModal') forgotPasswordModal: ModalDirective;
   @ViewChild('failedReset') failedResetModal: ModalDirective;
 
   public passwordAdditionalAttributes:Object;
@@ -40,6 +36,12 @@ export class Login implements LoggedIn {
   public newPassword:string = null;
   private passwordCallback;
   private passwordResetReason:string ="";
+
+  public doForgotPassword = false;
+  public forgotPasswordMessage:string = "";
+  public forgotPasswordReplacement:string = "";
+  public forgotVerificationCode:string = "";
+  public forgotPasswordCallback:Function;
 
   constructor(private fb:FormBuilder,
               private router: Router,
@@ -119,34 +121,34 @@ export class Login implements LoggedIn {
 
   forgotPassword():void{
     console.log("starting forgot password")
+    // reset the verification
+    this.doForgotPassword  = true;
+    this.forgotVerificationCode = "";
+    this.forgotPasswordReplacement = "";
+
     let self = this;
     this.users.resetPassword(this.email.value, {
       verificationCodeSent: function (location, confirm:ConfirmPasswordCallback){
         console.log("Verification code sent to: ", JSON.stringify(location));
 
-        let msg = "Verification code sent to: "+location.CodeDeliveryDetails.Destination + "\nPlease enter code:";
+        self.forgotPasswordMessage =  "Verification code sent to: "+location.CodeDeliveryDetails.Destination;
 
-        var code = self.doPrompt(msg);
-        if(code == null){
-          return;
+        self.forgotPasswordCallback = function(){
+          confirm.confirm(self.forgotVerificationCode, self.forgotPasswordReplacement).then((result) =>{
+            alert("Successfully reset password! Please try logging in again");
+          }).catch(err =>{
+            self.cancelForgotPassword();
+            let message = JSON.stringify(err)
+            if(message.includes("PostConfirmation")){
+              console.log("Reset didn't fail, cognito just sends a confirm signup on password reset.")
+              console.log("Error message:", message);
+              return;
+            }
+            console.log("Failed to reset password! \n", message);
+            alert("Failed to reset password! \nReason: "+message+"\n\nPlease try again.");
+          });
         }
-
-        var newPassword = self.doPrompt('Enter new password');
-        if(newPassword == null){
-          return;
-        }
-        confirm.confirm(code, newPassword).then((result) =>{
-          alert("Successfully reset password! Please try logging in again");
-        }).catch(err =>{
-          let message = JSON.stringify(err)
-          if(message.includes("PostConfirmation")){
-            console.log("Reset didn't fail, cognito just sends a confirm signup on password reset.")
-            console.log("Error message:", message);
-            return;
-          }
-          console.log("Failed to reset password! \n", message);
-          alert("Failed to reset password! \nReason: "+message+"\n\nPlease try again.");
-        });
+        self.forgotPasswordModal.show();
       },
 
       resetFailed: function(reason:string){
@@ -160,14 +162,7 @@ export class Login implements LoggedIn {
     });
   }
 
-  private doPrompt(msg):any{
-    var result = "";
-    while(result == ""){
-      result = prompt(msg,'');
-      if (result == null){
-        return null;
-      }
-    }
-    return result;
+  cancelForgotPassword(){
+    this.forgotPasswordModal.hide();
   }
 }
