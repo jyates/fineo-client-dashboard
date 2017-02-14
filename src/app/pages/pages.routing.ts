@@ -29,7 +29,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
-      // { path: 'dashboard', loadChildren: 'app/pages/dashboard/dashboard.module#DashboardModule' },
+      { path: 'dashboard', loadChildren: 'app/pages/dashboard/dashboard.module#DashboardModule' },
       { path: 'profile', loadChildren: 'app/pages/profile/profile.module#ProfileModule' },
       { path: 'devices', loadChildren: 'app/pages/devices/devices.module#DevicesModule' },
       { path: 'schemas', loadChildren: 'app/pages/schemas/schemas.module#SchemasModule' },

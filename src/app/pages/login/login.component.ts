@@ -25,7 +25,7 @@ import { SplitCamelCase } from './split.camelcase.pipe'
   templateUrl: './login.html',
 })
 export class Login implements LoggedIn, OnInit {
-  private static DEFAULT_HOME: string = '/pages/devices/view';
+  private static DEFAULT_HOME: string = '/pages/dashboard';
 
   public form: FormGroup;
   public email: AbstractControl;
