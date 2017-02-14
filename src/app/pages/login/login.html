@@ -26,19 +26,18 @@
       </div>
     </form>
 
-    <div class="row" style="color:red" *ngIf="!form.valid && form.touched">
-      <br/>
-      <span *ngIf="form.hasError['minlength']">{{form.errors.minLength}}</span>
+    <!-- Holding section for no errors -->
+    <div class="row error-hold" style="color:red" *ngIf="!errorMessage">
+      <span></span>
     </div>
+    <!-- Comes up if there are errors -->
     <div class="row" style="color:red" *ngIf="errorMessage">
       {{errorMessage}}
     </div>
   </div>
-  <div class="row" >
-      <div class="spinner" *ngIf="submitted">
-        <sk-three-bounce></sk-three-bounce>
-      </div>
-    </div>
+  <small-spinner
+    [visible]="submitted">
+  </small-spinner>
 </div>
 
 <!-- control modal from parent component -->
