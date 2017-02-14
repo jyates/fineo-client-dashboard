@@ -46,7 +46,7 @@ export class Login implements LoggedIn {
               private users: UserService) {
     this.form = fb.group({
       'email': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
-      'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
+      'password': ['', Validators.compose([Validators.required, Validators.minLength(8)])]
     });
 
     this.email = this.form.controls['email'];
@@ -101,6 +101,11 @@ export class Login implements LoggedIn {
   }
 
   resetPasswordFailed(message:string):void {
+    if(message.includes("PostConfirmation")){
+      console.log("Reset didn't fail, cognito just sends a confirm signup on password reset.")
+      console.log("Error message:", message);
+      return;
+    }
     console.log("Failed to reset password - "+message);
     this.passwordResetReason = message;
     this.failedResetModal.show();
@@ -133,8 +138,14 @@ export class Login implements LoggedIn {
         confirm.confirm(code, newPassword).then((result) =>{
           alert("Successfully reset password! Please try logging in again");
         }).catch(err =>{
-          console.log("Failed to reset password! \n", JSON.stringify(err));
-          alert("Failed to reset password! \nReason: "+err+"\n\nPlease try again.");
+          let message = JSON.stringify(err)
+          if(message.includes("PostConfirmation")){
+            console.log("Reset didn't fail, cognito just sends a confirm signup on password reset.")
+            console.log("Error message:", message);
+            return;
+          }
+          console.log("Failed to reset password! \n", message);
+          alert("Failed to reset password! \nReason: "+message+"\n\nPlease try again.");
         });
       },
 
