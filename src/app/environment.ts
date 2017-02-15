@@ -60,10 +60,10 @@ export const environment = {
 
   // urls for fineo services
   urls: {
-    stream: "https://wj7mcwo8vg.execute-api.us-east-1.amazonaws.com/prod",
-    schema: "https://kgtq36jvac.execute-api.us-east-1.amazonaws.com/prod",
-    batch: "https://mo2n9uyzo4.execute-api.us-east-1.amazonaws.com/prod",
-    meta: "https://q5zrhiqdx4.execute-api.us-east-1.amazonaws.com/prod"
+    stream: "https://stream.fineo.io/v1",
+    schema: "https://schema.fineo.io/v1",
+    batch: "https://batch.fineo.io/v1",
+    meta: "https://meta.fineo.io/v1"
   }
 };
 
