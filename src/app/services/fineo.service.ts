@@ -38,9 +38,11 @@ class BaseExec {
   protected api:Api;
   public endpoint:string;
   public pathComponent:string;
+  private url:string;
 
   constructor(protected users:UserLoginService,
-              private url:string){
+              path:string){
+    this.url = environment.urls.api + path;
     this.api = new Api(this);
     // extract endpoint and path from url
     this.endpoint = /(^https?:\/\/[^\/]+)/g.exec(this.url)[1];
