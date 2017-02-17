@@ -73,8 +73,16 @@ export class Confirm implements OnInit {
         this.router.navigate(["/login"]);
         this.submitted = false;
       }).catch(err =>{
-        console.log("Failed to confirm user: ", err);
+        let msg = JSON.stringify(err);
         this.submitted = false;
+        if(msg.includes("Socket timeout while invoking Lambda function")){
+          console.log(err);
+          this.router.navigate(["/login"]);
+          return;
+        }
+
+        // alert if not a 'real' failure
+        console.log("Failed to confirm user: ", err);
         alert(err);
       });
   }
