@@ -120,7 +120,7 @@ export class SchemaComponent {
 
   private addNewField(){
     const arrayControl = <FormArray>this.form.controls['added_fields'];
-    this.addFieldToControl({}, arrayControl);
+    this.addFieldToControl(null, arrayControl);
   }
 
   private addFieldToControl(field, arrayControl:FormArray){
@@ -129,6 +129,14 @@ export class SchemaComponent {
   }
 
   private newFieldGroup(field:Field){
+    if(field == null){
+      return this.fb.group({
+        name: ["", [Validators.required, Validators.minLength(1)]],
+        aliases: ["", []],
+        type: ["", [Validators.required, Validators.minLength(3)]]
+      });
+    }
+
     return this.fb.group({
       name: [field.name, [Validators.required]],
       originalName:[field.name, [Validators.required]],
