@@ -65,6 +65,17 @@ export class AddSchemaComponent {
     }
 
     this.submitted = true;
+
+    // disable the form fields
+    this.name.disable();
+    this.aliases.disable();
+    this.ts_aliases.disable();
+    this.ts_formats.disable();
+    this.fields.controls.forEach(field =>{
+      field.disable();
+    })
+
+
     // save the changes
     console.log("Submitted: "+JSON.stringify(form));
     var name = this.name.value;
