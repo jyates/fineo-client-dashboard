@@ -238,7 +238,7 @@ export class SchemaComponent {
   }
 
   private returnHome():void{
-    var target = '/pages/dashboard'
+    var target = '/pages/devices/view'
     console.log("redirecting to: "+target);
     this.router.navigate([target]);
   }

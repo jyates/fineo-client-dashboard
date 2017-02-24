@@ -144,7 +144,7 @@ export class AddSchemaComponent {
       }
       
       // go back to the dashboard
-      this.router.navigate(["/pages/dashboard"])
+      this.router.navigate(["/pages/devices/view"])
     })
   }
 
