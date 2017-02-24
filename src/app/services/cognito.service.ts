@@ -1,6 +1,5 @@
 import {Injectable, Inject} from "@angular/core";
 import {environment} from '../environment';
-import {Callback} from './aws.services';
 
 declare var AWSCognito:any;
 declare var AWS:any;
@@ -11,6 +10,12 @@ export class RegistrationUser {
     password:string;
     stripeToken:string;
     plan:string;
+}
+
+export interface Callback {
+    callback():void;
+    callbackWithParam(result:any):void;
+    sessionExpired():void;
 }
 
 export interface CognitoCallback {
@@ -28,17 +33,23 @@ export interface LoggedInCallback {
 @Injectable()
 export class CognitoUtil {
   
-  public static _POOL_DATA = {
-    UserPoolId: environment.userPoolId,
-    ClientId: environment.clientId
-  };
+    public static _POOL_DATA = {
+        UserPoolId: environment.userPoolId,
+        ClientId: environment.clientId
+    };
   
-  public static getAwsCognito():any {
+    public static getAwsCognito():any {
         return AWSCognito
     }
 
+    private pool:any;
+    constructor() {
+        this.pool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(CognitoUtil._POOL_DATA);
+        AWS.config.region = 'us-east-1'
+    }
+
     getUserPool() {
-        return new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(CognitoUtil._POOL_DATA);
+        return this.pool;
     }
 
     getCurrentUser() {
@@ -239,17 +250,23 @@ export class UserLoginService {
         let handler = {
             // result is a simple object with two fields: idToken and accessToken (both jwt tokens)
             onSuccess: function (result) {
-                console.log("successful auth of user: "+username);
+                console.log("successful auth of user: ", username);
                 
                 var logins = {}
                 logins['cognito-idp.us-east-1.amazonaws.com/' + environment.userPoolId] = result.getIdToken().getJwtToken();
 
                 // Add the User's Id Token to the Cognito credentials login map.
-                AWS.config.region = 'us-east-1'
-                AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+                let credentialParams = {
                     IdentityPoolId: environment.identityPoolId,
                     Logins: logins
-                });
+                };
+                // https://github.com/aws/aws-sdk-js/issues/609
+                var credentials = new AWS.CognitoIdentityCredentials(credentialParams);
+                credentials.clearCachedId();
+                credentials = new AWS.CognitoIdentityCredentials(credentialParams);
+                AWS.config.credentials = credentials;
+
+                console.log("Added logins for user: ",username);
                 callback.cognitoCallback(null, result);
             },
             onFailure: function (err) {
@@ -347,6 +364,9 @@ export class UserLoginService {
     logout() {
         console.log("UserLoginService: Logging out");
         this.cognitoUtil.getCurrentUser().signOut();
+        // reset any other parameters that got set
+        AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
+        AWS.config.credentials = null;
     }
 
     isAuthenticated(callback:LoggedInCallback) {

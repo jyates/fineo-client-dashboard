@@ -19,8 +19,6 @@ import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 
 /* Custom Fineo components */
-// AWS Connection
-import { AwsUtil } from './services/aws.services';
 import { 
   UserLoginService,
   CognitoUtil,
@@ -45,7 +43,6 @@ const APP_PROVIDERS = [
   AppState,
   GlobalState,
   // AWS connection
-  AwsUtil,
   CognitoUtil,
   UserLoginService,
   UserRegistrationService,

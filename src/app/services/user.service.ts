@@ -182,6 +182,7 @@ class DelegatingLoggedIn implements LoggedIn {
 class ApiKeyLookupOnLogin extends DelegatingLoggedIn{
   constructor(delegate:LoggedIn, private mgmt:UserService){
     super(delegate);
+    console.log("Looking up API Key before continuing login through delegate")
   }
 
   loggedIn(){

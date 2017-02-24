@@ -70,6 +70,7 @@ export class Login implements LoggedIn {
 
   // successful login, we are done!
   loggedIn():void {
+    console.log("Successfully logged in: ", this.email.value);
     this.router.navigate(['/pages/devices/view']);
     this.submitted = false;
   }
