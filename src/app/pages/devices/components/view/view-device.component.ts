@@ -66,9 +66,16 @@ export class ViewDeviceComponent {
   public onSubmit(form, valid):void{
     // save the changes
     this.saving = true;
+    var startTime = Date.now();
     this.service.updateDeviceName(this.id, this.name.value).then(result =>{
       console.log("Done updating device name");
-      this.saving = false;
+      // make sure we that show a little bit of loading so people believe its saved
+      var endTime = Date.now();
+      var timeDiff = 500 - endTime - startTime;
+      if(timeDiff < 0){
+         timeDiff =0
+      }
+      setTimeout(() =>{this.saving = false}, timeDiff)
     })
     .catch(err =>{
       this.saving = false;
