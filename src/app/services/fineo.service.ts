@@ -344,10 +344,13 @@ class Api {
                       } else{
                         resolve(data);
                       }
-                    }).catch(error => reject({
-                      request: request,
-                      error: error
-                    }));
+                    }).catch(error => {
+                      console.log("Error: ", error);
+                      reject({
+                        request: request,
+                        error: error
+                      });
+                    } );
           }).catch(err =>{
             console.log("Failed loading the api key! -- ", JSON.stringify(err));
             reject(err);

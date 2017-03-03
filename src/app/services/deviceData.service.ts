@@ -5,6 +5,8 @@ import {
   Metadata
 } from './fineo.service';
 
+import {RETRY_TIMEOUT} from '../environment'
+
 export class DeviceKeyInfo{
   constructor(public id:string){}
 }
@@ -51,7 +53,12 @@ export class DeviceDataService {
   * Get information about all the current devices
   */
   public devices():Promise<DeviceInfo[]>{
-    return this.deviceService.getDeviceIds().then(result =>{
+    // sometimes the user isn't fully "created" when logging in. This avoids failing for that
+    let p = Promise.reject("inital");
+    return p.catch(a => this.deviceService.getDeviceIds())
+          .catch(this.rejectDelay)
+          .catch(a => this.deviceService.getDeviceIds())
+          .then(result =>{
       let info = []
       if(result.devices === undefined){
         return Promise.resolve([]);
@@ -61,6 +68,13 @@ export class DeviceDataService {
         info.push(this.getDeviceInfo(id));
       });
       return Promise.all(info);
+    });
+  }
+
+  private rejectDelay(reason):Promise<any> {
+    console.log("Waiting", RETRY_TIMEOUT, "ms after failure. Error:", reason);
+    return new Promise(function(resolve, reject) {
+      setTimeout(reject.bind(null, reason), RETRY_TIMEOUT);
     });
   }
 

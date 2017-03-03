@@ -68,6 +68,8 @@ export const environment = {
   }
 };
 
+export const RETRY_TIMEOUT:number = 5000;
+
 if ('production' === ENV ) {
   // fineo's live, publishable, production key
   environment.stripeToken =  'pk_live_qISv2nPFzdZkrDVdjrutvRpV'

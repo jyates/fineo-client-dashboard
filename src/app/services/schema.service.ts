@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { FineoApi, Schema } from './fineo.service';
+import {RETRY_TIMEOUT} from '../environment'
 
 @Injectable()
 export class SchemaService {
@@ -19,9 +20,15 @@ export class SchemaService {
   */
   public schemas():Promise<SchemaMetaInfo[]>{
     let schemas = this;
-    return this.schemaApi.getMetrics().then(result =>{
+
+    // sometimes the user isn't fully "created" when logging in. This avoids failing for that
+    let p = Promise.reject("inital");
+    return p.catch(a => this.schemaApi.getMetrics())
+          .catch(this.rejectDelay)
+          .catch(a => this.schemaApi.getMetrics())
+          .then(result =>{
       let p = SchemaService.rejectEmptyData(result);
-      if( p != null){
+      if( p != null)  {
         return p;
       }
 
@@ -33,6 +40,13 @@ export class SchemaService {
       });
 
       return schemas.schemaProperties;
+    });
+  }
+
+  private rejectDelay(reason):Promise<any> {
+    console.log("Waiting", RETRY_TIMEOUT, "ms after failure. Error:", reason);
+    return new Promise(function(resolve, reject) {
+      setTimeout(reject.bind(null, reason), RETRY_TIMEOUT);
     });
   }
 
