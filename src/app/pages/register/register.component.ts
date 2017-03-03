@@ -36,10 +36,22 @@ export class Register {
     });
 
     this.name = this.form.controls['name'];
+    if(this.signup.name){
+      this.name.setValue(this.signup.name);
+    }
+
     this.email = this.form.controls['email'];
+    if(this.signup.email){
+      this.email.setValue(this.signup.email);
+    }
     this.passwords = <FormGroup> this.form.controls['passwords'];
     this.password = this.passwords.controls['password'];
     this.repeatPassword = this.passwords.controls['repeatPassword'];
+    if(this.signup.password){
+      let p = this.signup.password;
+      this.password.setValue(p);
+      this.repeatPassword.setValue(p);
+    }
   }
 
   public validatePassword(control:AbstractControl): {[key: string]: any} {

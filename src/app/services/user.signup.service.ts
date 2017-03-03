@@ -19,9 +19,9 @@ import {
 @Injectable()
 export class UserSignupService {
 
-  private name:string;
+  public name:string;
   public email:string;
-  private password:string;
+  public password:string;
   public package:string;
 
   constructor(@Inject(UserRegistrationService) public registration: UserRegistrationService,
