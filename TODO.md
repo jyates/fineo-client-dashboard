@@ -6,6 +6,7 @@
  
 ## UI/Frontend
 
+ * spinner for sending data
  * dashboarding
    * query url lookup for user
    * SQL query creation
