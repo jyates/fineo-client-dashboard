@@ -44,6 +44,11 @@ export class SelectPackage {
        }).catch(err =>{
          this.submitted = false;
          console.log("Failed to create user! Reason: ", JSON.stringify(err));
+         if(err == "User already exists"){
+           alert("User already exists! Did you mean to log in?")
+           return;
+         }
+         
          alert("Sign up failed. Please send console output to help@fineo.io. \nReason:"+JSON.stringify(err));
        })
     } else{
