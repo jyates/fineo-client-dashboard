@@ -61,6 +61,7 @@ export class StreamComponent {
     // make the request
     this.service.stream(val).then(result =>{
       this.submitting = false;
+      console.log("Successfully submitted data!");
     })
     .catch(err =>{
       console.log("Error uploading data!", JSON.stringify(err));
