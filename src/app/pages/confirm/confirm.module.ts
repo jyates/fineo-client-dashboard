@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
 
 import { Confirm } from './confirm.component';
+import { ConfirmEmpty } from './confirm.empty.component';
+import { NextSteps } from './next-steps/next.steps.component';
 import { routing } from './confirm.routing';
 
 
@@ -16,6 +18,8 @@ import { routing } from './confirm.routing';
     routing
   ],
   declarations: [
+    ConfirmEmpty,
+    NextSteps,
     Confirm
   ]
 })

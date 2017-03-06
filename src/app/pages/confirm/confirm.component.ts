@@ -18,6 +18,7 @@ import {
   template: require('./confirm.html'),
 })
 export class Confirm implements OnInit {
+  private NEXT:string = "/confirm/next-steps"
 
   public form:FormGroup;
   public code:AbstractControl;
@@ -70,14 +71,14 @@ export class Confirm implements OnInit {
 
     this.signup.confirmUser(this.username, this.code.value)
       .then(result =>{
-        this.router.navigate(["/login"]);
+        this.router.navigate([this.NEXT]);
         this.submitted = false;
       }).catch(err =>{
         let msg = JSON.stringify(err);
         this.submitted = false;
         if(msg.includes("Socket timeout while invoking Lambda function")){
           console.log(err);
-          this.router.navigate(["/login"]);
+          this.router.navigate([this.NEXT]);
           return;
         }
 
