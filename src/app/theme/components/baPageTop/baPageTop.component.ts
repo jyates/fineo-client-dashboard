@@ -37,4 +37,11 @@ export class BaPageTop {
     this.users.logout();
     this.router.navigate(['/login']);
   }
+
+  public profile(){
+    this.router.navigate(['/pages/profile']);
+    this._state.notifyDataChanged('menu.activeLink', {
+      title: "Profile"
+    });
+  }
 }

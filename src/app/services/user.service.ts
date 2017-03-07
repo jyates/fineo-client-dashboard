@@ -48,6 +48,19 @@ export interface PasswordResetCallback {
   resetFailed(reason:string):void;
 }
 
+export class Attribute{
+
+  constructor(private name:string, private value:any){}
+
+  public getName():string{
+    return this.name;
+  }
+
+  public getValue():any{
+    return this.value;
+  }
+}
+
 /**
 * A central place to manage user state. Encapsulates logging a user in/out, as well as metadata information about the user, like what their API Key is.
 */
@@ -119,6 +132,60 @@ export class UserService {
         callback.resetFailed(message);
       })
     );
+  }
+
+  public changePassword(oldPassword:string, newPassword: string):Promise<any>{
+    let user = this.getUser();
+    return new Promise((accept, reject) => {
+      user.changePassword(oldPassword, newPassword, function(err, result){
+        if(err){
+          reject(err);
+          return;
+        }
+        accept(result);
+      })
+    });
+  }
+
+  public userAttributes():Promise<Attribute[]>{
+    let user = this.getUser();
+    return new Promise((resolve, reject) =>{
+      user.getUserAttributes((err, result) =>{
+        if (err) {
+            reject(err);
+            return;
+        }
+        resolve(result);
+      })
+    });
+  }
+
+  public updateAttributes(attributes: Attribute[]):Promise<any>{
+    let user = this.getUser();
+    // convert the attributes over
+    let list = [];
+    attributes.forEach(attrib =>{
+      var attribute = {
+        Name: attrib.getName(),
+        Value: attrib.getValue()
+      };
+      var att = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(attribute);
+      list.push(att);
+    });
+
+    return new Promise((accept, reject) =>{
+      user.updateAttributes(list, function(err, result) {
+        if (err) {
+            reject(err);
+            return;
+        }
+        accept(result);
+      });
+    });
+  }
+
+  private getUser(){
+    return this.loginService.cognitoUtil.getCurrentUser();
   }
 
   public logout():void{

@@ -1,0 +1,89 @@
+<small-spinner
+  [visible]="loading"
+  [holding]="false">
+</small-spinner>
+
+<form [formGroup]="form" (ngSubmit)="saveAttributes()" class="form-horizontal">
+  <div class="form-group row">
+    <div class="col-lg-10">
+      <label class="col-sm-2 control-label control-label-name">Email</label>
+      <div class="col-sm-10">
+        <label class="col-sm-2 control-label">{{user.username}}</label>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="attributes">
+    <div *ngFor="let attrib of attributes; let i = index" class="form-group row">
+      <div class="col-lg-10">
+        <label for="profile{{i}}" class="col-sm-2 control-label control-label-name">{{attrib.getName()}}</label>
+        <div class="col-sm-10">
+          <input [formControl]="attrib.control" type="text" class="form-control" id="i" placeholder="<LOADING>">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-md-1">
+      <button type="submit" [disabled]="!form.valid || loading" class="btn btn-success btn-md btn-raised">Save</button>
+    </div>
+  </div>
+</form>
+
+<hr>
+<form [formGroup]="passwords" (ngSubmit)="updatePassword()" class="form-horizontal">
+  <h1>Password</h1>
+
+  <div class="form-group row"
+    [class.has-error]="((!oPassword.valid) && oPassword.touched)"
+    [class.has-success]="(oPassword.valid && oPassword.touched)">
+    <div class="col-lg-10">
+      <label for="oldPassword" class="col-sm-3 control-label control-label-name">Current Password</label>
+      <div class="col-sm-9">
+        <input [formControl]="oPassword" type="password" class="form-control" id="oldPassword">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row"
+    [class.has-error]="((!nPassword.valid) && nPassword.touched)"
+    [class.has-success]="(nPassword.valid && nPassword.touched)">
+    <div class="col-lg-10">
+      <label for="newPassword" class="col-sm-3 control-label control-label-name">New Password</label>
+      <div class="col-sm-9">
+        <input [formControl]="nPassword" type="password" class="form-control" id="newPassword">
+      </div>
+    </div>
+  </div>
+  <div class="form-group row"
+    [class.has-error]="((!rPassword.valid || !passwords.valid) && rPassword.touched)"
+    [class.has-success]="(rPassword.valid && passwords.valid && rPassword.touched)">
+    <div class="col-lg-10">
+      <label for="repeatPassword" class="col-sm-3 control-label control-label-name">Confirm Password</label>
+      <div class="col-sm-9">
+        <input [formControl]="rPassword" type="password" class="form-control" id="repeatPassword">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-md-1">
+            <button type="submit" [disabled]="!passwords.valid || loading" class="btn btn-success btn-md btn-raised">Update Password</button>
+    </div>
+  </div>
+</form>
+
+<hr>
+<form (ngSubmit)="updatePassword()" class="form-horizontal">
+  <h1>API Key</h1>
+
+  <div class="form-group row">
+    <div class="col-lg-10">
+      <label for="apikey" class="col-sm-2 control-label control-label-name">Key</label>
+      <div class="col-sm-10">
+        <input value="{{user.apikey}}" type="text" class="form-control" id="apikey" readonly>
+      </div>
+    </div>
+  </div>
+</form>

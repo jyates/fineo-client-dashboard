@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import {EmailValidator, EqualPasswordsValidator} from '../../theme/validators';
+import {EmailValidator, PasswordValidator} from '../../theme/validators';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { UserSignupService } from '../../services/user.signup.service';
@@ -29,10 +29,7 @@ export class Register {
     this.form = fb.group({
       'name': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
       'email': ['', Validators.compose([Validators.required, EmailValidator.validate])],
-      'passwords': fb.group({
-        'password': ['', Validators.compose([Validators.required, Validators.minLength(8), this.validatePassword])],
-        'repeatPassword': ['', Validators.compose([Validators.required, Validators.minLength(8)])]
-      }, {validator: EqualPasswordsValidator.validate('password', 'repeatPassword')})
+      'passwords': PasswordValidator.getPasswordGroup(fb)
     });
 
     this.name = this.form.controls['name'];
@@ -54,20 +51,7 @@ export class Register {
     }
   }
 
-  public validatePassword(control:AbstractControl): {[key: string]: any} {
-    let letters = /[a-z]+/i;
-    let numbers = /[0-9]+/i;
-    let special = /[!@#$%&';:\(\)*+\/=?^_`{|}~.-\/\\\]\[<>\",]+/i;
-    return (letters.test(control.value) &&
-            numbers.test(control.value) &&
-            special.test(control.value)) ?
-      null :
-      {
-        validatePassword: {
-          valid: false
-        }
-      };
-  }
+  
 
   public onSubmit(values:Object):void {
     this.submitted = true;

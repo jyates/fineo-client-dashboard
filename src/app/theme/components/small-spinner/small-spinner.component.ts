@@ -8,7 +8,7 @@ import { Component, Input } from "@angular/core";
     }`],
   template: `
   <div class="row">
-    <div class="spinner-hold" *ngIf="(!visible)">
+    <div class="spinner-hold" *ngIf="(!visible && holding)">
       <span></span>
     </div>
     <div class="spinner" *ngIf="visible">
@@ -20,4 +20,6 @@ import { Component, Input } from "@angular/core";
 export class SmallSpinnerComponent {
   @Input()
   public visible: boolean = false;
+  @Input()
+  public holding:boolean = true;
 }
