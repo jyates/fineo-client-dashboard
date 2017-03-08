@@ -135,33 +135,44 @@ export class UserService {
   }
 
   public changePassword(oldPassword:string, newPassword: string):Promise<any>{
-    let user = this.getUser();
-    return new Promise((accept, reject) => {
-      user.changePassword(oldPassword, newPassword, function(err, result){
-        if(err){
+    return new Promise((accept, reject) =>{
+      this.getUser({
+        withUser: function(user, session) {
+          user.changePassword(oldPassword, newPassword, function(err, result){
+            if(err){
+              reject(err);
+              return;
+            }
+            accept(result);
+          })
+        },
+        loadUserFailure: function(err){
           reject(err);
-          return;
         }
-        accept(result);
-      })
+      });
     });
   }
 
   public userAttributes():Promise<Attribute[]>{
-    let user = this.getUser();
-    return new Promise((resolve, reject) =>{
-      user.getUserAttributes((err, result) =>{
-        if (err) {
-            reject(err);
-            return;
+    return new Promise((accept, reject) =>{
+      this.getUser({
+        withUser: function(user, session){
+          user.getUserAttributes((err, result) =>{
+            if (err) {
+              reject(err);
+              return;
+            }
+            accept(result);
+          })
+        },
+        loadUserFailure: function(err){
+          reject(err);
         }
-        resolve(result);
-      })
+      });
     });
   }
 
   public updateAttributes(attributes: Attribute[]):Promise<any>{
-    let user = this.getUser();
     // convert the attributes over
     let list = [];
     attributes.forEach(attrib =>{
@@ -174,18 +185,39 @@ export class UserService {
     });
 
     return new Promise((accept, reject) =>{
-      user.updateAttributes(list, function(err, result) {
-        if (err) {
-            reject(err);
-            return;
+      this.getUser({
+        withUser: function(user, session){
+          user.updateAttributes(list, function(err, result) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            accept(result);
+          });
+        },
+        loadUserFailure: function(err){
+          reject(err);
         }
-        accept(result);
       });
     });
   }
 
-  private getUser(){
-    return this.loginService.cognitoUtil.getCurrentUser();
+  private getUser(callback:WithUser){
+    console.log("getting user...");
+    let user = this.loginService.cognitoUtil.getCurrentUser();
+    if (user == null) {
+      console.log("UserLoginService: can't retrieve the current user");
+      callback.loadUserFailure("no current user logged in or user could not be loaded");
+      return;
+    }
+    user.getSession(function (err, session) {
+      if (err) {
+        console.log("UserLoginService: Couldn't get the session: " + err, err.stack);
+        callback.loadUserFailure(err);
+        return;
+      }
+      callback.withUser(user, session);
+    });
   }
 
   public logout():void{
@@ -218,6 +250,11 @@ export class UserService {
         return val;
     });
   }
+}
+
+interface WithUser{
+  withUser(user:any, session:any):void;
+  loadUserFailure(err);
 }
 
 interface StartPasswordResetCallback{

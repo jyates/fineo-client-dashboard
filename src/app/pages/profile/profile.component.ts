@@ -12,7 +12,6 @@ import {PasswordValidator} from '../../theme/validators';
 })
 export class Profile {
 
-  private user:any;
   private form:FormGroup;
   private passwords:FormGroup;
   private attributes:AttribControl[];
@@ -23,46 +22,47 @@ export class Profile {
   private nPassword:AbstractControl;
   private rPassword: AbstractControl;
 
-  // constructor(private user:UserService){}
-  constructor(fb:FormBuilder){
+  // constructor(){}
+  constructor(fb:FormBuilder,
+              private user:UserService){
     // start with an empty set of attributes
     this.form = fb.group({});
 
     // mock user
-    this.user = {
-      username: "name@domain.com",
-      apikey: "1234fdsfag12",
-      changePassword: function(old:string, update:string){
-        console.log("Changing user password")
-        return new Promise((resolve, reject) => {
-          console.log("Updating password from ", old, "to", update);
-          setTimeout(resolve(""), 10);
-        });
-      },
-      userAttributes: function(){
-        console.log("Getting user attributes")
-        return new Promise((resolve, reject) => {
-          console.log("[in promise] Getting user attributes");
-          setTimeout(() => {
-            console.log("[user attrib] timeout complete!");
-            var attribs = [
-              new Attribute("name", "Jesse Yates"),
-              new Attribute("email", "name@domain.com"),
-              new Attribute("custom:stripeToken", "ct_23452"),
-              new Attribute("custom:plan", "pl_23452")]
-            resolve(attribs);
-          }, 2000);
-        });
-      },
-      updateAttributes : function(attributes: Attribute[]){
-        attributes.forEach(attrib =>{
-          console.log("Updating attribute: ["+attrib.getName()+"] =>", attrib.getValue());
-        })
-        return new Promise((resolve, reject)=>{
-         setTimeout(resolve(""), 10);
-       }
-      )},
-    };
+    // this.user = {
+    //   username: "name@domain.com",
+    //   apikey: "1234fdsfag12",
+    //   changePassword: function(old:string, update:string){
+    //     console.log("Changing user password")
+    //     return new Promise((resolve, reject) => {
+    //       console.log("Updating password from ", old, "to", update);
+    //       setTimeout(resolve(""), 10);
+    //     });
+    //   },
+    //   userAttributes: function(){
+    //     console.log("Getting user attributes")
+    //     return new Promise((resolve, reject) => {
+    //       console.log("[in promise] Getting user attributes");
+    //       setTimeout(() => {
+    //         console.log("[user attrib] timeout complete!");
+    //         var attribs = [
+    //           new Attribute("name", "Jesse Yates"),
+    //           new Attribute("email", "name@domain.com"),
+    //           new Attribute("custom:stripeToken", "ct_23452"),
+    //           new Attribute("custom:plan", "pl_23452")]
+    //         resolve(attribs);
+    //       }, 2000);
+    //     });
+    //   },
+    //   updateAttributes : function(attributes: Attribute[]){
+    //     attributes.forEach(attrib =>{
+    //       console.log("Updating attribute: ["+attrib.getName()+"] =>", attrib.getValue());
+    //     })
+    //     return new Promise((resolve, reject)=>{
+    //      setTimeout(resolve(""), 10);
+    //    }
+    //   )},
+    // };
 
     // setup password form
     this.passwords = fb.group({
@@ -81,7 +81,7 @@ export class Profile {
       let attribControls = [];
       attributes.filter(elem =>{
         let name = elem.getName();
-        return !name.startsWith("custom") && !name.match("email");
+        return !name.startsWith("custom") && !name.match("email") && !name.match("sub");
       }).forEach(elem =>{
         group[elem.getName()] = [elem.getValue(), Validators.compose([Validators.required, Validators.minLength(1)])]
         attribControls.push(new AttribControl(elem));
