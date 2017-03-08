@@ -22,7 +22,7 @@ export class PieChart {
   ngAfterViewInit() {
     if (!this._init) {
       this._loadPieCharts();
-      this._updatePieCharts();
+      // this._updatePieCharts();
       this._init = true;
     }
   }

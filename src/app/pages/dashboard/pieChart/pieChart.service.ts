@@ -15,21 +15,25 @@ export class PieChartService {
         description: 'New Visits',
         stats: '57,820',
         icon: 'person',
+        percent: 20
       }, {
         color: pieColor,
         description: 'Purchases',
         stats: '$ 89,745',
         icon: 'money',
+        percent: 40
       }, {
         color: pieColor,
         description: 'Active Users',
         stats: '178,391',
         icon: 'face',
+        percent: 60
       }, {
         color: pieColor,
         description: 'Returned',
         stats: '32,592',
         icon: 'refresh',
+        percent: 85
       }
     ];
   }
