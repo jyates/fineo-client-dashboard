@@ -68,6 +68,15 @@ export const PAGES_MENU = [
           },
         ]
       },
+      {
+        path: 'profile',
+        data: {
+          hidden: true,
+          menu:{
+            title: 'Profile'
+          }
+        }
+      }
       // {
       //   path: 'editors',
       //   data: {
