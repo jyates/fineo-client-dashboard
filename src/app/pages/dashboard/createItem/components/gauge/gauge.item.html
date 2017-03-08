@@ -1,0 +1,78 @@
+<div class="edit-gauge-container">
+  <!-- create an example panel for each type: pie, line, number, etc -->
+  <div class="row">
+    <h1>Gauge</h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-2 offset-sm-6">
+      <span>Preview</span>
+    </div>
+    <div class="col-sm-2 offset-sm-2">
+      <button type="submit" (click)="onRefresh()" class="btn btn-default">Refresh</button>
+    </div>
+  </div>
+  <div class="row">
+    <!-- Fields -->
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+      <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
+        <div class="row">
+          <div class="col-md-1">
+            <button type="submit" [disabled]="!form.valid || saving" class="btn btn-success btn-md btn-raised">Save</button>
+          </div>
+        </div>
+        <br/>
+
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label for="gaugeTitle" class="col-sm-2 control-label">Title</label>
+            <div class="col-sm-10">
+              <input [formControl]="form.controls['description']" type="text" class="form-control" id="gaugeTitle">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label for="gaugeQuery" class="col-sm-2 control-label">Query</label>
+            <div class="col-sm-10">
+              <input [formControl]="form.controls['query']" type="text" class="form-control" id="gaugeQuery">
+            </div>
+          </div>
+        </div>
+
+        <hr/>
+
+        <h5 class="panel-subtitle">Columns</h5>
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label for="gaugePercent" class="col-sm-2 control-label">Percent</label>
+            <div class="col-sm-10">
+              <input [formControl]="form.controls['percent']" type="text" class="form-control" id="gaugePercent">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label for="gaugeValue" class="col-sm-2 control-label">Value</label>
+            <div class="col-sm-10">
+              <input [formControl]="form.controls['stats']" type="text" class="form-control" id="gaugeValue">
+            </div>
+          </div>
+        </div>
+
+        <hr/>
+        <h5 class="panel-subtitle">Icon</h5>
+
+      </form>
+    </div>
+    <!-- Preview -->
+    <div [id] = "id">
+      <gauge
+        [chart]="gauge"
+        [editable]="false"
+        [deletable]="false">
+      </gauge>
+    </div>
+  </div>
+</div>

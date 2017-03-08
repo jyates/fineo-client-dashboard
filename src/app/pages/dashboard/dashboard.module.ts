@@ -1,9 +1,10 @@
 import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
 
 import { Dashboard } from './dashboard.component';
+import { DashboardOutlet } from './dashboard.outlet.component';
 import { routing }       from './dashboard.routing';
 
 import { PopularApp } from './popularApp';
@@ -27,11 +28,13 @@ import { TrafficChartService } from './trafficChart/trafficChart.service';
 import { UsersMapService } from './usersMap/usersMap.service';
 
 import {CreateComponent} from './create'
+import {CreateItem, GaugeItem} from './createItem'
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     NgaModule,
     routing
   ],
@@ -46,7 +49,14 @@ import {CreateComponent} from './create'
     Todo,
     Calendar,
     Dashboard,
-    CreateComponent
+    DashboardOutlet,
+    CreateComponent,
+    // creating items for the dashboard
+    CreateItem,
+    // individual items that can be created
+    GaugeItem,
+    //PieChartItem,
+    //LineChartItem
   ],
   providers: [
     CalendarService,
