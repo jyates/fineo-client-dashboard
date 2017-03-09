@@ -1,5 +1,7 @@
-import { Component, ViewEncapsulation, Input, EventEmitter } from '@angular/core';
+import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import './gauge.loader.ts';
+
+var nextId = 0;
 
 @Component({
   selector: 'gauge',
@@ -8,7 +10,7 @@ import './gauge.loader.ts';
   template: require('./gauge.html'),
   outputs: ['deleteEvent', 'editEvent']
 })
-export class Gauge {
+export class Gauge implements AfterViewInit, OnChanges {
 
   @Input()
   public chart: Object;
@@ -16,6 +18,10 @@ export class Gauge {
   public editable: boolean = true;
   @Input()
   public deletable: boolean = true;
+  @Input()
+  id = `gauge-${nextId++}`;
+
+  private _init: boolean = false;
 
   // pass through the delete/edit events from the underlying card
   public deleteEvent = new EventEmitter();
@@ -30,67 +36,69 @@ export class Gauge {
 
   private getChartSize() {
     let elems = {};
-    // ["small", "medium", "large"].forEach(size => {
-    //   elems["pie-chart-container-" + size] = this.chart["size"] == size
-    // });
-    // return elems;
-    // let elemClass = []
-    this.addAttributes("small", ["col-xl-3"], elems);
-    this.addAttributes("medium", ["col-xl-4"], elems);
-    this.addAttributes("large", ["col-xl-6"], elems);
-    // switch(this.chart["size"]){
-    //   case "small":
-    //     elemClass = ["col-xlg-3"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
-    //     break;
-    //   case "medium":
-    //     elemClass = ["col-xlg-6"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
-    //     break;
-    //   case "large":
-    //     elemClass = ["col-xlg-12"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
-    //     break;
-    //   default:
-    //     // console.log("Unknown size:", this.size,". Skipping setting gauge size");
-    //     return elemClass;
-    // }
-
-    // // console.log("Setting elems on gauge", elemClass)
-    // // convert into a property set that is understood & valid
-    // let ret = {}
-    // elemClass.forEach(clazz =>{
-    //   ret[clazz] = true;
-    // })
-    // return ret;
+    this.setSize("small", 3, elems);
+    this.setSize("medium", 4, elems);
+    this.setSize("large", 6, elems);
     return elems;
   }
 
-  private addAttributes(size:string, attributes:string[], to:Object){
+  private setSize(size: string, width: number, to: Object) {
+    let widths = ["xl", "lg", "md", "sm", "xs"];
+    let attributes = []
+    widths.forEach(w => {
+      attributes.push("col-" + w + "-" + width);
+    });
+    this.addAttributes(size, attributes, to);
+  }
+
+  private addAttributes(size: string, attributes: string[], to: Object) {
     let enabled = this.chart["size"] == size;
-    attributes.forEach(attrib =>{
+    attributes.forEach(attrib => {
       to[attrib] = enabled;
     })
-    to["pie-chart-container-"+size] = enabled;
+    to["pie-chart-container-" + size] = enabled;
   }
-  
-  private getStyle() {
-    switch (this.chart["size"]) {
-      case "small":
-        return {
-          width: "35%",
-          flex: "0 0 100%"
-        }
-      case "medium":
-        return {
-          width: "50%",
-          flex: "0 0 100%"
-        }
-        break;
-      case "large":
-        return {
-          width: "100%",
-          flex: "0 0 100%"
-        }
-        break;
-      // default:
+
+
+  ngAfterViewInit() {
+    if (!this._init) {
+      this._loadPieCharts();
+      this._init = true;
     }
+  }
+
+  private _loadPieCharts() {
+    jQuery('.chart').each(function() {
+      let chart = jQuery(this);
+      chart.easyPieChart({
+        easing: 'easeOutBounce',
+        onStep: function(from, to, percent) {
+          jQuery(this.el).find('.percent').text(Math.round(percent));
+        },
+        barColor: jQuery(this).attr('data-rel'),
+        trackColor: 'rgba(0,0,0,0)',
+        size: 84,
+        scaleLength: 0,
+        animation: 2000,
+        lineWidth: 9,
+        lineCap: 'round',
+      });
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log("got changes:", changes)
+    if (changes['chart']) {
+      this.updateChart(this.chart['percent']);
+    }
+  }
+
+  private updateChart(percent: number) {
+    let select = "#" + this.id + " .chart"
+    console.log("Updating chart with selection:", select, "-", percent);
+    jQuery(select).each(function(index, chart) {
+      console.log("Updating chart:", index, "=>", chart)
+      jQuery(chart).data('easyPieChart').update(percent);
+    });
   }
 }

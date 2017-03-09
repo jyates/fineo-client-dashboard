@@ -4,12 +4,12 @@
     <h1>Gauge</h1>
   </div>
   <div class="row">
-    <div class="col-sm-3 preview-header">
+    <div class="col-sm-5 preview-header">
       <span>Preview</span>
       <button type="submit" (click)="onRefresh()" style="margin-left: 10px" class="btn btn-default">Refresh</button>
     </div>
   </div>
-  <div class="row" [id]="id">
+  <div class="row">
     <gauge [chart]="gauge" [editable]="false" [deletable]="false">
     </gauge>
   </div>

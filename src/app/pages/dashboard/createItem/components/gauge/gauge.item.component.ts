@@ -7,7 +7,6 @@ import { Subject }  from 'rxjs/Subject';
 import {BaThemeConfigProvider, colorHelper} from '../../../../../theme';
 import {ItemConfig} from '../../create.item.component'
 
-var nextId = 0;
 
 /*
  * Item building for a gauge
@@ -19,21 +18,19 @@ var nextId = 0;
   styles: [require('./gauge.item.scss')],
   outputs: ['save', 'refresh']
 })
-export class GaugeItem implements AfterViewInit, OnChanges{
+export class GaugeItem implements OnChanges, AfterViewInit{
 
   @Input()
   public data:Object = null;
   @Input()
   public config:GaugeConfig = 
     new GaugeConfig("Gauge", 
-      "SELECT 75 as percent, 125 as result", "large","", "result", "percent");
+      "SELECT 75 as percent, 125 as result", "medium","refresh", "result", "percent");
 
   @Input()
   public saving:boolean = false;
   @Input()
   public refreshing:boolean = false;
-  @Input()
-  id = `create-gauge-${nextId++}`;
 
   private gauge:Object;
   public form:FormGroup;
@@ -41,9 +38,8 @@ export class GaugeItem implements AfterViewInit, OnChanges{
   public save = new EventEmitter();
   public refresh = new EventEmitter();
 
+  private _init: boolean = false;
   private icons = ["face", "refresh", "person", "money"];//, "shopping-cart", "comments"]
-
-  private _init:boolean = false;
 
   constructor(private _baConfig:BaThemeConfigProvider,
               private fb:FormBuilder) {
@@ -72,30 +68,10 @@ export class GaugeItem implements AfterViewInit, OnChanges{
 
   ngAfterViewInit() {
     if (!this._init) {
-      this._loadPieCharts();
       // do an initial data load
       this.onRefresh();
       this._init = true;
     }
-  }
-
-  private _loadPieCharts() {
-    jQuery('.chart').each(function () {
-      let chart = jQuery(this);
-      chart.easyPieChart({
-        easing: 'easeOutBounce',
-        onStep: function (from, to, percent) {
-          jQuery(this.el).find('.percent').text(Math.round(percent));
-        },
-        barColor: jQuery(this).attr('data-rel'),
-        trackColor: 'rgba(0,0,0,0)',
-        size: 84,
-        scaleLength: 0,
-        animation: 2000,
-        lineWidth: 9,
-        lineCap: 'round',
-      });
-    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -112,6 +88,7 @@ export class GaugeItem implements AfterViewInit, OnChanges{
       return;
     }
 
+    console.log("updating gauge")
     let config = this.getConfig();
     let column = config.value;
     if(column){
@@ -121,16 +98,10 @@ export class GaugeItem implements AfterViewInit, OnChanges{
     let percent = config.percent;
     if(percent){
       let pvalue = row[percent] ? row[percent] : 0;
-      this.updateChart(pvalue);
+      this.gauge['percent'] = pvalue;
     }
-  }
-
-  private updateChart(percent:number){
-    let select = "#"+this.id+" .chart"
-    jQuery(select).each(function(index, chart) {
-      console.log("Updating chart:", index, "=>", chart)
-      jQuery(chart).data('easyPieChart').update(percent);
-    });
+    // force a new object to trigger the child change detection
+    this.gauge = Object.create(this.gauge);
   }
 
   private selectIcon(name:string){

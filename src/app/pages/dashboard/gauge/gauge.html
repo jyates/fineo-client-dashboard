@@ -1,4 +1,4 @@
-<div>
+<div [id]="id">
   <ba-card
     class="pie-chart-item-container"
     [ngClass]="getChartSize()"
@@ -11,8 +11,13 @@
         <span class="percent"></span>
       </div>
       <div class="description">
-        <div>{{ chart.description }}</div>
-        <div class="description-stats">{{ chart.stats }}</div>
+        <div class="row description-row">{{ chart.description }}</div>
+        <div class="row">
+          <div class="percent-small col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <label>{{chart.percent}}</label>
+          </div>
+          <div class="description-stats">{{ chart.stats }}</div>
+        </div>
       </div>
       <i class="chart-icon i-{{ chart.icon }}" *ngIf="chart.icon"></i>
     </div>
