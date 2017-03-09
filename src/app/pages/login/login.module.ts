@@ -28,4 +28,4 @@ import { routing }       from './login.routing';
     SplitCamelCase
   ]
 })
-export default class LoginModule {}
+export class LoginModule {}

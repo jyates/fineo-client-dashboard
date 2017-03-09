@@ -23,4 +23,5 @@ export class BaCard {
   public deleteItem():void{
     this.deleteEvent.next(this);
   }
+  @Input() cardType:String;
 }

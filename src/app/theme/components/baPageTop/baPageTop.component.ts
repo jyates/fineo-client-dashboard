@@ -5,11 +5,11 @@ import {GlobalState} from '../../../global.state';
 import {UserLoginService} from '../../../services/cognito.service'
 import {BaMenuService} from '../../services/baMenu/baMenu.service'
 
+import 'style-loader!./baPageTop.scss';
+
 @Component({
   selector: 'ba-page-top',
-  styles: [require('./baPageTop.scss')],
-  template: require('./baPageTop.html'),
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './baPageTop.html',
 })
 export class BaPageTop {
 

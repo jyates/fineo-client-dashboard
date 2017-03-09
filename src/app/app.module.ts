@@ -56,7 +56,7 @@ const APP_PROVIDERS = [
   UserSignupService
 ];
 
-type StoreType = {
+export type StoreType = {
   state: InternalStateType,
   restoreInputValues: () => void,
   disposeOldHosts: () => void
