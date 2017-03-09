@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, Input, EventEmitter} from '@angular/core';
+import { Component, ViewEncapsulation, Input, EventEmitter } from '@angular/core';
 import './gauge.loader.ts';
 
 @Component({
@@ -11,51 +11,68 @@ import './gauge.loader.ts';
 export class Gauge {
 
   @Input()
-  public chart:Object;
+  public chart: Object;
   @Input()
-  public editable:boolean = true;
+  public editable: boolean = true;
   @Input()
-  public deletable:boolean = true;
+  public deletable: boolean = true;
 
   // pass through the delete/edit events from the underlying card
   public deleteEvent = new EventEmitter();
   public editEvent = new EventEmitter();
-  public handleDelete(event):void {
+  public handleDelete(event): void {
     this.deleteEvent.next(event);
   }
 
-  public handleEdit(event):void{
+  public handleEdit(event): void {
     this.editEvent.next(event);
   }
 
-  private getSize(){
-    let elemClass = []
-    switch(this.chart["size"]){
-      case "small":
-        elemClass = ["col-xlg-3"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
-        break;
-      case "medium":
-        elemClass = ["col-xlg-6"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
-        break;
-      case "large":
-        elemClass = ["col-xlg-12"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
-        break;
-      default:
-        // console.log("Unknown size:", this.size,". Skipping setting gauge size");
-        return elemClass;
-    }
+  private getChartSize() {
+    let elems = {};
+    // ["small", "medium", "large"].forEach(size => {
+    //   elems["pie-chart-container-" + size] = this.chart["size"] == size
+    // });
+    // return elems;
+    // let elemClass = []
+    this.addAttributes("small", ["col-xl-3"], elems);
+    this.addAttributes("medium", ["col-xl-4"], elems);
+    this.addAttributes("large", ["col-xl-6"], elems);
+    // switch(this.chart["size"]){
+    //   case "small":
+    //     elemClass = ["col-xlg-3"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
+    //     break;
+    //   case "medium":
+    //     elemClass = ["col-xlg-6"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
+    //     break;
+    //   case "large":
+    //     elemClass = ["col-xlg-12"]// col-lg-3 col-md-6 col-sm-12 col-xs-12"
+    //     break;
+    //   default:
+    //     // console.log("Unknown size:", this.size,". Skipping setting gauge size");
+    //     return elemClass;
+    // }
 
-    // console.log("Setting elems on gauge", elemClass)
-    // convert into a property set that is understood & valid
-    let ret = {}
-    elemClass.forEach(clazz =>{
-      ret[clazz] = true;
-    })
-    return ret;
+    // // console.log("Setting elems on gauge", elemClass)
+    // // convert into a property set that is understood & valid
+    // let ret = {}
+    // elemClass.forEach(clazz =>{
+    //   ret[clazz] = true;
+    // })
+    // return ret;
+    return elems;
   }
 
-  private getStyle(){
-    switch(this.chart["size"]){
+  private addAttributes(size:string, attributes:string[], to:Object){
+    let enabled = this.chart["size"] == size;
+    attributes.forEach(attrib =>{
+      to[attrib] = enabled;
+    })
+    to["pie-chart-container-"+size] = enabled;
+  }
+  
+  private getStyle() {
+    switch (this.chart["size"]) {
       case "small":
         return {
           width: "35%",

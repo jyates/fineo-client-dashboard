@@ -1,9 +1,7 @@
 <div>
-      <!-- [ngStyle]="getStyle()" -->
   <ba-card
     class="pie-chart-item-container"
-    
-
+    [ngClass]="getChartSize()"
     [editable]="editable"
     [deletable]="deletable"
     (deleteEvent)="handleDelete($event)"

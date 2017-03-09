@@ -4,24 +4,25 @@
     <h1>Gauge</h1>
   </div>
   <div class="row">
-    <div class="col-sm-2 offset-sm-6 preview-header">
+    <div class="col-sm-3 preview-header">
       <span>Preview</span>
-    </div>
-    <div class="col-sm-2 offset-sm-2 refresh">
-      <button type="submit" (click)="onRefresh()" class="btn btn-default">Refresh</button>
+      <button type="submit" (click)="onRefresh()" style="margin-left: 10px" class="btn btn-default">Refresh</button>
     </div>
   </div>
-  <div class="row">
-    <!-- Fields -->
-    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
-      <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
-        <div class="row">
-          <div class="col-md-1">
-            <button type="submit" [disabled]="!form.valid || saving" class="btn btn-success btn-md btn-raised">Save</button>
-          </div>
+  <div class="row" [id]="id">
+    <gauge [chart]="gauge" [editable]="false" [deletable]="false">
+    </gauge>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
+    <div class="row">
+      <div class="row" style="padding-bottom: 10px">
+        <div class="col-md-1">
+          <button type="submit" [disabled]="!form.valid || saving" class="btn btn-success btn-md btn-raised">Save</button>
         </div>
         <br/>
-
+      </div>
+      <!-- Fields -->
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
         <div class="form-group row">
           <div class="col-lg-10">
             <label for="gaugeTitle" class="col-sm-2 control-label">Title</label>
@@ -30,18 +31,15 @@
             </div>
           </div>
         </div>
-
         <div class="form-group row">
           <div class="col-lg-10">
             <label for="gaugeQuery" class="col-sm-2 control-label">Query</label>
             <div class="col-sm-10">
-              <input [formControl]="form.controls['query']" type="text" class="form-control" id="gaugeQuery">
+              <input [formControl]="form.controls['query']" type="text-area" class="form-control" id="gaugeQuery">
             </div>
           </div>
         </div>
-
         <hr/>
-
         <h5 class="panel-subtitle">Columns</h5>
         <div class="form-group row">
           <div class="col-lg-10">
@@ -51,7 +49,6 @@
             </div>
           </div>
         </div>
-
         <div class="form-group row">
           <div class="col-lg-10">
             <label for="gaugeValue" class="col-sm-2 control-label">Value</label>
@@ -60,32 +57,11 @@
             </div>
           </div>
         </div>
-
-        <hr/>
-        <h5 class="panel-subtitle">Icon</h5>
-        <div *ngFor="let icon of icons">
-          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="selectIcon(icon)">
-            <i class="chart-icon i-{{ icon }}"></i>
-          </div>
-        </div>
-        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 chart-icon icon-placeholder" (click)="selectIcon('none')">
-          <span></span>
-        </div>
-      </form>
-    </div>
-    <!-- Preview -->
-    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" [id]="id">
-      <div class="row">
-        <gauge
-          [chart]="gauge"
-          [editable]="false"
-          [deletable]="false">
-        </gauge>
       </div>
-      <div class="row">
-        <!-- 1/2 the space on the next "row" in this column -->
-        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
-          <form>
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5" [id]="id">
+        <div class="row">
+          <!-- 1/2 the space on the next "row" in this column -->
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <h5 class="panel-subtitle">Size</h5>
             <div class="row">
               <div class="col-md-4">
@@ -94,7 +70,7 @@
                   <span>Small</span>
                 </label>
               </div>
-            </div><!-- end row -->
+            </div>
             <div class="row">
               <div class="col-md-4">
                 <label class="radio-inline custom-radio nowrap">
@@ -102,17 +78,32 @@
                   <span>Medium</span>
                 </label>
               </div>
-            </div><!-- end row -->
+            </div>
             <div class="row">
               <div class="col-md-4">
-                <label class="radio-inline custom-radio nowrap">
+                <label class="radio-inline custom-radio nowrap last-radio">
                   <input type="radio" name="size" value="large" [formControl]="form.controls['size']">
                   <span>Large</span>
                 </label>
               </div>
-            </div><!-- end row -->
-          </form>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h5 class="panel-subtitle">Icon</h5>
+            <div *ngFor="let icon of icons">
+              <div class="select-icon col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="selectIcon(icon)">
+                <i class="chart-icon i-{{ icon }}"></i>
+              </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 chart-icon icon-placeholder" (click)="selectIcon('none')">
+              <label></label>
+            </div>
+          </div>
         </div>
       </div>
-  </div>
+    </div>
+  </form>
 </div>
