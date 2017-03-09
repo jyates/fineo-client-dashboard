@@ -20,6 +20,7 @@ export class CreateComponent {
       description: 'Gauge',
       stats: '57,820',
       icon: 'person',
+      size: 'large',
       percent: 75
     };
   }

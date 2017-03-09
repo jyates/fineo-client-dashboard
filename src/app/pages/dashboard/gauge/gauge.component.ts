@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import './gauge.loader.ts';
 
+import {BaseComponent} from './../baseComponent'
+
 var nextId = 0;
 
 @Component({
@@ -8,31 +10,11 @@ var nextId = 0;
   encapsulation: ViewEncapsulation.None,
   styles: [require('./gauge.scss')],
   template: require('./gauge.html'),
-  outputs: ['deleteEvent', 'editEvent']
+  inputs: ['data', 'editable', 'deletable']
 })
-export class Gauge implements AfterViewInit, OnChanges {
-
-  @Input()
-  public chart: Object;
-  @Input()
-  public editable: boolean = true;
-  @Input()
-  public deletable: boolean = true;
+export class Gauge extends BaseComponent {
   @Input()
   id = `gauge-${nextId++}`;
-
-  private _init: boolean = false;
-
-  // pass through the delete/edit events from the underlying card
-  public deleteEvent = new EventEmitter();
-  public editEvent = new EventEmitter();
-  public handleDelete(event): void {
-    this.deleteEvent.next(event);
-  }
-
-  public handleEdit(event): void {
-    this.editEvent.next(event);
-  }
 
   private getChartSize() {
     let elems = {};
@@ -52,23 +34,16 @@ export class Gauge implements AfterViewInit, OnChanges {
   }
 
   private addAttributes(size: string, attributes: string[], to: Object) {
-    let enabled = this.chart["size"] == size;
+    let enabled = this.data["size"] == size;
     attributes.forEach(attrib => {
       to[attrib] = enabled;
     })
     to["pie-chart-container-" + size] = enabled;
   }
 
-
-  ngAfterViewInit() {
-    if (!this._init) {
-      this._loadPieCharts();
-      this._init = true;
-    }
-  }
-
-  private _loadPieCharts() {
-    jQuery('.chart').each(function() {
+  public init() {
+    let select = this.select();
+    jQuery(select).each(function() {
       let chart = jQuery(this);
       chart.easyPieChart({
         easing: 'easeOutBounce',
@@ -86,19 +61,20 @@ export class Gauge implements AfterViewInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log("got changes:", changes)
-    if (changes['chart']) {
-      this.updateChart(this.chart['percent']);
-    }
+  protected updateData(){
+    this.updateChart(this.data['percent'])
   }
 
   private updateChart(percent: number) {
-    let select = "#" + this.id + " .chart"
+    let select = this.select();
     console.log("Updating chart with selection:", select, "-", percent);
     jQuery(select).each(function(index, chart) {
       console.log("Updating chart:", index, "=>", chart)
       jQuery(chart).data('easyPieChart').update(percent);
     });
+  }
+
+  private select():string{
+    return "#" + this.id + " .chart";
   }
 }
