@@ -5,7 +5,6 @@ import { GlobalState } from './global.state';
 import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from './theme/services';
 import { BaThemeConfig } from './theme/theme.config';
 import { BaMenuService } from './theme';
-import { ComponentsHelper } from 'ng2-bootstrap';
 import { SchemaService } from './services/schema.service'
 import { UserService } from './services/user.service'
 import { layoutPaths } from './theme/theme.constants';
