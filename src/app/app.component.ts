@@ -2,6 +2,7 @@ import { Route, Routes } from '@angular/router';
 import { Component, ViewEncapsulation, ViewContainerRef } from '@angular/core';
 
 import { GlobalState } from './global.state';
+import { PAGES_MENU as MENU } from './pages/pages.menu';
 import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from './theme/services';
 import { BaThemeConfig } from './theme/theme.config';
 import { BaMenuService } from './theme';
@@ -11,6 +12,8 @@ import { layoutPaths } from './theme/theme.constants';
 
 import 'style-loader!./app.scss';
 import 'style-loader!./theme/initial.scss';
+
+
 
 /*
  * App Component
