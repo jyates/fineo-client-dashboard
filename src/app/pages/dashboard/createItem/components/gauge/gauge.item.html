@@ -4,10 +4,10 @@
     <h1>Gauge</h1>
   </div>
   <div class="row">
-    <div class="col-sm-2 offset-sm-6">
+    <div class="col-sm-2 offset-sm-6 preview-header">
       <span>Preview</span>
     </div>
-    <div class="col-sm-2 offset-sm-2">
+    <div class="col-sm-2 offset-sm-2 refresh">
       <button type="submit" (click)="onRefresh()" class="btn btn-default">Refresh</button>
     </div>
   </div>
@@ -63,16 +63,56 @@
 
         <hr/>
         <h5 class="panel-subtitle">Icon</h5>
-
+        <div *ngFor="let icon of icons">
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2" (click)="selectIcon(icon)">
+            <i class="chart-icon i-{{ icon }}"></i>
+          </div>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 chart-icon icon-placeholder" (click)="selectIcon('none')">
+          <span></span>
+        </div>
       </form>
     </div>
     <!-- Preview -->
-    <div [id] = "id">
-      <gauge
-        [chart]="gauge"
-        [editable]="false"
-        [deletable]="false">
-      </gauge>
-    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" [id]="id">
+      <div class="row">
+        <gauge
+          [chart]="gauge"
+          [editable]="false"
+          [deletable]="false">
+        </gauge>
+      </div>
+      <div class="row">
+        <!-- 1/2 the space on the next "row" in this column -->
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <form>
+            <h5 class="panel-subtitle">Size</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="size" value="small" [formControl]="form.controls['size']">
+                  <span>Small</span>
+                </label>
+              </div>
+            </div><!-- end row -->
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="size" value="medium" [formControl]="form.controls['size']">
+                  <span>Medium</span>
+                </label>
+              </div>
+            </div><!-- end row -->
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="size" value="large" [formControl]="form.controls['size']">
+                  <span>Large</span>
+                </label>
+              </div>
+            </div><!-- end row -->
+          </form>
+        </div>
+      </div>
   </div>
 </div>

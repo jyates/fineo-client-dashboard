@@ -57,8 +57,8 @@ export class CreateItem implements OnInit{
       setTimeout(()=>{
         // send a fake result
         accept([{
-          "result": 100,
-          "percent_value": 75
+          "result": 125,
+          "percent": 75
         }]);
       }, 200)
     }).then(result =>{
@@ -82,5 +82,6 @@ export class CreateItem implements OnInit{
 
 export class ItemConfig{
   constructor(public title:string,
-              public query:string){}
+              public query:string,
+              public size:string){}
 }
