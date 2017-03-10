@@ -8,10 +8,16 @@
       (refresh)="handleRefresh($event)">
     ></create-gauge>
   </div>
-<!--   <div class="row" *ngIf="(type == 'pie')">
-    <create-pie></create-pie>
+  <div class="row" *ngIf="(type == 'donut')">
+    <create-donut
+      [saving]="saving"
+      [refreshing]="refreshing"
+      [data]="data"
+      (save)="handleSave($event)"
+      (refresh)="handleRefresh($event)">
+    </create-donut>
   </div>
-  <div class="row" *ngIf="(type == 'line')">
+  <!-- <div class="row" *ngIf="(type == 'line')">
     <create-line></create-line>
   </div> -->
   <small-spinner

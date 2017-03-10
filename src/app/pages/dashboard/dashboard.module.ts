@@ -40,6 +40,7 @@ import {CreateItem, GaugeItem, DonutItem} from './createItem'
     routing
   ],
   declarations: [
+    Donut,
     PopularApp,
     PieChart,
     Gauge,

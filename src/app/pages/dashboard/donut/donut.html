@@ -1,29 +1,32 @@
-<div class="channels-block">
-
-  <div class="chart-bg"></div>
-  <div class="traffic-chart" id="trafficChart">
-    <div class="canvas-holder">
-      <canvas class="chart-area" width="300px" height="300px"></canvas>
-      <div class="traffic-text" *ngIf="centerEnabled">
-        {{data.total.value}}
-        <span>{{data.total.label}}</span>
+<div [id]="id">
+  <ba-card 
+    [ngClass]="getSize()"
+    title="data.title" 
+    baCardClass="traffic-panel medium-card">
+    <div class="channels-block">
+      <div class="chart-bg"></div>
+      <div class="traffic-chart" id="trafficChart">
+        <div class="canvas-holder">
+          <canvas class="chart-area" width="300px" height="300px"></canvas>
+          <div class="traffic-text" *ngIf="centerEnabled">
+            {{data.total.value}}
+            <span>{{data.total.label}}</span>
+          </div>
+        </div>
+        <div class="traffic-legend"></div>
       </div>
-    </div>
-    <div class="traffic-legend"></div>
-  </div>
-
-  <div class="channels-info">
-    <div>
-      <div class="channels-info-item" *ngFor="let item of data.data">
-        <div class="legend-color" [ngStyle]="{'background-color': item.color }"></div>
-        <p>{{ item.label }}<span class="channel-number">{{ itemDisplay(item) }}</span></p>
-        <div class="progress progress-sm channel-progress">
-          <div class="progress-bar" role="progressbar"
-               [attr.aria-valuenow]="item.percentage" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width: item.percentage + '%' }">
+      <div class="channels-info">
+        <div>
+          <div class="channels-info-item" *ngFor="let item of data.data">
+            <div class="legend-color" [ngStyle]="{'background-color': item.color }"></div>
+            <p>{{ item.label }}<span class="channel-number">{{ itemDisplay(item) }}</span></p>
+            <div class="progress progress-sm channel-progress">
+              <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="item.percentage" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width: item.percentage + '%' }">
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </ba-card>
 </div>
-

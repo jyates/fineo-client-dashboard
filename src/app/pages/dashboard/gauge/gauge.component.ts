@@ -16,29 +16,16 @@ export class Gauge extends BaseComponent {
   @Input()
   id = `gauge-${nextId++}`;
 
+  constructor(){
+    super("pie-chart-container");
+  }
+
   private getChartSize() {
     let elems = {};
     this.setSize("small", 3, elems);
     this.setSize("medium", 4, elems);
     this.setSize("large", 6, elems);
     return elems;
-  }
-
-  private setSize(size: string, width: number, to: Object) {
-    let widths = ["xl", "lg", "md", "sm", "xs"];
-    let attributes = []
-    widths.forEach(w => {
-      attributes.push("col-" + w + "-" + width);
-    });
-    this.addAttributes(size, attributes, to);
-  }
-
-  private addAttributes(size: string, attributes: string[], to: Object) {
-    let enabled = this.data["size"] == size;
-    attributes.forEach(attrib => {
-      to[attrib] = enabled;
-    })
-    to["pie-chart-container-" + size] = enabled;
   }
 
   public init() {

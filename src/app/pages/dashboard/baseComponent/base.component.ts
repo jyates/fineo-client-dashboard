@@ -7,13 +7,15 @@ import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnCha
 export class BaseComponent implements AfterViewInit, OnChanges {
 
   @Input()
-  public data: Object;
+  public data: Object = null;
   @Input()
   public editable: boolean = true;
   @Input()
   public deletable: boolean = true;
 
   private _init: boolean = false;
+
+  constructor(private item_prefix: string) { }
 
   ngAfterViewInit() {
     if (!this._init) {
@@ -31,7 +33,7 @@ export class BaseComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  protected updateData():void { };
+  protected updateData(): void { };
 
   // pass through the delete/edit events from the underlying card
   public deleteEvent = new EventEmitter();
@@ -42,5 +44,22 @@ export class BaseComponent implements AfterViewInit, OnChanges {
 
   public handleEdit(event): void {
     this.editEvent.next(event);
+  }
+
+  protected setSize(size: string, width: number, to: Object) {
+    let widths = ["xl", "lg", "md", "sm", "xs"];
+    let attributes = []
+    widths.forEach(w => {
+      attributes.push("col-" + w + "-" + width);
+    });
+    this.addAttributes(size, attributes, to);
+  }
+
+  protected addAttributes(size: string, attributes: string[], to: Object) {
+    let enabled = this.data["size"] == size;
+    attributes.forEach(attrib => {
+      to[attrib] = enabled;
+    })
+    to[this.item_prefix + "-" + size] = enabled;
   }
 }

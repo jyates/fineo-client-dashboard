@@ -1,15 +1,14 @@
-import { Component, ViewEncapsulation, ElementRef, Input, AfterViewInit, OnChanges,  SimpleChanges} from '@angular/core';
+import { Component, ElementRef, Input, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Chart } from './donut.loader.ts';
-import {BaseComponent} from './../baseComponent'
+import { BaseComponent } from './../baseComponent'
 
-var nextId = 0;
+var nextDonutId = 0;
 
 @Component({
   selector: 'donut-chart',
-  encapsulation: ViewEncapsulation.None,
-  styles: [require('./donut.scss')],
-  template: require('./donut.html')
+  styleUrls: ['./donut.scss'],
+  templateUrl: './donut.html'
 })
 
 // TODO: move chart.js to it's own component
@@ -17,7 +16,9 @@ var nextId = 0;
  * A simple 'donut' like pie chart thing.
  * Data format:
  * {
- *   data: [
+ *   title: <string>,
+     size: <string>,
+     data: [
       label: <string>,
       color: <string>
       percentage: [string|number],
@@ -32,42 +33,60 @@ var nextId = 0;
 export class Donut extends BaseComponent {
 
   @Input()
-  id = `donut-${nextId++}`;
+  public id = `donut-${nextDonutId++}`;
 
   @Input()
-  public valueType:string; // raw or percentage
+  public valueType: string; // raw or percentage
 
   @Input()
-  public centerEnabled:boolean;
+  public centerEnabled: boolean;
 
-  @Input()
-  public data: Array<Object>;
+  constructor() {
+    super("donut-container");
+  }
 
   protected init() {
     this.updateData();
   }
 
   public updateData() {
-    let el = jQuery(this.select()).get(0) as HTMLCanvasElement;
+    if (!this.data) {
+      return;
+    }
+    let select = this.select();
+    let selected = jQuery(select);
+    if (!selected) {
+      console.log("Could not select from", select);
+      return;
+    }
+    let el = selected.get(0) as HTMLCanvasElement;
+    if (!el) {
+      console.log("Cannot find element", this.select());
+      return;
+    }
+    console.log("Updating ")
     new Chart(el.getContext('2d')).Doughnut(this.data, {
       segmentShowStroke: false,
-      percentageInnerCutout : 64,
+      percentageInnerCutout: 64,
       responsive: true
     });
   }
 
-  public itemDisplay(item){
-    if (valueType == "percent" ){
-      return item['percentage']+"%"
+  public getSize() {
+    let elems = {};
+    this.setSize("small", 3, elems);
+    this.setSize("large", 6, elems);
+    return elems;
+  }
+
+  public itemDisplay(item) {
+    if (this.valueType == "percent") {
+      return item['percentage'] + "%"
     }
     return item['value'];
   }
 
-  private getSuffix(){
-    return ? :"%": ""
-  }
-
-  private select(){
-    return "#"+this.id+" .chart-area"
+  private select() {
+    return "#" + this.id + " .chart-area"
   }
 }

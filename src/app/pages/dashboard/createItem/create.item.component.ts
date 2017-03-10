@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Subject } from 'rxjs/Subject';
@@ -9,9 +9,8 @@ import {
 
 @Component({
   selector: 'create-dashboard-item-instance',
-  encapsulation: ViewEncapsulation.None,
-  styles: [require('./create.item.scss')],
-  template: require('./create.item.html')
+  styleUrls: ['./create.item.scss'],
+  templateUrl: './create.item.html'
 })
 export class CreateItem implements OnInit {
 
@@ -19,7 +18,7 @@ export class CreateItem implements OnInit {
   private type: string;
   private saving: boolean = false;
   private refreshing: boolean = false;
-  public data: Object;
+  public data: Object = null;
 
   constructor(private route: ActivatedRoute,
     private router: Router) {

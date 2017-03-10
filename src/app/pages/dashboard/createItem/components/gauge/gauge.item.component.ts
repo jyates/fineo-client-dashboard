@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, AfterViewInit, EventEmitter, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, AfterViewInit, EventEmitter, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormControl} from '@angular/forms';
 
@@ -13,9 +13,8 @@ import {ItemConfig} from '../../create.item.component'
  */
  @Component({
   selector: 'create-gauge',
-  encapsulation: ViewEncapsulation.None,
-  template: require('./gauge.item.html'),
-  styles: [require('./gauge.item.scss')],
+  styleUrls: ['./gauge.item.scss'],
+  templateUrl: './gauge.item.html',
   outputs: ['save', 'refresh']
 })
 export class GaugeItem implements OnChanges, AfterViewInit{

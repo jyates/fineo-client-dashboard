@@ -1,7 +1,7 @@
 <div class="edit-gauge-container">
   <!-- create an example panel for each type: pie, line, number, etc -->
   <div class="row">
-    <h1>Gauge</h1>
+    <h1>Donut Chart</h1>
   </div>
   <div class="row">
     <div class="col-sm-5 preview-header">
@@ -10,8 +10,11 @@
     </div>
   </div>
   <div class="row">
-    <gauge [data]="gauge" [editable]="false" [deletable]="false">
-    </gauge>
+    <donut-chart 
+      [data]="out" 
+      [editable]="false" 
+      [deletable]="false">
+    </donut-chart>
   </div>
   <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
     <div class="row">
@@ -89,7 +92,7 @@
             <div class="row">
               <div class="col-md-4">
                 <label class="radio-inline custom-radio nowrap">
-                  <input type="radio" name="valueType" value="percent" [formControl]="form.controls['asValues']">
+                  <input type="radio" name="valueType" value="percent" [formControl]="form.controls['valueType']">
                   <span>Percent</span>
                 </label>
               </div>
@@ -97,7 +100,7 @@
             <div class="row">
               <div class="col-md-4">
                 <label class="radio-inline custom-radio nowrap last-radio">
-                  <input type="radio" name="valueType" value="raw" [formControl]="form.controls['asValues']">
+                  <input type="radio" name="valueType" value="raw" [formControl]="form.controls['valueType']">
                   <span>Raw</span>
                 </label>
               </div>
