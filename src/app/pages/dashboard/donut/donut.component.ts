@@ -25,7 +25,7 @@ export class Donut extends BaseComponent {
     this.updateData();
   }
 
-  private updateData() {
+  public updateData() {
     let el = jQuery(this.select()).get(0) as HTMLCanvasElement;
     new Chart(el.getContext('2d')).Doughnut(this.data, {
       segmentShowStroke: false,
