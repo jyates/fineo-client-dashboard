@@ -6,6 +6,7 @@ import { Subject }  from 'rxjs/Subject';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
 import { GaugeConfig } from '../../../gauge';
+import { BaseItem } from '../baseItem/base.item.component';
 
 
 /*
@@ -17,70 +18,34 @@ import { GaugeConfig } from '../../../gauge';
   templateUrl: './gauge.item.html',
   outputs: ['save', 'refresh']
 })
-export class GaugeItem implements OnChanges, AfterViewInit{
+export class GaugeItem extends BaseItem{
 
-  @Input()
-  public data:Object = null;
-  @Input()
-  public config:GaugeConfig = 
-    new GaugeConfig("Gauge", 
-      "SELECT 75 as percent, 125 as result", "medium","refresh", "result", "percent");
-
-  @Input()
-  public saving:boolean = false;
-  @Input()
-  public refreshing:boolean = false;
-
-  private gauge:Object;
-  public form:FormGroup;
-
-  public save = new EventEmitter();
-  public refresh = new EventEmitter();
-
-  private _init: boolean = false;
   private icons = ["face", "refresh", "person", "money"];//, "shopping-cart", "comments"]
 
-  constructor(private _baConfig:BaThemeConfigProvider,
-              private fb:FormBuilder) {
+  constructor(_baConfig:BaThemeConfigProvider,
+              fb:FormBuilder) {
+    super(fb, 'gauge');
     console.log("setting up gauge")
-    // initial gauge setup
-    let pieColor = this._baConfig.get().colors.custom.dashboardPieChart;
-    this.gauge = {
-      color: pieColor,
-      description: this.config.title ? this.config.title: 'Gauge',
-      icon: this.config.icon ? (this.config.icon) : null,
-      size: this.config.size,
+    if(this.config == null){
+     this.config = new GaugeConfig("Gauge", 
+        "SELECT 75 as percent, 125 as result",
+        "medium","refresh", "result", "percent", _baConfig.get().colors.custom.dashboardPieChart);
     }
 
     // create the form to describe the gauge
     // the form groups match the fields in the gauge, not the config
     this.form = fb.group({
-      'description': [this.gauge['description'], Validators.compose([Validators.required, Validators.minLength(1)])],
-      'icon': [this.gauge['icon'], []],
+      'description': [this.config.title, Validators.compose([Validators.required, Validators.minLength(1)])],
+      'icon': [this.config.icon, []],
       'size': [this.config.size, Validators.compose([Validators.required, Validators.minLength(3)])],
       'query': [this.config.query, Validators.compose([Validators.required, Validators.minLength(3)])],
       'stats': [this.config.value,  Validators.compose([Validators.minLength(1)])],
       'percent': [this.config.percent,  Validators.compose([Validators.required, Validators.minLength(1)])]
     });
-    this.listenForChanges(this.form);
+    this.listenForChanges(this.form, [ "stats", "percent"], {description: 'title'});
   }
 
-  ngAfterViewInit() {
-    if (!this._init) {
-      // do an initial data load
-      this.onRefresh();
-      this._init = true;
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    // only run when property "data" changed
-    if (changes['data']) {
-      this.updateData(this.data);
-    }
-  }
-
-  private updateData(result):void{
+  protected updateData(result):Object{
     console.log("got a data event: ", result);
     let row = result? result[0]: null;
     if(!row){
@@ -92,15 +57,14 @@ export class GaugeItem implements OnChanges, AfterViewInit{
     let column = config.value;
     if(column){
       let value = row[column] ? row[column] : "0";
-      this.gauge['stats'] = ""+value;
+      this.dataOut['stats'] = ""+value;
     }
     let percent = config.percent;
     if(percent){
       let pvalue = row[percent] ? row[percent] : 0;
-      this.gauge['percent'] = pvalue;
+      this.dataOut['percent'] = pvalue;
     }
-    // force a new object to trigger the child change detection
-    this.gauge = Object.create(this.gauge);
+    return this.dataOut;
   }
 
   private selectIcon(name:string){
@@ -113,39 +77,7 @@ export class GaugeItem implements OnChanges, AfterViewInit{
     this.form.controls['icon'].setValue(val);
   }
 
-  /**
-   * Constantly update the gauge with information as it becomes available.
-   * Skips 'query' update b/c that is handled by the onRefresh() hook 
-   */
-  private listenForChanges(form:FormGroup){
-    let controls = form.controls;
-    let skip = ["query", "stats", "percent"];
-    Object.keys(controls)
-      .filter(name =>{
-        return !(skip.indexOf(name) > 0);
-      })
-      .forEach(name =>{
-        let control = <AbstractControl>controls[name];
-        control.statusChanges.subscribe(status =>{
-          if(status == "VALID"){
-            // console.log("Setting gauge", name, "to", controls[name].value)
-            this.gauge[name] = controls[name].value;
-          }
-        })
-      })
-  }
-
-  public onSave():void{
-    console.log("[gauge] Triggering save");
-    this.save.next(this.getConfig());
-  }
-
-  public onRefresh():void{
-    console.log("[gauge] Triggering refresh");
-   this.refresh.next(this.getConfig());
-  }
-
-  private getConfig():GaugeConfig{
+  protected getConfig():GaugeConfig{
     return new GaugeConfig(this.form.controls['description'].value,
                            this.form.controls['query'].value,
                            this.form.controls['icon'].value,

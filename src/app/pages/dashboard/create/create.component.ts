@@ -1,7 +1,7 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import { Router} from '@angular/router';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { BaThemeConfigProvider, colorHelper} from '../../../theme';
+import { BaThemeConfigProvider, colorHelper } from '../../../theme';
 
 @Component({
   selector: 'create-dashboard-item',
@@ -11,24 +11,47 @@ import { BaThemeConfigProvider, colorHelper} from '../../../theme';
 })
 export class CreateComponent {
 
-  private gauge:Object;
-  private _init:boolean = false;
+  private gauge: Object;
+  private donut: Object;
+  private _init: boolean = false;
 
   constructor(private _baConfig: BaThemeConfigProvider,
-              private router: Router) {
+    private router: Router) {
     let pieColor = this._baConfig.get().colors.custom.dashboardPieChart;
+
     this.gauge = {
-      color: pieColor,
-      description: 'Gauge',
-      stats: '57,820',
-      icon: 'person',
-      size: 'large',
-      percent: 75
+      config: {
+        color: pieColor,
+        title: 'Gauge',
+        icon: 'person',
+        size: 'large',
+      },
+      data: {
+        stats: '57,820',
+        percent: 75
+      }
     };
+
+    this.donut = {
+      config:{
+        title: "Donut Chart",
+        size: 'large',
+        valueType: 'percent',
+        centerEnabled: true,
+        centerLabel: 'Total Value'
+      },
+      data: {
+        column1: 10,
+        column2: 20,
+        column3: 75,
+        column4: 35,
+        column5: 122
+      }
+    }
   }
 
-  private select(type:string){
+  private select(type: string) {
     console.log("Selecting type:", type);
-    this.router.navigate(['/pages/dashboard/create/'+type]);
+    this.router.navigate(['/pages/dashboard/create/' + type]);
   }
 }

@@ -8,9 +8,9 @@
       <br>
           <span>A simple gauge for a number. Can inlude a percent calculation and icon</span>
       </div>
-      <!-- example -->
         <gauge
-          [data]="gauge"
+          [data]="gauge.data"
+          [config]="gauge.config"
           [editable]="false"
           [deletable]="false"
           ></gauge>

@@ -73,7 +73,8 @@ export class GaugeConfig extends ItemConfig {
               size:string,
               public icon:string,
               public value:string,
-              public percent:string){
+              public percent:string,
+              public color: string = "#ffffff"){
     super(title, query, size);
   }
 }

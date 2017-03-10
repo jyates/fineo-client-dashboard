@@ -33,6 +33,9 @@ export class Donut extends BaseComponent<DonutConfig> {
 
   constructor() {
     super("donut-container");
+    if(this.config == null){
+      this.config = new DonutConfig("LOADING", "", "large", "percent", true, "Center Label");
+    }
   }
 
   protected init() {

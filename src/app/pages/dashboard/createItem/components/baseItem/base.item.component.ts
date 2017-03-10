@@ -55,7 +55,7 @@ export class BaseItem implements OnChanges, AfterViewInit{
 
   ngOnChanges(changes: SimpleChanges) {
     // only run when property "data" changed
-    if (changes['data']) {
+    if (changes['dataIn']) {
       let result = this.updateData(this.dataIn);
       // reset the data to trigger a change event on the child
       this.dataOut = Object.create(result);

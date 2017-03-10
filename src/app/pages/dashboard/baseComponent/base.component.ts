@@ -33,8 +33,12 @@ export class BaseComponent<T> implements AfterViewInit, OnChanges {
     if (changes['data']) {
       this.updateData();
     }
+    else if (changes['config']){
+      this.updateConfig();
+    }
   }
 
+  protected updateConfig(): void { };
   protected updateData(): void { };
 
   // pass through the delete/edit events from the underlying card
@@ -58,7 +62,7 @@ export class BaseComponent<T> implements AfterViewInit, OnChanges {
   }
 
   protected addAttributes(size: string, attributes: string[], to: Object) {
-    let enabled = this.data["size"] == size;
+    let enabled = this.config["size"] == size;
     attributes.forEach(attrib => {
       to[attrib] = enabled;
     })
