@@ -77,7 +77,7 @@ export class Donut extends BaseComponent<DonutConfig> {
 
   public getSize() {
     let elems = {};
-    this.setSize("small", 3, elems);
+    this.setSize("small", 4, elems);
     this.setSize("large", 6, elems);
     return elems;
   }
