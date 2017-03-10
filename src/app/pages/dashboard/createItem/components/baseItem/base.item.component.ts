@@ -1,4 +1,4 @@
-import {Component, AfterViewInit, EventEmitter, Input, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, AfterViewInit, EventEmitter, Input, Output, OnChanges, SimpleC hanges} from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormControl} from '@angular/forms';
 
@@ -13,7 +13,6 @@ import { ItemConfig } from '../../../baseComponent';
  */
  @Component({
   selector: 'base-item',
-  outputs: ['save', 'refresh']
 })
 export class BaseItem implements OnChanges, AfterViewInit{
 
@@ -37,7 +36,9 @@ export class BaseItem implements OnChanges, AfterViewInit{
   public form: FormGroup;
 
   // notify the parent of the save/refresh events
+  @Output()
   public save = new EventEmitter();
+  @Output()
   public refresh = new EventEmitter();
 
   private _init: boolean = false;
@@ -96,9 +97,10 @@ export class BaseItem implements OnChanges, AfterViewInit{
     this.save.next(this.getConfig());
   }
 
-  public onRefresh():void{
-    console.log("["+this.name+"] Triggering refresh");
-     this.refresh.next(this.getConfig());
+  public onRefresh(): void {
+    let config = this.getConfig();
+    console.log("[" + this.name + "] Triggering refresh. Config: ", config);
+    this.refresh.next(config);
   }
 
   protected getConfig(): Object { return null;}

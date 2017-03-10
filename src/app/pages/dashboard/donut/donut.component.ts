@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, AfterViewInit, OnChanges, SimpleChanges }
 
 import { Chart } from './donut.loader.ts';
 import { BaseComponent, ItemConfig } from './../baseComponent'
+import { colorHelper } from '../../../theme';
 
 var nextDonutId = 0;
 
@@ -29,12 +30,15 @@ export class Donut extends BaseComponent<DonutConfig> {
   @Input()
   public id = `donut-${nextDonutId++}`;
 
-  private total: number = -1;
+  @Input()
+  public colorOptions: Object[] = [];
+
+  private donutData: DonutData = new DonutData();
 
   constructor() {
     super("donut-container");
-    if(this.config == null){
-      this.config = new DonutConfig("LOADING", "", "large", "percent", true, "Center Label");
+    if (this.config == null) {
+      this.config = new DonutConfig();
     }
   }
 
@@ -46,6 +50,12 @@ export class Donut extends BaseComponent<DonutConfig> {
     if (!this.data) {
       return;
     }
+
+    this.donutData = this.asDonutData(this.data);
+    if (!this.donutData.valid) {
+      return;
+    }
+
     let select = this.select();
     let selected = jQuery(select);
     if (!selected) {
@@ -57,8 +67,8 @@ export class Donut extends BaseComponent<DonutConfig> {
       console.log("Cannot find element", this.select());
       return;
     }
-    console.log("Updating ")
-    new Chart(el.getContext('2d')).Doughnut(this.data, {
+
+    new Chart(el.getContext('2d')).Doughnut(this.donutData.items, {
       segmentShowStroke: false,
       percentageInnerCutout: 64,
       responsive: true
@@ -72,26 +82,93 @@ export class Donut extends BaseComponent<DonutConfig> {
     return elems;
   }
 
-  public itemDisplay(item) {
+  public itemDisplay(item: DonutDatum) {
     if (this.config.valueType == "percent") {
-      return item['percentage'] + "%"
+      return item.percent + "%"
     }
-    return item['value'];
+    return item.value;
   }
 
   private select() {
     return "#" + this.id + " .chart-area"
   }
+
+  private asDonutData(row): DonutData {
+    if (!row) {
+      console.log(this.id, ": No data row. Skipping!");
+      return new DonutData();
+    }
+
+    if (row instanceof Array || Array.isArray(row)) {
+      if (row.length == 1) {
+        row = row[0];
+      } else {
+        throw new TypeError("Donuts only support a single row of data! Element: " + this.id + ". Got row:\n" + row);
+      }
+    }
+
+    if (Object.keys(row).length == 0) {
+      console.log(this.id, ": No keys in data row. Skipping!");
+      return new DonutData();
+    }
+
+    let retn = new DonutData();
+    var i = 0;
+    let colorLen = this.colorOptions.length;
+    Object.keys(row).sort().forEach(column => {
+      var index = (i++ % colorLen);
+      var color = this.colorOptions[index];
+      let value = row[column];
+      let colorValue = color['color'];
+      let data = new DonutDatum(column, value, colorValue);
+      retn.add(data);
+    });
+
+    return retn.done();
+  }
+}
+
+class DonutData {
+  public valid: boolean = false;
+  public items: DonutDatum[] = [];
+  public total: number = 0;
+
+  public add(item: DonutDatum): void {
+    this.total += item.value;
+    this.items.push(item);
+  }
+
+  /*
+   * Calculate the percent each item holds against the total and mark
+   * this as 'valid' (e.g. displayable)
+   */
+  public done(): DonutData {
+    this.items.forEach(data => {
+      data.percent = (data.value * 100) / this.total;
+    });
+
+    this.valid = true;
+    return this;
+  }
+}
+
+
+
+class DonutDatum {
+  constructor(public label: string,
+    public value: number,
+    public color: string,
+    public percent: number = -1) { }
 }
 
 export class DonutConfig extends ItemConfig {
 
-  constructor(title:string,
-              query:string,
-              size:string,
-              public valueType:string,
-              public centerEnabled:boolean,
-              public centerLabel:string){
+  constructor(title: string = "LOADING",
+    query: string = "",
+    size: string = "large",
+    public valueType: string = "percent",
+    public centerEnabled: boolean = true,
+    public centerLabel: string = "Total Value") {
     super(title, query, size);
   }
 }

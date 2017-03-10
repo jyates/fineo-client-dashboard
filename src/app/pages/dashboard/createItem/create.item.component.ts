@@ -33,7 +33,7 @@ export class CreateItem implements OnInit {
     });
   }
 
-  private handleSave(config: ItemConfig) {
+  public handleSave(config: ItemConfig) {
     this.saving = true;
     // save the configuration value
     console.log("Saving", this.type, " => ", config.title, ":", config.query);
@@ -50,7 +50,11 @@ export class CreateItem implements OnInit {
     })
   }
 
-  private handleRefresh(config: ItemConfig) {
+  public hanldeR(config){
+    this.handleRefresh(config);
+  }
+
+  public handleRefresh(config: ItemConfig) {
     this.refreshing = true;
     console.log("Attempting to refresh data for query:", config.query);
     // save the configuration value

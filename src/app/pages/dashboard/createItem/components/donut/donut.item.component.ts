@@ -11,12 +11,6 @@ import { BaseItem } from '../baseItem/base.item.component';
 
 /*
  * Item building for a donut
- * Data:
- * {
-     column: <number>,
-     ...
-   }
- *
  */
 @Component({
   selector: 'create-donut',
@@ -35,7 +29,7 @@ export class DonutItem extends BaseItem {
     if (!this.config) {
       this.config = new DonutConfig("Donut",
         "SELECT 75 as c1, 125 as c2, 60 as c3, 30 as c4, 40 as c5, 70 as c6",
-        "large", "percent", true, "Center Label");
+        "large", "percent", true, "Total Value");
     }
 
     // name and a value to display
@@ -61,10 +55,9 @@ export class DonutItem extends BaseItem {
 
   protected updateData(result): Object {
     console.log("got a data event: ", result);
-    if (!result || !result.data) {
+    if (!result) {
       return null;
     }
-    // force a new object to trigger the child change detection
     return result;
   }
 

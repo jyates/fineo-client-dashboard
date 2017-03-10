@@ -15,8 +15,7 @@ import { BaseItem } from '../baseItem/base.item.component';
 @Component({
   selector: 'create-gauge',
   styleUrls: ['./gauge.item.scss'],
-  templateUrl: './gauge.item.html',
-  outputs: ['save', 'refresh']
+  templateUrl: './gauge.item.html'
 })
 export class GaugeItem extends BaseItem{
 
@@ -49,7 +48,7 @@ export class GaugeItem extends BaseItem{
     console.log("got a data event: ", result);
     let row = result? result[0]: null;
     if(!row){
-      return;
+      return null;
     }
 
     console.log("updating gauge")
