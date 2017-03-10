@@ -1,16 +1,16 @@
-<div [id]="id">
+<div [attr.id]="id">
   <ba-card 
     [ngClass]="getSize()"
-    title="data.title" 
+    [title]="config.title" 
     baCardClass="traffic-panel medium-card">
     <div class="channels-block">
       <div class="chart-bg"></div>
       <div class="traffic-chart" id="trafficChart">
         <div class="canvas-holder">
           <canvas class="chart-area" width="300px" height="300px"></canvas>
-          <div class="traffic-text" *ngIf="centerEnabled">
+          <div class="traffic-text" *ngIf="config.centerEnabled">
             {{data.total.value}}
-            <span>{{data.total.label}}</span>
+            <span>{{config.centerLabel}}</span>
           </div>
         </div>
         <div class="traffic-legend"></div>

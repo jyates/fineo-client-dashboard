@@ -5,7 +5,7 @@ import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormCon
 import { Subject }  from 'rxjs/Subject';
 
 import {BaThemeConfigProvider, colorHelper} from '../../../../../theme';
-import {ItemConfig} from '../../create.item.component'
+import { ItemConfig } from '../../../baseComponent';
 
 
 /*
@@ -17,20 +17,26 @@ import {ItemConfig} from '../../create.item.component'
 })
 export class BaseItem implements OnChanges, AfterViewInit{
 
+  // data from the underlying query
   @Input()
-  public data:Object = null;
+  public dataIn:Object = null;
+  // configuration for the underlying viz component
   @Input()
   public config;
 
+  // translation from the input data and passed along to the viz component
+  public dataOut: Object = null; 
+
+  // are we in the process of doing an outside task?
   @Input()
   public saving:boolean = false;
   @Input()
   public refreshing:boolean = false;
 
-  // output from the item to the actual chart. 
-  public out: Object = null;
-
+  // used in the template, so exposed here
   public form: FormGroup;
+
+  // notify the parent of the save/refresh events
   public save = new EventEmitter();
   public refresh = new EventEmitter();
 
@@ -50,19 +56,21 @@ export class BaseItem implements OnChanges, AfterViewInit{
   ngOnChanges(changes: SimpleChanges) {
     // only run when property "data" changed
     if (changes['data']) {
-      let result = this.updateData(this.data);
+      let result = this.updateData(this.dataIn);
       // reset the data to trigger a change event on the child
-      this.out = Object.create(result);
+      this.dataOut = Object.create(result);
     }
   }
 
   protected updateData(result): Object { return null;}
 
   /**
-   * Constantly update the gauge with information as it becomes available.
-   * Skips values in the 'skip' array (e.g. they are handled in the update method)
+   * Constantly update the target with information as it becomes available.
+   * Skips values in the 'skip' array (e.g. they are handled in the update method).
+   * NameMap is used to translate the form control name to the name in the target.
+   * If there is no match in the nameMap, the control name is used in the target
    */
-  private listenForChanges(target:Object, skip:string[]){
+  protected listenForChanges(target:Object, skip:string[] = [], nameMap={}){
     let controls = this.form.controls;
     Object.keys(controls)
       .filter(name =>{
@@ -72,8 +80,12 @@ export class BaseItem implements OnChanges, AfterViewInit{
         let control = <AbstractControl>controls[name];
         control.statusChanges.subscribe(status =>{
           if(status == "VALID"){
-            // console.log("Setting gauge", name, "to", controls[name].value)
-            target[name] = controls[name].value;
+            // console.log("Setting ", this.name, ":", name,"to", controls[name].value)
+            var targetName = nameMap[name];
+            if(!targetName){
+              targetName = name;
+            }
+            target[targetName] = controls[name].value;
           }
         })
       })

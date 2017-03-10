@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import './gauge.loader.ts';
 
-import {BaseComponent} from './../baseComponent'
+import { BaseComponent, ItemConfig } from './../baseComponent';
 
 var nextId = 0;
 
@@ -12,7 +12,7 @@ var nextId = 0;
   template: require('./gauge.html'),
   inputs: ['data', 'editable', 'deletable']
 })
-export class Gauge extends BaseComponent {
+export class Gauge extends BaseComponent<GaugeConfig> {
   @Input()
   id = `gauge-${nextId++}`;
 
@@ -63,5 +63,17 @@ export class Gauge extends BaseComponent {
 
   private select():string{
     return "#" + this.id + " .chart";
+  }
+}
+
+export class GaugeConfig extends ItemConfig {
+
+  constructor(title:string,
+              query:string,
+              size:string,
+              public icon:string,
+              public value:string,
+              public percent:string){
+    super(title, query, size);
   }
 }

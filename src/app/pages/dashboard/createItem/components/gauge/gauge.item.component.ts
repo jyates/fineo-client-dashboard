@@ -4,14 +4,14 @@ import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormCon
 
 import { Subject }  from 'rxjs/Subject';
 
-import {BaThemeConfigProvider, colorHelper} from '../../../../../theme';
-import {ItemConfig} from '../../create.item.component'
+import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
+import { GaugeConfig } from '../../../gauge';
 
 
 /*
  * Item building for a gauge
  */
- @Component({
+@Component({
   selector: 'create-gauge',
   styleUrls: ['./gauge.item.scss'],
   templateUrl: './gauge.item.html',
@@ -152,17 +152,5 @@ export class GaugeItem implements OnChanges, AfterViewInit{
                            this.form.controls['size'].value,
                            this.form.controls['stats'].value,
                            this.form.controls['percent'].value)
-  }
-}
-
-export class GaugeConfig extends ItemConfig {
-
-  constructor(title:string,
-              query:string,
-              size:string,
-              public icon:string,
-              public value:string,
-              public percent:string){
-    super(title, query, size);
   }
 }

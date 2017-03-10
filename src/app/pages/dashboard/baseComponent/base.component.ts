@@ -4,10 +4,12 @@ import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnCha
   selector: "base-dashboard-component",
   outputs: ['deleteEvent', 'editEvent']
 })
-export class BaseComponent implements AfterViewInit, OnChanges {
+export class BaseComponent<T> implements AfterViewInit, OnChanges {
 
   @Input()
   public data: Object = null;
+  @Input()
+  public config: T = null;
   @Input()
   public editable: boolean = true;
   @Input()
@@ -62,4 +64,10 @@ export class BaseComponent implements AfterViewInit, OnChanges {
     })
     to[this.item_prefix + "-" + size] = enabled;
   }
+}
+
+export class ItemConfig {
+  constructor(public title: string,
+    public query: string,
+    public size: string) { }
 }

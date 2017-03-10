@@ -40,10 +40,8 @@ import {CreateItem, GaugeItem, DonutItem} from './createItem'
     routing
   ],
   declarations: [
-    Donut,
     PopularApp,
     PieChart,
-    Gauge,
     TrafficChart,
     UsersMap,
     LineChart,
@@ -59,6 +57,9 @@ import {CreateItem, GaugeItem, DonutItem} from './createItem'
     GaugeItem,
     DonutItem,
     //LineChartItem
+    // custom components from the standard ng2-admin dashaboard
+    Gauge,
+    Donut,
   ],
   providers: [
     CalendarService,

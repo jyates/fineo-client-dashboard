@@ -11,12 +11,13 @@
   </div>
   <div class="row">
     <donut-chart 
-      [data]="out" 
+      [data]="dataOut"
+      [config]="config"
       [editable]="false" 
       [deletable]="false">
     </donut-chart>
   </div>
-  <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
+ <!--  <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
     <div class="row">
       <div class="row" style="padding-bottom: 10px">
         <div class="col-md-1">
@@ -24,7 +25,7 @@
         </div>
         <br/>
       </div>
-      <!-- Fields -->
+      <!-- Fields 
       <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
         <div class="form-group row">
           <div class="col-lg-10">
@@ -63,7 +64,7 @@
       </div>
       <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5" [id]="id">
         <div class="row">
-          <!-- 1/2 the space on the next "row" in this column -->
+          <!-- 1/2 the space on the next "row" in this column 
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <h5 class="panel-subtitle">Size</h5>
             <div class="row">
@@ -86,7 +87,7 @@
         </div>
         <hr>
         <div class="row">
-          <!-- 1/2 the space on the next "row" in this column -->
+          <!-- 1/2 the space on the next "row" in this column 
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <h5 class="panel-subtitle">Values</h5>
             <div class="row">
@@ -109,5 +110,5 @@
         </div>
       </div>
     </div>
-  </form>
+  </form> -->
 </div>

@@ -5,7 +5,9 @@ import { Subject } from 'rxjs/Subject';
 
 import {
   DataReadService
-} from '../../../services/data.read.service'
+} from '../../../services/data.read.service';
+
+import { ItemConfig } from '../baseComponent';
 
 @Component({
   selector: 'create-dashboard-item-instance',
@@ -81,10 +83,4 @@ export class CreateItem implements OnInit {
   private alertFineo(msg: string): void {
     alert(msg + "\nPlease contact help@fineo.io with the output of the web console.");
   }
-}
-
-export class ItemConfig {
-  constructor(public title: string,
-    public query: string,
-    public size: string) { }
 }

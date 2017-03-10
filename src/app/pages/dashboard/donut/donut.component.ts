@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Chart } from './donut.loader.ts';
-import { BaseComponent } from './../baseComponent'
+import { BaseComponent, ItemConfig } from './../baseComponent'
 
 var nextDonutId = 0;
 
@@ -16,30 +16,20 @@ var nextDonutId = 0;
  * A simple 'donut' like pie chart thing.
  * Data format:
  * {
- *   title: <string>,
-     size: <string>,
      data: [
       label: <string>,
       color: <string>
       percentage: [string|number],
       value: [string | number]
-     ],
-     total: {
-      label: <string>,
-      value: [string, number]
-     }
+     ]
  * }
  */
-export class Donut extends BaseComponent {
+export class Donut extends BaseComponent<DonutConfig> {
 
   @Input()
   public id = `donut-${nextDonutId++}`;
 
-  @Input()
-  public valueType: string; // raw or percentage
-
-  @Input()
-  public centerEnabled: boolean;
+  private total: number = -1;
 
   constructor() {
     super("donut-container");
@@ -80,7 +70,7 @@ export class Donut extends BaseComponent {
   }
 
   public itemDisplay(item) {
-    if (this.valueType == "percent") {
+    if (this.config.valueType == "percent") {
       return item['percentage'] + "%"
     }
     return item['value'];
@@ -90,3 +80,16 @@ export class Donut extends BaseComponent {
     return "#" + this.id + " .chart-area"
   }
 }
+
+export class DonutConfig extends ItemConfig {
+
+  constructor(title:string,
+              query:string,
+              size:string,
+              public valueType:string,
+              public centerEnabled:boolean,
+              public centerLabel:string){
+    super(title, query, size);
+  }
+}
+
