@@ -5,7 +5,7 @@ import {LineChartService} from './lineChart.service';
 import 'style-loader!./lineChart.scss';
 
 @Component({
-  selector: 'line-chart',
+  selector: 'dline-chart',
   templateUrl: './lineChart.html'
 })
 export class LineChart {

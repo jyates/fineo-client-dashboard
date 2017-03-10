@@ -20,18 +20,17 @@
   <!-- "traffic chart" is really more of a pie chart, while pie chart is really more of a gauge -->
   <div class="row elem" (click)="select('donut')">
      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
-      <h1>Pie Chart</h1>
+      <h1>Donut Chart</h1>
       <br>
           <span>Optional summation field. Has specific call outs for each sub-group</span>
       </div>
-    <ba-card 
-      class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-xs-12"
-      title="Pie Chart"
+    <donut-chart
+      [data]="donut.data"
+      [config]="donut.config"
+      [colorOptions]="donut.colors"
       [editable]="false"
-      [deletable]="false"
-      baCardClass="traffic-panel medium-card">
-      <traffic-chart></traffic-chart>
-    </ba-card>
+      [deletable]="false">
+      </donut-chart>
   </div>
   <hr>
   <div class="row elem" (click)="select('line')">
@@ -46,7 +45,7 @@
       [deletable]=false
       [editable]=false
       baCardClass="medium-card">
-      <line-chart></line-chart>
+      <dline-chart></dline-chart>
   </ba-card>
   </div>
 </div>

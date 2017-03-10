@@ -84,7 +84,9 @@ export class Donut extends BaseComponent<DonutConfig> {
 
   public itemDisplay(item: DonutDatum) {
     if (this.config.valueType == "percent") {
-      return item.percent + "%"
+      let display = Math.round(item.percent * 100) / 100;
+// return (item.percent).toPrecision(2) + "%"
+      return display + "%"
     }
     return item.value;
   }

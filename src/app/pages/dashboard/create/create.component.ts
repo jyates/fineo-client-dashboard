@@ -33,7 +33,7 @@ export class CreateComponent {
     };
 
     this.donut = {
-      config:{
+      config: {
         title: "Donut Chart",
         size: 'large',
         valueType: 'percent',
@@ -47,7 +47,20 @@ export class CreateComponent {
         column4: 35,
         column5: 122
       }
+      colors: CreateComponent.donutColors(this._baConfig)
     }
+  }
+
+  private static donutColors(_baConfig: BaThemeConfigProvider): Object[] {
+    let colorOptions = []
+    let dashboardColors = _baConfig.get().colors.dashboard;
+    Object.keys(dashboardColors).forEach(name => {
+      colorOptions.push({
+        name: name,
+        color: dashboardColors[name]
+      })
+    });
+    return colorOptions;
   }
 
   private select(type: string) {

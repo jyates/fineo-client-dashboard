@@ -1,0 +1,259 @@
+@import "../../../theme/sass/conf/conf";
+
+/*
+ * Convert the guage dial into just a percent and value
+ * for a the tagged container size when screen is smaller
+ * than the specified width
+ */
+@mixin mini-gauge($size, $width) {
+  @media screen and (max-width: $width) {
+    .pie-chart-container-#{$size} {
+      .card{
+        >.card-body{
+          padding-left: 3px;
+          padding-right: 3px;
+        }
+      }
+      .pie-chart-item {
+        .chart {
+          display: none
+        }
+        .description {
+          width: 100%;
+          padding-top: 5px;
+
+          .row {
+            font-size: 24px;
+            padding-top: 10px;
+            padding-left: 3px;
+            padding-bottom: 15px;
+            text-align: center;
+            width: 95%;
+            // shorten text that doesn't fit
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-right: 0px;
+            // font-size: 32px;
+          }
+          .percent-small {
+            display: inline-block;
+            padding-left: 3px;
+            text-align: left;
+            font-size: 18px;
+          }
+          .percent-small:after {
+            display: inline-block;
+            text-align: left;
+            font-size: 18px;
+          }
+          .description-stats {
+            text-align: right;
+            padding-right: 4px;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin super-mini-gauge($size, $width) {
+  @media screen and (max-width: $width) {
+    .pie-chart-container-#{$size} {
+      .card{
+        >.card-body{
+          padding-left: 3px;
+          padding-right: 3px;
+        }
+      }
+      .pie-chart-item {
+        .chart {
+          display: none
+        }
+        .description {
+          width: 100%;
+          padding-top: 5px;
+
+          .description-row {
+            display: none;
+          }
+          .row{
+            .percent-small {
+              display: none;
+            }
+            .description-stats {
+              display: block;
+              text-align: center;
+              font-size: 24px;
+              padding-top: 20px;
+              padding-left: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * decrease the gauge box size once the screen is
+ * below the specified width
+ */
+@mixin tiny-gauge($size, $width){
+  @media screen and (max-width: $width) {
+    .pie-chart-container-#{$size} {
+      .card{
+        height: 65px;
+        >.card-body{
+          padding-left: 3px;
+          padding-right: 3px;
+        }
+      }
+      .pie-chart-item {
+        .chart {
+          display: none
+        }
+        .description {
+          width: 100%;
+          padding-top: 0px;
+          padding-left: 0px;
+
+          .description-row {
+            display: none;
+          }
+          .row{
+            margin-right: 0px;
+            margin-left: 0px;
+            .percent-small {
+              display: none;
+            }
+            .description-stats {
+              display: block;
+              padding: 0px;
+              text-align: center;
+              font-size: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// hide the icon for the tagged container size when the screen is smaller than the specified width
+@mixin hide-icon($size, $width) {
+  @media screen and (max-width: $width) {
+    .pie-chart-container-#{$size} {
+      .pie-chart-item {
+        i.chart-icon {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+div {
+  color: $content-text;
+  // start with a standard set of basic properties for an item container
+  .pie-chart-item-container {
+    position: relative;
+    padding: 0 15px;
+    float: left;
+    box-sizing: border-box;
+    // width: 100%;
+    flex: 0 0 100%;
+    .card {
+      height: 114px;
+    }
+  }
+
+  // when do we hide the icon?
+  .pie-chart-container-small {
+    .pie-chart-item {
+      // never display the icon for small containers
+      i.chart-icon {
+        display: none;
+      }
+    }
+  }
+  @include hide-icon('medium', 1000px)
+  @include hide-icon('large', 700px)
+
+  /*
+   * when do we turn it into a 'mini' gauge?
+   */
+  // have to go in reverse order to ensure we get the right layering
+  @include mini-gauge('small', 870px)
+  @include super-mini-gauge('small', 675px)
+  @include tiny-gauge('small', 670px)
+
+  @include super-mini-gauge('medium', 450px)
+  @include mini-gauge('medium', 675px)
+  // large never needs a mini-gauge
+  // @include mini-gauge('large', 675px)
+
+  .chart-icon {
+    right: 0;
+    top: 3px;
+  }
+  .pie-chart-item {
+    position: relative;
+    .chart-icon {
+      position: absolute;
+      right: 0;
+      top: 3px;
+    }
+  }
+  .chart {
+    position: relative;
+    display: inline-block;
+    width: 84px;
+    height: 84px;
+    text-align: center;
+    float: left;
+  }
+  .chart canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .percent {
+    display: inline-block;
+    line-height: 84px;
+    z-index: 2;
+    font-size: 16px;
+  }
+  .percent:after {
+    content: '%';
+    margin-left: 0.1em;
+    font-size: .8em;
+  }
+  .description {
+    display: inline-block;
+    padding: 20px 0 0 20px;
+    font-size: 18px;
+    opacity: 0.9;
+    .description-stats {
+      padding: 8px 0px 0px 0px;
+      font-size: 24px;
+    }
+    .percent-small {
+      display: none;
+      font-size: 24px;
+      padding: 8px 0px 0px 0px;
+    }
+    .percent-small:after {
+      content: '%';
+      margin-left: -0.2em;
+      font-size: .9em;
+    }
+  }
+  .angular {
+    margin-top: 100px;
+  }
+  .angular .chart {
+    margin-top: 0;
+  }
+}

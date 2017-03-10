@@ -67,7 +67,7 @@ export class CreateItem implements OnInit {
           "c3": 60,
           "c4": 30,
           "c5": 40,
-          "c16": 70,
+          "c6": 70,
         }]);
       }, 200)
     }).then(result => {
