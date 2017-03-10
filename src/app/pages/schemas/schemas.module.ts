@@ -33,6 +33,6 @@ import { routing }             from './schemas.routing';
     StringifyPipe
   ]
 })
-export default class SchemasModule {
+export class SchemasModule {
 }
 

@@ -19,4 +19,4 @@ import { routing } from './payment.routing';
     Payment
   ]
 })
-export default class PaymentModule {}
+export class PaymentModule {}

@@ -29,4 +29,4 @@ import { Devices } from './devices.component';
     ViewDeviceComponent,
   ]
 })
-export default class DevicesModule {}
+export class DevicesModule {}

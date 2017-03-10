@@ -28,6 +28,4 @@ import { routing }           from './data.routing';
     BatchComponent,
   ]
 })
-export default class DataModule {
-}
-
+export class DataModule {}
