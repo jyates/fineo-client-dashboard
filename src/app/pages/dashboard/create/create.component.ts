@@ -1,6 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
+import { Router} from '@angular/router';
 
-import {BaThemeConfigProvider, colorHelper} from '../../../theme';
+import { BaThemeConfigProvider, colorHelper} from '../../../theme';
 
 @Component({
   selector: 'create-dashboard-item',
@@ -13,7 +14,8 @@ export class CreateComponent {
   private gauge:Object;
   private _init:boolean = false;
 
-  constructor(private _baConfig: BaThemeConfigProvider) {
+  constructor(private _baConfig: BaThemeConfigProvider,
+              private router: Router) {
     let pieColor = this._baConfig.get().colors.custom.dashboardPieChart;
     this.gauge = {
       color: pieColor,
@@ -27,9 +29,6 @@ export class CreateComponent {
 
   private select(type:string){
     console.log("Selecting type:", type);
-  }
-
-  private selectGauge(){
-    console.log("Selecting gauge component");
+    this.router.navigate(['/pages/dashboard/create/'+type]);
   }
 }
