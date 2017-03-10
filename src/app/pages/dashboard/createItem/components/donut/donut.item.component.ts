@@ -44,7 +44,7 @@ export class DonutItem extends BaseItem {
     // create the form to describe the contents
     this.form = fb.group({
       'title': [this.config.title, Validators.compose([Validators.required, Validators.minLength(1)])],
-      'query': [this.config.query, Validators.compose([Validators.required, Validators.minLength(3)])],
+      'query': [this.config.queries[0].text, Validators.compose([Validators.required, Validators.minLength(3)])],
       'size': [this.config.size, Validators.compose([Validators.required, Validators.minLength(1), Validators.pattern("small|large")])],
       'centerEnabled': [this.config.centerEnabled, []],
       'centerLabel': [this.config.centerLabel, []],

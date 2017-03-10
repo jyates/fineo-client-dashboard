@@ -1,8 +1,7 @@
-import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ViewEncapsulation, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: "base-dashboard-component",
-  outputs: ['deleteEvent', 'editEvent']
+  selector: "base-dashboard-component"
 })
 export class BaseComponent<T> implements AfterViewInit, OnChanges {
 
@@ -42,7 +41,9 @@ export class BaseComponent<T> implements AfterViewInit, OnChanges {
   protected updateData(): void { };
 
   // pass through the delete/edit events from the underlying card
+  @Output()
   public deleteEvent = new EventEmitter();
+  @Output()
   public editEvent = new EventEmitter();
   public handleDelete(event): void {
     this.deleteEvent.next(event);
@@ -71,7 +72,19 @@ export class BaseComponent<T> implements AfterViewInit, OnChanges {
 }
 
 export class ItemConfig {
+  public queries: Query[];
   constructor(public title: string,
-    public query: string,
-    public size: string) { }
+    query, public size: string) {
+    // support single or multi-query components
+    console.log("Setting up config with query:", query);
+    if (typeof query == "string") {
+      this.queries = [new Query(query)]
+    }else{
+      this.queries = query;
+    }
+  }
+}
+
+export class Query{
+  constructor(public text, public name:string = ""){}
 }

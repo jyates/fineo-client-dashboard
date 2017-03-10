@@ -10,7 +10,6 @@ var nextId = 0;
   encapsulation: ViewEncapsulation.None,
   styles: [require('./gauge.scss')],
   template: require('./gauge.html'),
-  inputs: ['data', 'editable', 'deletable']
 })
 export class Gauge extends BaseComponent<GaugeConfig> {
   @Input()

@@ -37,7 +37,7 @@ export class GaugeItem extends BaseItem{
       'description': [this.config.title, Validators.compose([Validators.required, Validators.minLength(1)])],
       'icon': [this.config.icon, []],
       'size': [this.config.size, Validators.compose([Validators.required, Validators.minLength(3)])],
-      'query': [this.config.query, Validators.compose([Validators.required, Validators.minLength(3)])],
+      'query': [this.config.queries[0].text, Validators.compose([Validators.required, Validators.minLength(3)])],
       'stats': [this.config.value,  Validators.compose([Validators.minLength(1)])],
       'percent': [this.config.percent,  Validators.compose([Validators.required, Validators.minLength(1)])]
     });

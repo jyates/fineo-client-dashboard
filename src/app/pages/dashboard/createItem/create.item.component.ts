@@ -56,7 +56,7 @@ export class CreateItem implements OnInit {
 
   public handleRefresh(config: ItemConfig) {
     this.refreshing = true;
-    console.log("Attempting to refresh data for query:", config.query);
+    console.log("Attempting to refresh data for query:", config.queries);
     // save the configuration value
     new Promise((accept, reject) => {
       setTimeout(() => {
