@@ -54,16 +54,17 @@ export class GaugeItem extends BaseItem{
     console.log("updating gauge")
     let config = this.getConfig();
     let column = config.value;
+    let out = {};
     if(column){
       let value = row[column] ? row[column] : "0";
-      this.dataOut['stats'] = ""+value;
+      out['stats'] = ""+value;
     }
     let percent = config.percent;
     if(percent){
       let pvalue = row[percent] ? row[percent] : 0;
-      this.dataOut['percent'] = pvalue;
+      out['percent'] = pvalue;
     }
-    return this.dataOut;
+    return out;
   }
 
   private selectIcon(name:string){
