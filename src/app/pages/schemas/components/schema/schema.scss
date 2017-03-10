@@ -1,19 +1,14 @@
 @import '../../../../theme/sass/conf/conf';
-
 .modal {
   padding-top: 300px;
-
   .modal-content {
     color: $dropdown-text;
-
     .modal-header {
       border: none;
     }
-
     .modal-footer {
       border: none;
     }
-
     .close {
       outline: none;
     }
@@ -23,7 +18,6 @@
 .modal-buttons .btn {
   margin-right: 20px;
 }
-
 
 .form-control-modal {
   color: #000000;
@@ -42,12 +36,10 @@
 }
 
 $text-color: $default;
-
-.schema-block{
+.schema-block {
   margin: 0 auto;
   border-radius: 5px;
   color: #fff;
-
   h1 {
     font-weight: $font-light;
     margin-bottom: 28px;
@@ -64,18 +56,24 @@ $text-color: $default;
       color: $primary-dark;
     }
   }
-
   .control-label {
     padding-top: 11px;
     color: $text-color;
   }
-
   .form-group {
     margin-bottom: 12px;
+    label {
+      .control-label.alias-label {
+        padding-left: 0px;
+        text-align: left;
+      }
+    }
   }
 }
 
+
 /* Showing the loading spinner */
+
 .schema-spin-main {
   display: flex;
   flex-direction: column;
