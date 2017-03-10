@@ -4,23 +4,23 @@ import { Pages } from './pages.component';
 const routes: Routes = [
   {
     path: 'login',
-    loadChildren: 'app/pages/login/login.module#LoginModule')
+    loadChildren: 'app/pages/login/login.module#LoginModule'
   },
   {
     path: 'register',
-    loadChildren: 'app/pages/register/register.module#RegisterModule')
+    loadChildren: 'app/pages/register/register.module#RegisterModule'
   },
   {
     path: 'select-package',
-    loadChildren: 'app/pages/select-package/select-package.module#SelectPackageModule')
+    loadChildren: 'app/pages/select-package/select-package.module#SelectPackageModule'
   },
   {
     path: 'payment',
-    loadChildren: 'app/pages/payment/payment.module#PaymentModule')
+    loadChildren: 'app/pages/payment/payment.module#PaymentModule'
   },
   {
     path: 'confirm',
-    loadChildren: 'app/pages/confirm/confirm.module#ConfirmModule')
+    loadChildren: 'app/pages/confirm/confirm.module#ConfirmModule'
   },
   {
     path: 'pages',
@@ -28,11 +28,11 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
-      // { path: 'dashboard', loadChildren: 'app/pages/dashboard/dashboard.module#DashboardModule') },
-      { path: 'profile', loadChildren: 'app/pages/profile/profile.module#ProfileModule') },
-      { path: 'devices', loadChildren: 'app/pages/devices/devices.module#DevicesModule') },
-      { path: 'schemas', loadChildren: 'app/pages/schemas/schemas.module#SchemasModule') },
-      { path: 'data', loadChildren: 'app/pages/data/data.module#DataModule') },
+      // { path: 'dashboard', loadChildren: 'app/pages/dashboard/dashboard.module#DashboardModule' },
+      { path: 'profile', loadChildren: 'app/pages/profile/profile.module#ProfileModule' },
+      { path: 'devices', loadChildren: 'app/pages/devices/devices.module#DevicesModule' },
+      { path: 'schemas', loadChildren: 'app/pages/schemas/schemas.module#SchemasModule' },
+      { path: 'data', loadChildren: 'app/pages/data/data.module#DataModule' },
 
       // { path: 'editors', loadChildren: 'app/pages/editors/editors.module') },
       // { path: 'components', loadChildren: 'app/pages/components/components.module') }
