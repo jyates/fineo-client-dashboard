@@ -7,19 +7,19 @@
     (deleteEvent)="handleDelete($event)"
     (editEvent)="handleEdit($event)">
     <div class="pie-chart-item">
-      <div class="chart" [attr.data-rel]="chart.color" [attr.data-percent]="chart.percent">
+      <div class="chart" [attr.data-rel]="data.color" [attr.data-percent]="data.percent">
         <span class="percent"></span>
       </div>
       <div class="description">
-        <div class="row description-row">{{ chart.description }}</div>
+        <div class="row description-row">{{ data.description }}</div>
         <div class="row">
           <div class="percent-small col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <label>{{chart.percent}}</label>
+            <label>{{data.percent}}</label>
           </div>
-          <div class="description-stats">{{ chart.stats }}</div>
+          <div class="description-stats">{{ data.stats }}</div>
         </div>
       </div>
-      <i class="chart-icon i-{{ chart.icon }}" *ngIf="chart.icon"></i>
+      <i class="chart-icon i-{{ data.icon }}" *ngIf="data.icon"></i>
     </div>
   </ba-card>
 </div>
