@@ -17,7 +17,7 @@ import { routing }       from './login.routing';
     ReactiveFormsModule,
     FormsModule,
   // other libs
-    ModalModule,
+    ModalModule.forRoot(),
   // internal libs
     NgaModule,
   // this module

@@ -2,8 +2,7 @@ import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AlertModule } from 'ng2-bootstrap';
-import { ModalModule } from 'ng2-bootstrap';
+import { AlertModule, ModalModule } from 'ng2-bootstrap';
 
 import { NgaModule } from '../../theme/nga.module';
 
@@ -17,12 +16,12 @@ import { routing }             from './schemas.routing';
 
 @NgModule({
   imports: [
-    AlertModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     NgaModule,
-    ModalModule,
+    ModalModule.forRoot(),
+    AlertModule.forRoot(),
     routing
   ],
   declarations: [

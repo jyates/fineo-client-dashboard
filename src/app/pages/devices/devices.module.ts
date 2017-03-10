@@ -19,7 +19,7 @@ import { Devices } from './devices.component';
     FormsModule,
     ReactiveFormsModule,
     NgaModule,
-    ModalModule,
+    ModalModule.forRoot(),
     routing
   ],
   declarations: [
