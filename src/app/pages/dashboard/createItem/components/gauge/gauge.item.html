@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="row">
-    <gauge [chart]="gauge" [editable]="false" [deletable]="false">
+    <gauge [data]="gauge" [editable]="false" [deletable]="false">
     </gauge>
   </div>
   <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
