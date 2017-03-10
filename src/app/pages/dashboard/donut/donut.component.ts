@@ -13,10 +13,32 @@ var nextId = 0;
 })
 
 // TODO: move chart.js to it's own component
+/**
+ * A simple 'donut' like pie chart thing.
+ * Data format:
+ * {
+ *   data: [
+      label: <string>,
+      color: <string>
+      percentage: [string|number],
+      value: [string | number]
+     ],
+     total: {
+      label: <string>,
+      value: [string, number]
+     }
+ * }
+ */
 export class Donut extends BaseComponent {
 
   @Input()
   id = `donut-${nextId++}`;
+
+  @Input()
+  public valueType:string; // raw or percentage
+
+  @Input()
+  public centerEnabled:boolean;
 
   @Input()
   public data: Array<Object>;
@@ -32,6 +54,17 @@ export class Donut extends BaseComponent {
       percentageInnerCutout : 64,
       responsive: true
     });
+  }
+
+  public itemDisplay(item){
+    if (valueType == "percent" ){
+      return item['percentage']+"%"
+    }
+    return item['value'];
+  }
+
+  private getSuffix(){
+    return ? :"%": ""
   }
 
   private select(){

@@ -1,1 +1,1 @@
-export * from './pie.component';
+export * from './donut.component';

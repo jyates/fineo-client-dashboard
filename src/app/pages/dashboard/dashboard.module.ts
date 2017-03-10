@@ -11,6 +11,7 @@ import { PopularApp } from './popularApp';
 
 import { PieChart } from './pieChart';
 import { Gauge } from './gauge';
+import { Donut } from './donut'
 
 import { TrafficChart } from './trafficChart';
 import { UsersMap } from './usersMap';
@@ -28,7 +29,7 @@ import { TrafficChartService } from './trafficChart/trafficChart.service';
 import { UsersMapService } from './usersMap/usersMap.service';
 
 import {CreateComponent} from './create'
-import {CreateItem, GaugeItem} from './createItem'
+import {CreateItem, GaugeItem, DonutItem} from './createItem'
 
 @NgModule({
   imports: [
@@ -55,7 +56,7 @@ import {CreateItem, GaugeItem} from './createItem'
     CreateItem,
     // individual items that can be created
     GaugeItem,
-    //PieChartItem,
+    DonutItem,
     //LineChartItem
   ],
   providers: [

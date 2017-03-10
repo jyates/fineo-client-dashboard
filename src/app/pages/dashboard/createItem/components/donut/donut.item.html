@@ -1,0 +1,110 @@
+<div class="edit-gauge-container">
+  <!-- create an example panel for each type: pie, line, number, etc -->
+  <div class="row">
+    <h1>Gauge</h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-5 preview-header">
+      <span>Preview</span>
+      <button type="submit" (click)="onRefresh()" style="margin-left: 10px" class="btn btn-default">Refresh</button>
+    </div>
+  </div>
+  <div class="row">
+    <gauge [data]="gauge" [editable]="false" [deletable]="false">
+    </gauge>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
+    <div class="row">
+      <div class="row" style="padding-bottom: 10px">
+        <div class="col-md-1">
+          <button type="submit" [disabled]="!form.valid || saving" class="btn btn-success btn-md btn-raised">Save</button>
+        </div>
+        <br/>
+      </div>
+      <!-- Fields -->
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label for="gaugeTitle" class="col-sm-2 control-label">Title</label>
+            <div class="col-sm-10">
+              <input [formControl]="form.controls['title']" type="text" class="form-control" id="gaugeTitle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label for="gaugeQuery" class="col-sm-2 control-label">Query</label>
+            <div class="col-sm-10">
+              <input [formControl]="form.controls['query']" type="text-area" class="form-control" id="gaugeQuery">
+            </div>
+          </div>
+        </div>
+        <hr/>
+        <h5 class="panel-subtitle">Center Text</h5>
+        <div class="form-group row">
+          <div class="col-md-4">
+            <label class="radio-inline custom-radio nowrap">
+              <input type="checkbox" name="centerEnabled" value="true" [formControl]="form.controls['centerEnabled']">
+              <span>Enabled</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label for="centerLabel" class="col-sm-2 control-label">Label</label>
+            <div class="col-sm-10">
+              <input [formControl]="form.controls['centerLabel']" type="text" class="form-control" id="centerLabel">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5" [id]="id">
+        <div class="row">
+          <!-- 1/2 the space on the next "row" in this column -->
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h5 class="panel-subtitle">Size</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="size" value="small" [formControl]="form.controls['size']">
+                  <span>Small</span>
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap last-radio">
+                  <input type="radio" name="size" value="large" [formControl]="form.controls['size']">
+                  <span>Large</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <!-- 1/2 the space on the next "row" in this column -->
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h5 class="panel-subtitle">Values</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="valueType" value="percent" [formControl]="form.controls['asValues']">
+                  <span>Percent</span>
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap last-radio">
+                  <input type="radio" name="valueType" value="raw" [formControl]="form.controls['asValues']">
+                  <span>Raw</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,47 @@
+.preview-header{
+  padding-bottom: 15px;
+}
+
+.chart-icon{
+  cursor: pointer;
+  cursor: hand;
+
+  &.icon-placeholder{
+    label {
+      height: 80px;
+      width: 80px;
+      border: grey;
+      border-style: dashed;
+      border-width: thin;
+      cursor: pointer;
+      cursor: hand;
+    } 
+  }
+}
+
+
+.edit-gauge-container{
+
+  .refresh{
+    // text-align: -webkit-right;
+    padding-bottom: 15px;
+  }
+
+  .radio-inline{
+    padding-bottom: 5px;
+    line-height: 16px;
+
+    span {
+      font-size: medium;
+    }
+
+    &.last-radio
+    {
+      padding-bottom: 12px;
+    }
+  }
+
+  .select-icon{
+    min-width: 75px;
+  }
+}
