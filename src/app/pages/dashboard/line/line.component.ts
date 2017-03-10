@@ -1,27 +1,26 @@
 import { Component, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import './gauge.loader.ts';
 
-import { BaseComponent, ItemConfig } from './../baseComponent';
+import { BaseComponent, ItemConfig, Query } from './../baseComponent';
 
 var nextId = 0;
 
 @Component({
   selector: 'line-chart',
   styleUrls: ['./gauge.scss'],
-  emplateUrl: './gauge.html'),
+  templateUrl: './gauge.html'
 })
 export class Line extends BaseComponent<LineConfig> {
   @Input()
   id = `line-${nextId++}`;
 
   constructor(){
-    super("pie-chart-container");
+    super("line-chart-container");
   }
 
   private getChartSize() {
     let elems = {};
-    this.setSize("small", 3, elems);
-    this.setSize("medium", 4, elems);
+    this.setSize("small", 4, elems);
     this.setSize("large", 6, elems);
     return elems;
   }
@@ -64,15 +63,21 @@ export class Line extends BaseComponent<LineConfig> {
   }
 }
 
-export class GaugeConfig extends ItemConfig {
+export class LineConfig extends ItemConfig {
 
   constructor(title:string,
-              query:string[],
+              queries:LineQuery[],
               size:string,
               public icon:string,
               public value:string,
               public percent:string,
               public color: string = "#ffffff"){
-    super(title, query, size);
+    super(title, queries, size);
+  }
+}
+
+export class LineQuery extends Query{
+  constructor(text, name, public color:string){
+    super(text, name);
   }
 }
