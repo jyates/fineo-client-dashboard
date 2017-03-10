@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -13,9 +13,8 @@ import {
 
 @Component({
   selector: 'view-device',
-  encapsulation: ViewEncapsulation.None,
-  template: require('./view-device.html'),
-  styles: [require('./view-device.scss')]
+  templateUrl: './view-device.html',
+  styleUrls: ['./view-device.scss']
 })
 export class ViewDeviceComponent {
 

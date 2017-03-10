@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 
 import {UserService, Attribute} from '../../services/user.service'
@@ -6,9 +6,8 @@ import {PasswordValidator} from '../../theme/validators';
 
 @Component({
   selector: 'profile',
-  encapsulation: ViewEncapsulation.None,
-  styles: [require('./profile.scss')],
-  template: require('./profile.html')
+  styleUrls: ['./profile.scss'],
+  templateUrl: './profile.html'
 })
 export class Profile {
 

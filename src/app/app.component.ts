@@ -1,5 +1,5 @@
 import { Route, Routes } from '@angular/router';
-import { Component, ViewEncapsulation, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 
 import { GlobalState } from './global.state';
 import { PAGES_MENU as MENU } from './pages/pages.menu';

@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -7,9 +7,8 @@ import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'next_steps',
-  encapsulation: ViewEncapsulation.None,
-  template: require('./next.steps.html'),
-  styles: [require('./next.steps.scss')]
+  templateUrl: './next.steps.html',
+  styleUrls: ['./next.steps.scss']
 })
 export class NextSteps{
   constructor(private route: ActivatedRoute,

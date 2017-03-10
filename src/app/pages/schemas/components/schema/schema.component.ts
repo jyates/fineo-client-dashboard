@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ViewChild, HostListener, Input } from '@angular/core';
+import { Component, ViewChild, HostListener, Input } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -26,9 +26,8 @@ import { StringifyPipe } from '../util/stringify.pipe';
 
 @Component({
   selector: 'schema-component',
-  // encapsulation: ViewEncapsulation.None,
-  template: require('./schema.html'),
-  styles: [require('./schema.scss')]
+  templateUrl: './schema.html',
+  styleUrls: ['./schema.scss']
 })
 export class SchemaComponent {
 

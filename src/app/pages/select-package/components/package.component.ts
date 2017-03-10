@@ -1,10 +1,9 @@
-import {Component, ViewEncapsulation, ViewChild, Input, EventEmitter} from '@angular/core';
+import {Component, ViewChild, Input, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'package-card',
-  styles: [require('./package.scss')],
-  template: require('./package.html'),
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./package.scss'],
+  templateUrl: './package.html',
   outputs: ['selectEvent']
 })
 export class Package {

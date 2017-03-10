@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation, ElementRef, Renderer } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ModalDirective }     from 'ng2-bootstrap';
@@ -7,9 +7,8 @@ import { DataUploadService } from '../../../../services/data.upload.service';
 
 @Component({
   selector: 'bach-component',
-  // encapsulation: ViewEncapsulation.None,
-  template: require('./batch.html'),
-  styles: [require('./batch.scss')]
+  templateUrl: './batch.html',
+  styleUrls: ['./batch.scss']
 })
 export class BatchComponent {
 
