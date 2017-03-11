@@ -72,7 +72,7 @@ export class BaseComponent<T> implements AfterViewInit, OnChanges {
 }
 
 export class ItemConfig {
-  public queries: Query[];
+  public queries;
   constructor(public title: string,
     query, public size: string) {
     // support single or multi-query components

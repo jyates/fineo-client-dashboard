@@ -36,7 +36,7 @@ export class CreateItem implements OnInit {
   public handleSave(config: ItemConfig) {
     this.saving = true;
     // save the configuration value
-    console.log("Saving", this.type, " => ", config.title, ":", config.query);
+    console.log("Saving", this.type, " => ", config.title, ":", config.queries);
     new Promise((accept, reject) => {
       setTimeout(() => {
         console.log("done saving!");

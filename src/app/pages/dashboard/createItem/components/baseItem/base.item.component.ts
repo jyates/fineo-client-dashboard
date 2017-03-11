@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, EventEmitter, Input, Output, OnChanges, SimpleC hanges} from '@angular/core';
+import { Component, AfterViewInit, EventEmitter, Input, Output, OnChanges, SimpleChanges} from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormControl} from '@angular/forms';
 

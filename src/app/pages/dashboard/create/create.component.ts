@@ -46,7 +46,7 @@ export class CreateComponent {
         column3: 75,
         column4: 35,
         column5: 122
-      }
+      },
       colors: CreateComponent.donutColors(this._baConfig)
     }
   }
