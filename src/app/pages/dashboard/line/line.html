@@ -1,5 +1,10 @@
 <div>
-  <ba-card baCardClass="medium-card" title="config.title" [ngClass]="getChartSize()">
+  <ba-card 
+    baCardClass="medium-card"
+    title="config.title"
+    [ngClass]="getChartSize()"
+    [deletable]="deletable"
+    [editable]="editable">
     <ba-am-chart baAmChartClass="getChartClass()" [baAmChartConfiguration]="chartData" (onChartReady)="initChart($event)"></ba-am-chart>
   </ba-card>
 </div>

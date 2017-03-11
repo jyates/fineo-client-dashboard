@@ -39,13 +39,11 @@
       <br>
           <span>Line chart to track multipler events over a range (generally time).</span>
       </div>
-    <ba-card
-      class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-xs-12"
-      title="Line Chart"
-      [deletable]=false
-      [editable]=false
-      baCardClass="medium-card">
-      <dline-chart></dline-chart>
-  </ba-card>
+      <line-chart
+        [data]="line.data",
+        [config]="line.config"
+        [editable]="false"
+        [deletable]="false">
+      ></line-chart>
   </div>
 </div>

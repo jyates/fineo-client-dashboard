@@ -12,6 +12,7 @@ import { PopularApp } from './popularApp';
 import { PieChart } from './pieChart';
 import { Gauge } from './gauge';
 import { Donut } from './donut'
+import { Line } from './line'
 
 import { TrafficChart } from './trafficChart';
 import { UsersMap } from './usersMap';
@@ -60,6 +61,7 @@ import {CreateItem, GaugeItem, DonutItem} from './createItem'
     // custom components from the standard ng2-admin dashaboard
     Gauge,
     Donut,
+    Line
   ],
   providers: [
     CalendarService,

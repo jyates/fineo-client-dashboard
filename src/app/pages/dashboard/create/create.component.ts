@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../theme';
+import { Xaxis, GraphInfo } from '../line';
 
 @Component({
   selector: 'create-dashboard-item',
@@ -13,11 +14,14 @@ export class CreateComponent {
 
   private gauge: Object;
   private donut: Object;
+  private line: Object;
   private _init: boolean = false;
 
   constructor(private _baConfig: BaThemeConfigProvider,
     private router: Router) {
     let pieColor = this._baConfig.get().colors.custom.dashboardPieChart;
+    var layoutColors = this._baConfig.get().colors;
+    var graphColor = this._baConfig.get().colors.custom.dashboardLineChart;
 
     this.gauge = {
       config: {
@@ -48,6 +52,39 @@ export class CreateComponent {
         column5: 122
       },
       colors: CreateComponent.donutColors(this._baConfig)
+    }
+
+    this.line = {
+      data:{
+
+      },
+      config:{
+        title: "Line Chart",
+        size: "large",
+        queries: [
+          {
+            id: "1",
+            color: colorHelper.hexToRgbA(graphColor, 0.3),
+            chart:{
+              xfield: "x",
+              yfield: "y"
+            }
+          },
+          {
+            id: "2",
+            color: colorHelper.hexToRgbA(graphColor, 0.15),
+            chart:{
+              xfield: "x",
+              yfield: "y"
+            }
+          }
+        ],
+        xAxisIsDate: false,
+        xAxis: new Xaxis("x", false, layoutColors.defaultText, layoutColors.defaultText),
+        info:{
+
+        }
+      }
     }
   }
 

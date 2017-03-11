@@ -4,16 +4,12 @@ import './gauge.loader.ts';
 import { BaseComponent, ItemConfig, Query } from './../baseComponent';
 import { layoutPaths } from '../../../theme';
 
-var nextId = 0;
-
 @Component({
   selector: 'line-chart',
   styleUrls: ['./gauge.scss'],
   templateUrl: './gauge.html'
 })
 export class Line extends BaseComponent<LineConfig> {
-  @Input()
-  id = `line-${nextId++}`;
 
   public chartData: ChartData = new ChartData(layoutPaths.images.amChart);
 
@@ -62,7 +58,6 @@ export class LineConfig extends ItemConfig {
   constructor(title: string,
     queries: LineQuery[],
     size: string,
-    public xAxisIsDate:boolean,
     public xAxis: Xaxis) {
     super(title, queries, size);
   }
@@ -106,18 +101,16 @@ export class QueryChartConfig{
 
 export class Xaxis {
   public boldPeriodBeginning = false;
-  public parseDates: true;
   public gridAlpha: 0;
-  public color;
-  public axisColor;
-  public name;
+
+  constructor(public name:string, public parseDates: boolean = true, public color: string, public axisColor: string) { };
 }
 
 class ChartData {
 
   public dataProvider = [];
   public graphs: GraphInfo[];
-  public categoryAxis: Xaxis = new Xaxis();
+  public categoryAxis: Xaxis = new Xaxis("xfield", false, "white", "white");
   public categoryField;
   public chartCursor: Cursor = new Cursor();
   public export: {
@@ -180,6 +173,10 @@ class ChartData {
 
   public updateGraphs(queries: LineQuery[]): void {
     this.queries = queries;
+    // convert queries to graph infos
+    this.graphs = queries.map(query =>{
+      return new GraphInfo(query.id, query.color, query.chart.yfield);
+    });
     this.data(this.dataInternal);
   }
 }
@@ -195,14 +192,13 @@ class Cursor {
 }
 
 class GraphInfo {
-  public id: string;
   public bullet = 'none';
   public useLineColorForBulletBorder = true;
-  public lineColor;
   public lineThickness = 1;
   public negativeLineColor: "red";
   public type: 'smoothedLine';
-  public valueField: 'value0';
   public fillAlphas = 1;
   public fillColorsField: 'lineColor';
+
+  constructor(public id: string, public lineColor: string, public valueField: string) { };
 }
