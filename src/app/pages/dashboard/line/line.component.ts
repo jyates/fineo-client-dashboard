@@ -1,13 +1,12 @@
 import { Component, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
-import './gauge.loader.ts';
 
 import { BaseComponent, ItemConfig, Query } from './../baseComponent';
 import { layoutPaths } from '../../../theme';
 
 @Component({
   selector: 'line-chart',
-  styleUrls: ['./gauge.scss'],
-  templateUrl: './gauge.html'
+  styleUrls: ['./line.scss'],
+  templateUrl: './line.html'
 })
 export class Line extends BaseComponent<LineConfig> {
 
@@ -191,7 +190,7 @@ class Cursor {
   public valueLineAlpha: 0.5;
 }
 
-class GraphInfo {
+export class GraphInfo {
   public bullet = 'none';
   public useLineColorForBulletBorder = true;
   public lineThickness = 1;

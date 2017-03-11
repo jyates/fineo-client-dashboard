@@ -1,8 +1,8 @@
 <div class="create-dashboard-container">
   <!-- create an example panel for each type: pie, line, number, etc -->
-  <div class="row elem" (click)="select('gauge')">
+<!--   <div class="row elem" (click)="select('gauge')">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <!-- general description -->
+      <!-- general description 
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
            <h1>Gauge</h1>
       <br>
@@ -17,7 +17,7 @@
     </div>
   </div>
   <hr>
-  <!-- "traffic chart" is really more of a pie chart, while pie chart is really more of a gauge -->
+  <!-- "traffic chart" is really more of a pie chart, while pie chart is really more of a gauge 
   <div class="row elem" (click)="select('donut')">
      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
       <h1>Donut Chart</h1>
@@ -32,15 +32,15 @@
       [deletable]="false">
       </donut-chart>
   </div>
-  <hr>
+  <hr> -->
   <div class="row elem" (click)="select('line')">
      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
        <h1>Line Chart</h1>
       <br>
-          <span>Line chart to track multipler events over a range (generally time).</span>
+      <span>Line chart to track multipler events over a range (generally time).</span>
       </div>
       <line-chart
-        [data]="line.data",
+        [data]="line.data"
         [config]="line.config"
         [editable]="false"
         [deletable]="false">

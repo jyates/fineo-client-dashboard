@@ -7,8 +7,8 @@ import { Xaxis, GraphInfo } from '../line';
 @Component({
   selector: 'create-dashboard-item',
   encapsulation: ViewEncapsulation.None,
-  styles: [require('./create.scss')],
-  template: require('./create.html')
+  styleUrls: ['./create.scss'],
+  templateUrl: './create.html'
 })
 export class CreateComponent {
 
