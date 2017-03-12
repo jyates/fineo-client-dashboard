@@ -13,7 +13,11 @@ import { DataUploadService } from '../../../../services/data.upload.service';
 })
 export class StreamComponent {
 
-  public submitting:boolean = false;
+  private tooltip: string = "All events that do not have a 'timestamp' field will have one added with the value as the current time.";
+
+  public submitting: boolean = false;
+  public displayDone: boolean = false;
+  private clearDoneId: any = null;
   public form:FormGroup;
   private content:AbstractControl;
   @ViewChild('fileUpload') protected _fileUpload:ElementRef;
@@ -41,11 +45,7 @@ export class StreamComponent {
     var val = this.content.value;
     val = JSON.parse(val);
 
-    // also disables the form validity
-    this.content.reset();
-
-    this.submitting = true;
-
+    this.markSubmit();
     // update the data to send to ensure there is a timestamp, if there isn't one already
     var timeInMs = Date.now();
     if (Array.isArray(val)){
@@ -60,13 +60,41 @@ export class StreamComponent {
 
     // make the request
     this.service.stream(val).then(result =>{
-      this.submitting = false;
+      this.markDone();
       console.log("Successfully submitted data!");
     })
     .catch(err =>{
       console.log("Error uploading data!", JSON.stringify(err));
+      this.markDone(false);
       alert("Failed to upload data! Please send console information to help@fineo.io");
     });
+  }
+
+  private markSubmit():void{
+    this.submitting = true;
+    let val = this.content.value.toString();
+    // this.content.setValue(val);
+    this.content.reset({ value: val, disabled: true });
+    this.cancelDone()
+  }
+
+  private cancelDone():void{
+    if (this.clearDoneId != null) {
+      clearTimeout(this.clearDoneId);
+      this.clearDoneId = null;
+      this.displayDone = false;
+    }
+  }
+
+  private markDone(displayDone:boolean = true){
+    this.content.reset();
+    this.submitting = false;
+    this.displayDone = displayDone;
+    // turn off displayDone in 2 seconds. 
+    if (displayDone) {
+      console.log("Enabling 'done' display, waiting to turn if off");
+      this.clearDoneId = setTimeout(() => this.displayDone = false, 2000);
+    }
   }
 
   private addTimestampIfNecessary(obj:Object):void{
