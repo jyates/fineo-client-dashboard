@@ -19,6 +19,6 @@ import { routing }           from './profile.routing';
     Profile,
   ]
 })
-export default class ProfileModule {
+export class ProfileModule {
 }
 

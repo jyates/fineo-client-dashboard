@@ -3,7 +3,7 @@ import { CommonModule }  from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
 
-import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { ModalModule } from 'ng2-bootstrap';
 
 import { routing } from './devices.routing';
 
@@ -19,7 +19,7 @@ import { Devices } from './devices.component';
     FormsModule,
     ReactiveFormsModule,
     NgaModule,
-    ModalModule,
+    ModalModule.forRoot(),
     routing
   ],
   declarations: [
@@ -29,4 +29,4 @@ import { Devices } from './devices.component';
     ViewDeviceComponent,
   ]
 })
-export default class DevicesModule {}
+export class DevicesModule {}

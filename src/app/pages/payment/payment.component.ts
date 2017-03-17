@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router, NavigationExtras } from '@angular/router';
 
@@ -10,9 +10,8 @@ import {
 
 @Component({
   selector: 'payment',
-  encapsulation: ViewEncapsulation.None,
-  styles: [require('./payment.scss')],
-  template: require('./payment.html'),
+  styleUrls: ['./payment.scss'],
+  templateUrl: './payment.html',
 })
 export class Payment {
 

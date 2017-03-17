@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
@@ -9,9 +9,8 @@ import { DeviceHoverTable } from '../deviceTable/deviceTable.component'
 
 @Component({
   selector: 'view-all-devices',
-  encapsulation: ViewEncapsulation.None,
-  template: require('./devices.html'),
-  styles: [require('./devices.scss')]
+  templateUrl: './devices.html',
+  styleUrls: ['./devices.scss']
 })
 export class ViewAllDevicesComponent {
 

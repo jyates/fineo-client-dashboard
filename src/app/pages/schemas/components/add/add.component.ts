@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -11,9 +11,7 @@ import {GlobalState} from '../../../../global.state';
 
 @Component({
   selector: 'add-schema-component',
-  encapsulation: ViewEncapsulation.None,
-  template: require('./add.html'),
-  styles: []//require('./add.scss')
+  templateUrl: './add.html',
 })
 export class AddSchemaComponent {
 

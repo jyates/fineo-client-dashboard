@@ -1,10 +1,9 @@
-import {Component, ViewEncapsulation, ViewChild, Input, EventEmitter} from '@angular/core';
+import {Component, ViewChild, Input, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'ba-card',
-  styles: [require('./baCard.scss')],
-  template: require('./baCard.html'),
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./baCard.scss'],
+  templateUrl: './baCard.html',
   outputs: ['deleteEvent', 'editEvent']
 })
 export class BaCard {
@@ -23,4 +22,5 @@ export class BaCard {
   public deleteItem():void{
     this.deleteEvent.next(this);
   }
+  @Input() cardType:String;
 }

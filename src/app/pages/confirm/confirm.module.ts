@@ -23,4 +23,4 @@ import { routing } from './confirm.routing';
     Confirm
   ]
 })
-export default class ConfirmModule {}
+export class ConfirmModule {}

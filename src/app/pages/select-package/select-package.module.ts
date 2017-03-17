@@ -21,4 +21,4 @@ import { Package } from './components/package.component'
     Package
   ]
 })
-export default class SelectPackageModule {}
+export class SelectPackageModule {}

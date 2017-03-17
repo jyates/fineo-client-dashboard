@@ -2,7 +2,7 @@ import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { ModalModule } from 'ng2-bootstrap';
 
 import { NgaModule } from '../../theme/nga.module';
 
@@ -17,7 +17,7 @@ import { routing }       from './login.routing';
     ReactiveFormsModule,
     FormsModule,
   // other libs
-    ModalModule,
+    ModalModule.forRoot(),
   // internal libs
     NgaModule,
   // this module
@@ -28,4 +28,4 @@ import { routing }       from './login.routing';
     SplitCamelCase
   ]
 })
-export default class LoginModule {}
+export class LoginModule {}

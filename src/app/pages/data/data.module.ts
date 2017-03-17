@@ -2,8 +2,7 @@ import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { TooltipModule } from 'ng2-bootstrap';
+import { ModalModule, TooltipModule } from 'ng2-bootstrap';
 
 import { NgaModule } from '../../theme/nga.module';
 
@@ -19,8 +18,8 @@ import { routing }           from './data.routing';
     FormsModule,
     ReactiveFormsModule,
     NgaModule,
-    ModalModule,
-    TooltipModule,
+    ModalModule.forRoot(),
+    TooltipModule.forRoot(),
     routing
   ],
   declarations: [
@@ -29,6 +28,4 @@ import { routing }           from './data.routing';
     BatchComponent,
   ]
 })
-export default class DataModule {
-}
-
+export class DataModule {}

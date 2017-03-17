@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router} from '@angular/router';
 
@@ -16,9 +16,8 @@ import { SplitCamelCase } from './split.camelcase.pipe'
 
 @Component({
   selector: 'login',
-  encapsulation: ViewEncapsulation.None,
-  styles: [require('./login.scss')],
-  template: require('./login.html'),
+  styleUrls: ['./login.scss'],
+  templateUrl: './login.html',
 })
 export class Login implements LoggedIn {
   public form:FormGroup;

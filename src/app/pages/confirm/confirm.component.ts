@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -13,9 +13,8 @@ import {
 
 @Component({
   selector: 'confirm',
-  encapsulation: ViewEncapsulation.None,
-  styles: [require('./confirm.scss')],
-  template: require('./confirm.html'),
+  styleUrls: ['./confirm.scss'],
+  templateUrl: './confirm.html',
 })
 export class Confirm implements OnInit {
   private NEXT:string = "/confirm/next-steps"
