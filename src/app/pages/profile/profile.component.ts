@@ -61,17 +61,21 @@ export class Profile implements OnInit {
       this.attributes = attribControls;
       this.loading = false;
     }).catch(err => {
+      if (err.credentials) {
+        console.log("Failed to load initial credentials:", err);
+        return;
+      }
       this.alertUser("Failed to load user info!", err);
     });
   }
 
   ngOnInit() {
     // need to load the api key if we are loading the user from storage
-    if(this.user.apikey == null){
+    if (this.user.apikey == null) {
       this.fineo.meta.getApiKey().then(key => {
         this.user.setApiKey(key);
-      }).catch(err =>{
-        if(err.credentials){
+      }).catch(err => {
+        if (err.credentials) {
           return;
         }
         this.alertUser("Failed to load API Key!", err);
@@ -79,49 +83,49 @@ export class Profile implements OnInit {
     }
   }
 
-    public updatePassword(): void {
-      if (!this.passwords.valid) {
-        console.log("Atttempted to update password, but new password not valid");
-        return;
-      }
-
-      let oldPassword = this.passwords.controls['oldPassword'];
-      this.loading = true;
-      this.user.changePassword(oldPassword.value, this.nPassword.value).then(result => {
-        this.loading = false;
-      }).catch(err => {
-        this.alertUser("Failed to save password!", err);
-      });
+  public updatePassword(): void {
+    if (!this.passwords.valid) {
+      console.log("Atttempted to update password, but new password not valid");
+      return;
     }
+
+    let oldPassword = this.passwords.controls['oldPassword'];
+    this.loading = true;
+    this.user.changePassword(oldPassword.value, this.nPassword.value).then(result => {
+      this.loading = false;
+    }).catch(err => {
+      this.alertUser("Failed to save password!", err);
+    });
+  }
 
   public saveAttributes(): void {
-      this.loading = true;
-      let updates = [];
-      // get the attributes to update
-      let map = this.form.controls;
-      Object.keys(map)
-        .forEach(name => {
-          let control = map[name];
-          if (control.dirty) {
-            updates.push(new Attribute(name, control.value));
-          }
-        });
-
-      this.user.updateAttributes(updates).then(success => {
-        this.loading = false;
-      }).catch(err => {
-        this.alertUser("Failed to update attributes!", err);
+    this.loading = true;
+    let updates = [];
+    // get the attributes to update
+    let map = this.form.controls;
+    Object.keys(map)
+      .forEach(name => {
+        let control = map[name];
+        if (control.dirty) {
+          updates.push(new Attribute(name, control.value));
+        }
       });
-    }
 
-  private alertUser(msg: string, cause: any){
-      this.alertFineo(msg + "\nReason: " + JSON.stringify(cause))
+    this.user.updateAttributes(updates).then(success => {
       this.loading = false;
-    }
+    }).catch(err => {
+      this.alertUser("Failed to update attributes!", err);
+    });
+  }
+
+  private alertUser(msg: string, cause: any) {
+    this.alertFineo(msg + "\nReason: " + JSON.stringify(cause))
+    this.loading = false;
+  }
 
   private alertFineo(msg: string): void {
-      alert(msg + "\nPlease contact help@fineo.io with the output of the web console.");
-    }
+    alert(msg + "\nPlease contact help@fineo.io with the output of the web console.");
+  }
 }
 
 class AttribControl {

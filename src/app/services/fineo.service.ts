@@ -226,14 +226,17 @@ export class Data {
 
   public batch: Batch;
   public stream: Stream;
+  public read:Read
   constructor(users: UserService, lookup: MetaLookup) {
     this.batch = new Batch(users, lookup);
     this.stream = new Stream(users, lookup)
+    this.read = new Read(users, lookup);
   }
 
   public setApiKey(key: string) {
     this.batch.setApiKey(key);
     this.stream.setApiKey(key);
+    this.read.setApiKey(key);
   }
 }
 
@@ -264,6 +267,17 @@ export class Batch extends BaseExec {
     };
     return this.api.doPost("/batch/upload/file", obj);
   }
+}
+
+export class Read extends BaseExec {
+
+  constructor(users: UserService, lookup: MetaLookup){
+    super(users, environment.urls.read, lookup);
+  }
+
+  public query(body:Object):Promise<any>{
+    return this.api.doGet("/query", body);  
+  }  
 }
 
 export class Schema extends BaseExec {

@@ -1,0 +1,62 @@
+<div class="errors-block">
+  <!-- Filter the input -->
+  <div class="error-filtering col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="error-filter col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8">
+      <input *ngIf="config.filtering" placeholder="Filter" [ngTableFiltering]="config.filtering" (tableChanged)="pager.onChangeTable(config)" />
+    </div>
+    <!-- Select time filter -->
+    <div class="range-filters col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+      <div *ngFor="let span of ranges" class="range-elem">
+        <a (click)="applyRangeFilter(span)">{{span}}</a>
+      </div>
+      <div class="custom-group" [autoClose]="'disabled'" #dropdownGroup="bs-dropdown" dropdown>
+        <a id="custom-timerange" (click)="customRange()">custom</a>
+        <div class="top-dropdown-menu dropdown-menu" aria-labelledby="custom-timerange">
+          <div class="row">
+            <a (click)="cancelRange()" style="position: relative;left: 550px;color: darkgray;">x</a>
+          </div>
+          <div class="row">
+            <div style="display:inline-block;padding-left: 25px;">
+              <datepicker [(ngModel)]="custom.start" [showWeeks]="false"></datepicker>
+            </div>
+            <div style="display:inline-block;">
+              <datepicker [(ngModel)]="custom.end" [showWeeks]="custom.showWeeks"></datepicker>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-left: 60px;">
+              <timepicker [(ngModel)]="custom.start"></timepicker>
+            </div>
+            <div class="offset-sm-2 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+              <timepicker [(ngModel)]="custom.end"></timepicker>
+            </div>
+            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1" style="padding-top: 20px;">
+              <button class="btn btn-success" (click)="confirmRange()">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="error-table col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <!-- Actual table holding the data -->
+    <div class="row">
+      <ng-table [config]="config.sorting" (tableChanged)="pager.onChangeTable(config)" [rows]="pager.rows" [columns]="config.columns" (cellClicked)="onCellClick($event)">
+      </ng-table>
+    </div>
+    <!-- Pagination information -->
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <pagination class="pagination-sm" [(ngModel)]="pager.page" [totalItems]="pager.length" [itemsPerPage]="pager.itemsPerPage" [maxSize]="maxSize" [boundaryLinks]="true" [rotate]="false" (pageChanged)="pager.onChangeTable(config, $event)" (numPages)="numPages = $event">
+        </pagination>
+      </div>
+      <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1 reload">
+        <button class="btn btn-sm btn-primary" (click)="reloadData()">Reload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <small-spinner
+    [visible]="config.loading">
+  </small-spinner>

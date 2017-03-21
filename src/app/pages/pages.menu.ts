@@ -69,6 +69,17 @@ export const PAGES_MENU = [
         ]
       },
       {
+        path: 'errors',
+        data: {
+          menu: {
+            title: 'Errors',
+            pathMatch: 'errors',
+            icon: 'ion-help-buoy',
+            order: 130,
+          }
+        }
+      },
+      {
         path: 'profile',
         data: {
           hidden: true,

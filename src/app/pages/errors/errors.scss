@@ -1,0 +1,79 @@
+  @import '../../theme/sass/conf/conf';
+  .errors-block {
+    .error-filtering {
+      border: 1px solid;
+      padding-left: 0px;
+      // margin-left: 14px;
+      border-radius: 5px;
+      padding-right: 0px;
+      // width: 98.3%;
+      .error-filter {
+        padding-left: 0px;
+        padding-right: 2px;
+        input {
+          color: #ffffff;
+          width: 100%;
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          border-radius: 5px;
+          background-color: rgba(255, 255, 255, 0.1);
+          box-shadow: none;
+          font-size: 24px;
+          height: 40px;
+        }
+      }
+      .range-filters {
+        font-size: large;
+        padding-left: 1px;
+        padding-right: 1px;
+        padding-top: 12px;
+        .range-elem {
+          padding-left: 5px;
+          width: 10%;
+          margin-right: 0px;
+          float: left;
+          padding-right: 5px;
+          overflow: hidden;
+          position: relative;
+          text-align: center;
+          a {
+            &:hover {
+              color: $primary-dark;
+              cursor: pointer;
+            }
+          }
+        }
+        div.custom-group {
+          // background: red;
+          width: 20%;
+          display: inline;
+          padding-left: 10px;
+          a {
+            &:hover {
+              color: $primary-dark;
+              cursor: pointer;
+            }
+          }
+          .dropdown-toggle::after {
+            display: none;
+          }
+          .top-dropdown-menu.dropdown-menu {
+            width: 559px;
+            // set the background to something neutral b/c I can't figure out how to set the color of the buttons in the dropdown... which sucks.
+            background: #4181c1;
+            .date {
+              margin-left: 2px;
+              padding-right: 24px;
+            }
+          }
+        }
+      }
+    }
+    .error-table {
+      .reload {
+        padding-top: 10px;
+        float: right;
+        text-align: right;
+        padding-right: 2px;
+      }
+    }
+  }

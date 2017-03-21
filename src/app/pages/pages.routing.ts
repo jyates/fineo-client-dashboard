@@ -33,6 +33,7 @@ const routes: Routes = [
       { path: 'profile', loadChildren: 'app/pages/profile/profile.module#ProfileModule' },
       { path: 'devices', loadChildren: 'app/pages/devices/devices.module#DevicesModule' },
       { path: 'schemas', loadChildren: 'app/pages/schemas/schemas.module#SchemasModule' },
+      { path: 'errors', loadChildren: 'app/pages/errors/errors.module#ErrorsModule' },
       { path: 'data', loadChildren: 'app/pages/data/data.module#DataModule' },
 
       // { path: 'editors', loadChildren: 'app/pages/editors/editors.module') },

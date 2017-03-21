@@ -342,7 +342,8 @@ export class UserService {
   }
 
   public getUserName(): string {
-    return this.loginService.cognitoUtil.getCurrentUser().getUsername()
+    let user = this.loginService.cognitoUtil.getCurrentUser();
+    return user == null ? null : user.getUsername();
   }
 
   public setApiKey(key: string): void {

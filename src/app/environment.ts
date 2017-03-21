@@ -63,7 +63,8 @@ export const environment = {
     schema: "schema/v1",
     stream: "stream/v1",
     batch: "batch/v1",
-    meta: "meta/v1"
+    meta: "meta/v1",
+    read: "read/v1"
   }
 };
 
