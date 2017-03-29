@@ -136,8 +136,10 @@ export class UserService {
 
   public changePassword(oldPassword: string, newPassword: string): Promise<any> {
     return new Promise((accept, reject) => {
-      this.getUser({
-        withUser: function(user, session) {
+      this.getUser().then(us: UserWithSession) =>{
+      let user = us.user;
+      let session = us.session;
+        return new Promise((accept, reject) => {
           user.changePassword(oldPassword, newPassword, function(err, result) {
             if (err) {
               reject(err);
@@ -145,29 +147,23 @@ export class UserService {
             }
             accept(result);
           })
-        },
-        loadUserFailure: function(err) {
-          reject(err);
-        }
+        });
       });
     });
   }
 
   public userAttributes(): Promise<Attribute[]> {
-    return new Promise((accept, reject) => {
-      this.getUser({
-        withUser: function(user, session) {
-          user.getUserAttributes((err, result) => {
+    return this.getUser().then(us: UserWithSession) =>{
+      let user = us.user;
+      let session = us.session;
+      return new Promise((accept, reject) => {
+         user.getUserAttributes((err, result) => {
             if (err) {
               reject(err);
               return;
             }
             accept(result);
           })
-        },
-        loadUserFailure: function(err) {
-          reject(err);
-        }
       });
     });
   }
@@ -247,6 +243,9 @@ export class UserService {
     });
   }
 
+  /**
+   * Attempt to relogin the user from local storage
+   */
   private relogin():Promise<any>{
     return new Promise((resolve, reject) =>{
 
