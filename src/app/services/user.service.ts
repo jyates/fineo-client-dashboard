@@ -1,6 +1,6 @@
-import {Injectable, Inject} from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 
-import {GlobalState} from '../global.state'
+import { GlobalState } from '../global.state'
 
 import {
   CognitoCallback,
@@ -17,9 +17,9 @@ import {
 * So you want to hear about the user being logged in, eh? Implement this.
 */
 export interface LoggedIn {
-  loggedIn():void;
-  
-  loginFailed(reason:string):void;
+  loggedIn(): void;
+
+  loginFailed(reason: string): void;
 
   /**
   * User needs to reset their password and, possibly, provide some additional atttributes
@@ -29,13 +29,13 @@ export interface LoggedIn {
   * 
   * The callback will later invoke another of the LoggedIn methods on success/failure
   */
-  resetPasswordRequired(attributesToUpdate:Object, requiredAttributes, callback:(password:string) => void):void;
+  resetPasswordRequired(attributesToUpdate: Object, requiredAttributes, callback: (password: string) => void): void;
 
-  resetPasswordFailed(message):void;
+  resetPasswordFailed(message): void;
 }
 
-export interface ConfirmPasswordCallback{
-  confirm(verificationCode: string, password:string):Promise<any>;
+export interface ConfirmPasswordCallback {
+  confirm(verificationCode: string, password: string): Promise<any>;
 }
 
 /**
@@ -43,20 +43,20 @@ export interface ConfirmPasswordCallback{
  */
 export interface PasswordResetCallback {
 
-  verificationCodeSent(location, confirm:ConfirmPasswordCallback):void;
+  verificationCodeSent(location, confirm: ConfirmPasswordCallback): void;
 
-  resetFailed(reason:string):void;
+  resetFailed(reason: string): void;
 }
 
-export class Attribute{
+export class Attribute {
 
-  constructor(private name:string, private value:any){}
+  constructor(private name: string, private value: any) { }
 
-  public getName():string{
+  public getName(): string {
     return this.name;
   }
 
-  public getValue():any{
+  public getValue(): any {
     return this.value;
   }
 }
@@ -67,18 +67,18 @@ export class Attribute{
 @Injectable()
 export class UserService {
 
-  public static API_KEY_STATE:string = "fineo.schema.apikey";
-  public apikey:string;
-  private username:string;
-  public userService:Metadata;
+  public static API_KEY_STATE: string = "fineo.schema.apikey";
+  public apikey: string;
+  private username: string;
+  public userService: Metadata;
 
-  constructor(@Inject(UserLoginService) public loginService:UserLoginService,
-              @Inject(FineoApi) private fineo:FineoApi,
-              @Inject(GlobalState) private state:GlobalState){
+  constructor( @Inject(UserLoginService) public loginService: UserLoginService,
+    @Inject(FineoApi) private fineo: FineoApi,
+    @Inject(GlobalState) private state: GlobalState) {
     this.userService = fineo.meta;
   }
 
-  public login(email:string, password:string, onlogin:LoggedIn):void {
+  public login(email: string, password: string, onlogin: LoggedIn): void {
     this.username = email;
     let mgmt = this;
 
@@ -86,7 +86,7 @@ export class UserService {
     // after the user is "setup", then allow the login to acknowledge the success
     let apiKeyLookup = new ApiKeyLookupOnLogin(onlogin, mgmt);
 
-    let startPasswordReset = function(resetCallback:StartPasswordResetCallback){
+    let startPasswordReset = function(resetCallback: StartPasswordResetCallback) {
       let cc = new SuccessFailureCallback(
         (message, result) => { resetCallback.onSuccess(); },
         (message, result) => {
@@ -99,9 +99,9 @@ export class UserService {
     let finishPasswordReset = function(code, passsword) {
       mgmt.loginService.confirmNewPassword(email, code, passsword,
         new SuccessFailureCallback(null, (message, result) => {
-            console.log(message);
-            onlogin.resetPasswordFailed(message);
-          })
+          console.log(message);
+          onlogin.resetPasswordFailed(message);
+        })
       );
     };
 
@@ -109,18 +109,18 @@ export class UserService {
     this.loginService.authenticate(email, password, new LoginCallback(startPasswordReset, finishPasswordReset, apiKeyLookup));
   }
 
-  public resetPassword(username:string, callback:PasswordResetCallback) {
+  public resetPassword(username: string, callback: PasswordResetCallback) {
     let self = this;
     this.loginService.forgotPassword(username, new SuccessFailureCallback(
       // success
       (message, result) => {
         callback.verificationCodeSent(message, {
-          confirm: function(verificationCode: string, password:string) {
+          confirm: function(verificationCode: string, password: string) {
             return new Promise((resolve, reject) => {
               // basic mapping of resolve/success - reject/failure, based on message != null
               let cognitoCallback = new SuccessFailureCallback(
-                (message, result) => {resolve(result);},
-                (message, result) => {reject(message);});
+                (message, result) => { resolve(result); },
+                (message, result) => { reject(message); });
 
               self.loginService.confirmNewPassword(username, verificationCode, password, cognitoCallback);
             });
@@ -128,36 +128,17 @@ export class UserService {
         });
       },
       // failure
-     (message, result) => {
+      (message, result) => {
         callback.resetFailed(message);
       })
     );
   }
 
-  public changePassword(oldPassword:string, newPassword: string):Promise<any>{
-    return new Promise((accept, reject) =>{
+  public changePassword(oldPassword: string, newPassword: string): Promise<any> {
+    return new Promise((accept, reject) => {
       this.getUser({
         withUser: function(user, session) {
-          user.changePassword(oldPassword, newPassword, function(err, result){
-            if(err){
-              reject(err);
-              return;
-            }
-            accept(result);
-          })
-        },
-        loadUserFailure: function(err){
-          reject(err);
-        }
-      });
-    });
-  }
-
-  public userAttributes():Promise<Attribute[]>{
-    return new Promise((accept, reject) =>{
-      this.getUser({
-        withUser: function(user, session){
-          user.getUserAttributes((err, result) =>{
+          user.changePassword(oldPassword, newPassword, function(err, result) {
             if (err) {
               reject(err);
               return;
@@ -165,17 +146,36 @@ export class UserService {
             accept(result);
           })
         },
-        loadUserFailure: function(err){
+        loadUserFailure: function(err) {
           reject(err);
         }
       });
     });
   }
 
-  public updateAttributes(attributes: Attribute[]):Promise<any>{
+  public userAttributes(): Promise<Attribute[]> {
+    return new Promise((accept, reject) => {
+      this.getUser({
+        withUser: function(user, session) {
+          user.getUserAttributes((err, result) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            accept(result);
+          })
+        },
+        loadUserFailure: function(err) {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  public updateAttributes(attributes: Attribute[]): Promise<any> {
     // convert the attributes over
     let list = [];
-    attributes.forEach(attrib =>{
+    attributes.forEach(attrib => {
       var attribute = {
         Name: attrib.getName(),
         Value: attrib.getValue()
@@ -184,123 +184,129 @@ export class UserService {
       list.push(att);
     });
 
-    return new Promise((accept, reject) =>{
-      this.getUser({
-        withUser: function(user, session){
-          user.updateAttributes(list, function(err, result) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            accept(result);
-          });
-        },
-        loadUserFailure: function(err){
-          reject(err);
-        }
+    return this.getUser().then((us: UserWithSession) => {
+      let user = us.user;
+      let session = us.session;
+      user.updateAttributes(list, function(err, result) { });
+    });
+  }
+
+  private getUser(): Promise<UserWithSession> {
+    console.log("getting user...");
+    let promise = Promise.resolve(this.loginService.cognitoUtil.getCurrentUser());
+    // make sure we have a non-null user
+    return promise.then(maybeUser => {
+      if (maybeUser == null) {
+        console.log("UserLoginService: can't retrieve the current user. Trying relogin");
+        return this.relogin();
+      }
+      return maybeUser;
+    }).then(user => {
+      return new Promise((resolve, reject) => {
+        user.getSession((err, session) => {
+          if (err) {
+            console.log("UserLoginService: Couldn't get the session: " + err, err.stack);
+            reject(err);
+            return;
+          }
+          resolve(new UserWithSession(user, session));
+        })
+
       });
     });
   }
 
-  private getUser(callback:WithUser){
-    console.log("getting user...");
-    let user = this.loginService.cognitoUtil.getCurrentUser();
-    if (user == null) {
-      console.log("UserLoginService: can't retrieve the current user");
-      callback.loadUserFailure("no current user logged in or user could not be loaded");
-      return;
-    }
-    user.getSession(function (err, session) {
-      if (err) {
-        console.log("UserLoginService: Couldn't get the session: " + err, err.stack);
-        callback.loadUserFailure(err);
-        return;
-      }
-      callback.withUser(user, session);
-    });
-  }
-
-  public logout():void{
+  public logout(): void {
     // reset the internal user information and then logout the user (so credentials are invalidated)
     this.apikey = null;
     this.fineo.setApiKey(null);
     this.loginService.logout();
   }
 
-  public setApiKey(key:string):void {
+  public setApiKey(key: string): void {
     this.apikey = key;
     this.fineo.setApiKey(key);
     this.state.notifyDataChanged(UserService.API_KEY_STATE, key);
   }
 
-  public alertFineo(msg:string):void {
-     alert(msg+" Please contact help@fineo.io with the output of the web console.");
+  public alertFineo(msg: string): void {
+    alert(msg + " Please contact help@fineo.io with the output of the web console.");
   }
 
   public static transform(value: Object): string {
     var seen = [];
 
     return JSON.stringify(value, function(key, val) {
-       if (val != null && typeof val == "object") {
-            if (seen.indexOf(val) >= 0) {
-                return;
-            }
-            seen.push(val);
+      if (val != null && typeof val == "object") {
+        if (seen.indexOf(val) >= 0) {
+          return;
         }
-        return val;
+        seen.push(val);
+      }
+      return val;
+    });
+  }
+
+  private relogin():Promise<any>{
+    return new Promise((resolve, reject) =>{
+
     });
   }
 }
 
-interface WithUser{
-  withUser(user:any, session:any):void;
+class UserWithSession {
+  constructor(public user, public session) { }
+}
+
+interface WithUser {
+  withUser(user: any, session: any): void;
   loadUserFailure(err);
 }
 
-interface StartPasswordResetCallback{
-  onSuccess():void;
+interface StartPasswordResetCallback {
+  onSuccess(): void;
 
-  onFailure(message:string):void;
+  onFailure(message: string): void;
 }
 
 class DelegatingLoggedIn implements LoggedIn {
-  constructor(public delegate:LoggedIn){}
+  constructor(public delegate: LoggedIn) { }
 
-  loggedIn():void{
+  loggedIn(): void {
     this.delegate.loggedIn();
   }
-  
-  loginFailed(reason:string){
+
+  loginFailed(reason: string) {
     this.delegate.loginFailed(reason);
   }
 
-  resetPasswordRequired(attributesToUpdate:Object, requiredAttributes, callback:(password:string) => void):void{
+  resetPasswordRequired(attributesToUpdate: Object, requiredAttributes, callback: (password: string) => void): void {
     this.delegate.resetPasswordRequired(attributesToUpdate, requiredAttributes, callback);
   }
 
-  resetPasswordFailed(message):void{
+  resetPasswordFailed(message): void {
     this.delegate.resetPasswordFailed(message);
   }
 }
 
-class ApiKeyLookupOnLogin extends DelegatingLoggedIn{
-  constructor(delegate:LoggedIn, private mgmt:UserService){
+class ApiKeyLookupOnLogin extends DelegatingLoggedIn {
+  constructor(delegate: LoggedIn, private mgmt: UserService) {
     super(delegate);
     console.log("Looking up API Key before continuing login through delegate")
   }
 
-  loggedIn(){
+  loggedIn() {
     let lookup = this;
     console.log("Starting api key lookup");
     this.mgmt.userService.getApiKey()
-      .then(function(success){
-        console.log("got api key response: "+ JSON.stringify(success));
+      .then(function(success) {
+        console.log("got api key response: " + JSON.stringify(success));
         lookup.mgmt.setApiKey(success.apiKey);
         // login fully complete
         lookup.delegate.loggedIn();
       })
-      .catch(function(err){
-        console.log("Failed to get api key because: "+ UserService.transform(err));
+      .catch(function(err) {
+        console.log("Failed to get api key because: " + UserService.transform(err));
         // ensure that we can try logging in again
         lookup.mgmt.loginService.logout();
         lookup.mgmt.alertFineo("Failed to download api key!");
@@ -321,45 +327,45 @@ class LoginCallback implements CognitoCallback {
   * @param {simpleResetCallback} method to call from the LoggedIn when it acquires a new user password and wants to finish the login
   * @param {onlogins} callbacks to update when the logins completes, fails, or needs a password reset.
   */
-  constructor(private startResetPassword, private finishPasswordReset:(code:string, password:string) =>void, private login:LoggedIn){}
+  constructor(private startResetPassword, private finishPasswordReset: (code: string, password: string) => void, private login: LoggedIn) { }
 
-  cognitoCallback(message:string, result:any) {
+  cognitoCallback(message: string, result: any) {
     // error... of some sort
     if (message != null) {
-      if(message == "Password reset required for the user"){
+      if (message == "Password reset required for the user") {
         console.log("Need to reset password for user");
         let callback = this;
         // start the user forgot password flow
         this.startResetPassword({
-          onSuccess(){
-              let attributes = {}
-              callback.login.resetPasswordRequired(attributes, ["verificationCode"], function(password:string):void {
-                  callback.finishPasswordReset(attributes["verificationCode"], password);
+          onSuccess() {
+            let attributes = {}
+            callback.login.resetPasswordRequired(attributes, ["verificationCode"], function(password: string): void {
+              callback.finishPasswordReset(attributes["verificationCode"], password);
             });
           },
-          onFailure(message:string){
+          onFailure(message: string) {
             // for each of the "logins" attempt trigger the reset password flow
-            callback.login.resetPasswordFailed("Password needed to be reset, but it failed!\n"+message);
+            callback.login.resetPasswordFailed("Password needed to be reset, but it failed!\n" + message);
           }
         });
-        
-        
+
+
       } else {
         this.login.loginFailed(message);
       }
-    } 
+    }
     // success
-    else { 
+    else {
       this.login.loggedIn();
     }
   }
 
-  resetPassword(attributesToUpdate, requiredAttributes, callback:(password:string) => any):void{
+  resetPassword(attributesToUpdate, requiredAttributes, callback: (password: string) => any): void {
     this.login.resetPasswordRequired(attributesToUpdate, requiredAttributes, callback);
   }
 
 
-  handleMFA(codeDeliveryDetails, callbackWithCode:(mfa:string) => any):void{
+  handleMFA(codeDeliveryDetails, callbackWithCode: (mfa: string) => any): void {
     // noop - we don't support MFA right now because we don't have a secondary input mechanism for users
     // when they use their username/password on a third party tool (e.g. BI tool)
   }
@@ -367,34 +373,34 @@ class LoginCallback implements CognitoCallback {
 
 class SuccessFailureCallback implements CognitoCallback {
 
-  constructor(private success:(message:any, result:any) => void,
-              private failure:(message:any, result:any) => void,
-              private decider?:(message:any, result:any) => boolean) {
-    if(this.decider == null) {
-      this.decider = function(message, result){
-          return result != null;
-        };
+  constructor(private success: (message: any, result: any) => void,
+    private failure: (message: any, result: any) => void,
+    private decider?: (message: any, result: any) => boolean) {
+    if (this.decider == null) {
+      this.decider = function(message, result) {
+        return result != null;
+      };
     }
   }
 
-  cognitoCallback(message, result){
-    if(this.decider(message, result)) {
-      if(this.success != null){
+  cognitoCallback(message, result) {
+    if (this.decider(message, result)) {
+      if (this.success != null) {
         this.success(message, result);
       }
-    }else {
-      if(this.failure != null){
+    } else {
+      if (this.failure != null) {
         this.failure(message, result);
       }
     }
   }
 
-  resetPassword(attributesToUpdate, requiredAttributes, callback:(password:string) => any):void{
+  resetPassword(attributesToUpdate, requiredAttributes, callback: (password: string) => any): void {
     // noop
   }
 
 
-  handleMFA(codeDeliveryDetails, callbackWithCode:(mfa:string) => any):void{
+  handleMFA(codeDeliveryDetails, callbackWithCode: (mfa: string) => any): void {
     // noop
   }
 }
