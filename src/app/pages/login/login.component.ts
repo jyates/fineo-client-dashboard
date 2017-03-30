@@ -12,6 +12,11 @@ import {
   ConfirmPasswordCallback
 } from '../../services/user.service';
 
+import {
+  FineoApi,
+  Metadata
+} from '../../services/fineo.service';
+
 import { SplitCamelCase } from './split.camelcase.pipe'
 
 @Component({
@@ -42,9 +47,12 @@ export class Login implements LoggedIn {
   public forgotVerificationCode:string = "";
   public forgotPasswordCallback:Function;
 
+  private meta: Metadata;
+
   constructor(private fb:FormBuilder,
               private router: Router,
-              private users: UserService) {
+              private users: UserService,
+              private fineo: FineoApi) {
     this.form = fb.group({
       'email': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
       'password': ['', Validators.compose([Validators.required, Validators.minLength(8)])]
@@ -52,6 +60,7 @@ export class Login implements LoggedIn {
 
     this.email = this.form.controls['email'];
     this.password = this.form.controls['password'];
+    this.meta = this.fineo.meta;
   }
 
   public onSubmit(values:Object):void {
@@ -70,8 +79,26 @@ export class Login implements LoggedIn {
   // successful login, we are done!
   loggedIn():void {
     console.log("Successfully logged in: ", this.email.value);
-    this.router.navigate(['/pages/devices/view']);
-    this.submitted = false;
+
+    // lookup and set the api key, so we have it for later requets
+    console.log("Looking up api key");
+    let self = this;
+    this.getApiKey().then(key => {
+      // users tells everyone interested when we get an api key
+      this.users.setApiKey(key);
+    }).then(key =>{
+      this.router.navigate(['/pages/devices/view']);
+      this.submitted = false;
+    }).catch(err => {
+        console.log("Failed to get api key because: ", err, "Transformed: ", UserService.transform(err));
+        self.users.logout();
+        self.loginFailed(err);
+      });
+  }
+
+  private getApiKey():Promise<any>{
+    console.log("Starting api key lookup");
+    return this.meta.getApiKey();
   }
 
   loginFailed(reason:string):void {

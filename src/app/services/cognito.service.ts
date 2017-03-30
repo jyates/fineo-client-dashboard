@@ -314,9 +314,16 @@ export class UserLoginService {
   }
 
     withCredentials(func:WithCredentials){
+        if (AWS.config.credentials == null) {
+            func.noCredentials();
+            return;
+        }
         AWS.config.credentials.get(function(err) {
-            if (err){console.log(err);}
-            else{
+            if (err){
+              console.log(err);
+              func.noCredentials();
+            }
+            else {
                 func.with(AWS.config.credentials.accessKeyId, AWS.config.credentials.secretAccessKey,AWS.config.credentials.sessionToken);
             }
         });
@@ -396,6 +403,8 @@ export class UserLoginService {
 
 export interface WithCredentials{
     with(access:string, secret:string, session:string);
+
+    noCredentials();
 }
 
 @Injectable()

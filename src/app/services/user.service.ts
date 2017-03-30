@@ -5,13 +5,12 @@ import { GlobalState } from '../global.state'
 import {
   CognitoCallback,
   LoggedInCallback,
-  UserLoginService
+  UserLoginService,
+  WithCredentials
 } from './cognito.service'
 
-import {
-  FineoApi,
-  Metadata
-} from './fineo.service'
+const USER_STORAGE_KEY: string = "currentUser";
+const ONE_HOUR_MILLIS: number = 3600000;
 
 /**
 * So you want to hear about the user being logged in, eh? Implement this.
@@ -70,22 +69,15 @@ export class UserService {
   public static API_KEY_STATE: string = "fineo.schema.apikey";
   public apikey: string;
   private username: string;
-  public userService: Metadata;
 
   constructor( @Inject(UserLoginService) public loginService: UserLoginService,
-    @Inject(FineoApi) private fineo: FineoApi,
     @Inject(GlobalState) private state: GlobalState) {
-    this.userService = fineo.meta;
   }
 
   public login(email: string, password: string, onlogin: LoggedIn): void {
     this.username = email;
     let mgmt = this;
-
-    // when the user is logged in, look up the api key
-    // after the user is "setup", then allow the login to acknowledge the success
-    let apiKeyLookup = new ApiKeyLookupOnLogin(onlogin, mgmt);
-
+    let setUser = new SetUserOnLogin(onlogin, password, email);
     let startPasswordReset = function(resetCallback: StartPasswordResetCallback) {
       let cc = new SuccessFailureCallback(
         (message, result) => { resetCallback.onSuccess(); },
@@ -106,7 +98,7 @@ export class UserService {
     };
 
     // do the login process
-    this.loginService.authenticate(email, password, new LoginCallback(startPasswordReset, finishPasswordReset, apiKeyLookup));
+    this.loginService.authenticate(email, password, new LoginCallback(startPasswordReset, finishPasswordReset, setUser));
   }
 
   public resetPassword(username: string, callback: PasswordResetCallback) {
@@ -136,9 +128,9 @@ export class UserService {
 
   public changePassword(oldPassword: string, newPassword: string): Promise<any> {
     return new Promise((accept, reject) => {
-      this.getUser().then(us: UserWithSession) =>{
-      let user = us.user;
-      let session = us.session;
+      this.getUser().then((us: UserWithSession) => {
+        let user = us.user;
+        let session = us.session;
         return new Promise((accept, reject) => {
           user.changePassword(oldPassword, newPassword, function(err, result) {
             if (err) {
@@ -153,17 +145,17 @@ export class UserService {
   }
 
   public userAttributes(): Promise<Attribute[]> {
-    return this.getUser().then(us: UserWithSession) =>{
+    return this.getUser().then((us: UserWithSession) => {
       let user = us.user;
       let session = us.session;
       return new Promise((accept, reject) => {
-         user.getUserAttributes((err, result) => {
-            if (err) {
-              reject(err);
-              return;
-            }
-            accept(result);
-          })
+        user.getUserAttributes((err, result) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          accept(result);
+        })
       });
     });
   }
@@ -214,15 +206,11 @@ export class UserService {
 
   public logout(): void {
     // reset the internal user information and then logout the user (so credentials are invalidated)
-    this.apikey = null;
-    this.fineo.setApiKey(null);
     this.loginService.logout();
-  }
-
-  public setApiKey(key: string): void {
-    this.apikey = key;
-    this.fineo.setApiKey(key);
-    this.state.notifyDataChanged(UserService.API_KEY_STATE, key);
+    localStorage.removeItem(USER_STORAGE_KEY);
+    // unset the api key
+    this.state.notifyDataChanged(UserService.API_KEY_STATE, null);
+    this.apikey = null;
   }
 
   public alertFineo(msg: string): void {
@@ -246,10 +234,69 @@ export class UserService {
   /**
    * Attempt to relogin the user from local storage
    */
-  private relogin():Promise<any>{
-    return new Promise((resolve, reject) =>{
+  private relogin(): Promise<any> {
+    console.log("Attempting relogin");
+    var currentUser = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
+    if (currentUser == null) {
+      console.log(" -> no user found in local storage - done relogin()");
+      return Promise.reject("No user found in local storage.");
+    }
 
+    let now = Date.now();
+    if (now > currentUser.timeout) {
+      // remove the user key so we don't try again
+      localStorage.removeItem(USER_STORAGE_KEY)
+      console.log(" -> user info expired in local storage. Done relogin()");
+      return Promise.reject("User data expired");
+    }
+
+    return new Promise((resolve, reject) => {
+      let self = this;
+      this.login(currentUser.name, currentUser.password, {
+        loggedIn: function() {
+          resolve(self.loginService.cognitoUtil.getCurrentUser());
+        },
+
+        loginFailed: function(reason: string) {
+          console.log(" -> relogin failed! Logging out");
+          self.logout()
+          console.log("-> Rejecting login attempt. Done relogin()")
+          reject(reason);
+        },
+        resetPasswordRequired: function(attributesToUpdate, requiredAttributes, callback) {
+          reject("Reset password required");
+        },
+        resetPasswordFailed: function(message) {
+          reject("Attempted to reset password on relogin. Failed: " + message);
+        }
+      })
     });
+  }
+
+  public withCredentials(func: WithCredentials) {
+    let self = this;
+    let wrapper = {
+      with: func.with,
+      noCredentials: function() {
+        // attempt to relogin
+        self.relogin().then(user => {
+          self.loginService.withCredentials(func);
+        }).catch(err => {
+          func.noCredentials();
+        })
+      }
+    };
+    this.loginService.withCredentials(wrapper);
+  }
+
+  public getUserName(): string {
+    return this.loginService.cognitoUtil.getCurrentUser().getUsername()
+  }
+
+  public setApiKey(key: string): void {
+    console.log("Setting api key in user: ", key);
+    this.apikey = key;
+    this.state.notifyDataChanged(UserService.API_KEY_STATE, key);
   }
 }
 
@@ -288,29 +335,17 @@ class DelegatingLoggedIn implements LoggedIn {
   }
 }
 
-class ApiKeyLookupOnLogin extends DelegatingLoggedIn {
-  constructor(delegate: LoggedIn, private mgmt: UserService) {
+class SetUserOnLogin extends DelegatingLoggedIn {
+  constructor(delegate: LoggedIn, private password: string, private name: string) {
     super(delegate);
-    console.log("Looking up API Key before continuing login through delegate")
   }
 
   loggedIn() {
-    let lookup = this;
-    console.log("Starting api key lookup");
-    this.mgmt.userService.getApiKey()
-      .then(function(success) {
-        console.log("got api key response: " + JSON.stringify(success));
-        lookup.mgmt.setApiKey(success.apiKey);
-        // login fully complete
-        lookup.delegate.loggedIn();
-      })
-      .catch(function(err) {
-        console.log("Failed to get api key because: " + UserService.transform(err));
-        // ensure that we can try logging in again
-        lookup.mgmt.loginService.logout();
-        lookup.mgmt.alertFineo("Failed to download api key!");
-        lookup.delegate.loginFailed("Internal server error: could not locate api key");
-      });
+    let now = Date.now()
+    let valid_until = now + ONE_HOUR_MILLIS;
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({ name: this.name, password: this.password, timeout: valid_until }));
+    super.loggedIn();
+    // this.delegate.loggedIn();
   }
 }
 
