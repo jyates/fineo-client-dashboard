@@ -68,8 +68,8 @@ export class SchemaComponent {
     // register the "schema loading" work
     this.loading = true;
     let self = this;
-    BaThemePreloader.registerLoader(
       // add a loading spinner 
+    BaThemePreloader.registerLoader(
       this.service.getSchema(this.id)
         .then(info => {
           self.initWithInfo(info);
@@ -78,9 +78,9 @@ export class SchemaComponent {
           if (error.credentials) {
             console.log("Credentials failed to load. Should revert back to login screen");
             console.log("Credentials failed because:", error.message);
-            this.router.navigate['/login']
             return;
           }
+          console.log("Got a different error:", error)
           alert(JSON.stringify(error));
         }));
 

@@ -22,9 +22,11 @@ export class SchemaService {
     let schemas = this;
     let p = this.schemaApi.getMetrics();
     p = p.catch(err => {
+      console.log("Got error in schemas()", err)
       // there are no more possible results, something is wrong in the credentials
       if (err.credentials) {
-        return err;
+        console.log("Credential error, just retuning that")
+        return Promise.reject(err);
       }
       // retry!
       console.log("Waiting", RETRY_TIMEOUT, "ms after failure. Error:", err);
@@ -39,6 +41,7 @@ export class SchemaService {
       });
     });
     return p.then(result => {
+      console.log("got schema result:", result);
       let p = SchemaService.rejectEmptyData(result);
       if (p != null) {
         return p;
@@ -46,12 +49,12 @@ export class SchemaService {
 
       // set to an empty array to start with
       let data = result.idToMetricName;
-      schemas.schemaProperties = [];
+      this.schemaProperties = [];
       Object.keys(data).forEach((key, index) => {
-        schemas.schemaProperties.push(new SchemaMetaInfo(key, data[key]));
+        this.schemaProperties.push(new SchemaMetaInfo(key, data[key]));
       });
 
-      return schemas.schemaProperties;
+      return this.schemaProperties;
     });
   }
 
@@ -68,9 +71,12 @@ export class SchemaService {
     let self = this;
     // we didn't load the data before, so load it now.
     if (this.schemaProperties == null) {
-      promise = this.schemas().then((success) => {
+      promise = this.schemas();
+      console.log("Got promise while loading schemas:", promise);
+      return promise.then((success) => {
+        console.log("Successful loading schemas, getting schema info")
         return self.getSchemaInfo(id);
-      })
+      });
     } else {
       return this.getSchemaInfo(id);
     }

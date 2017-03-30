@@ -12,6 +12,7 @@ import {
 
 const USER_STORAGE_KEY: string = "currentUser";
 const ONE_HOUR_MILLIS: number = 3600000;
+const FIVE_MINS_MILLIS: number = 5000;
 
 /**
 * So you want to hear about the user being logged in, eh? Implement this.
@@ -62,6 +63,14 @@ export class Attribute {
 }
 
 /**
+ * Make a request with AWS credentials for the current user
+ */
+export interface WithUserCredentials {
+  with(accessKey: string, secretKey: string, sessionToeken: string);
+  fail(reason): void;
+}
+
+/**
 * A central place to manage user state. Encapsulates logging a user in/out, as well as metadata information about the user, like what their API Key is.
 */
 @Injectable()
@@ -70,6 +79,7 @@ export class UserService {
   public static API_KEY_STATE: string = "fineo.schema.apikey";
   public apikey: string;
   private username: string;
+  private _lastInteractionTime: number = 0;
 
   constructor( @Inject(UserLoginService) public loginService: UserLoginService,
     @Inject(GlobalState) private state: GlobalState,
@@ -77,9 +87,11 @@ export class UserService {
   }
 
   public login(email: string, password: string, onlogin: LoggedIn): void {
+    this._lastInteractionTime = Date.now();
     this.username = email;
     let mgmt = this;
-    let setUser = new SetUserOnLogin(onlogin, password, email);
+    let logoutWatch = new TriggerLogoutWatchOnLogin(onlogin, this);
+    let setUser = new SetUserOnLogin(logoutWatch, password, email);
     let startPasswordReset = function(resetCallback: StartPasswordResetCallback) {
       let cc = new SuccessFailureCallback(
         (message, result) => { resetCallback.onSuccess(); },
@@ -104,6 +116,7 @@ export class UserService {
   }
 
   public resetPassword(username: string, callback: PasswordResetCallback) {
+    this._lastInteractionTime = Date.now();
     let self = this;
     this.loginService.forgotPassword(username, new SuccessFailureCallback(
       // success
@@ -129,6 +142,7 @@ export class UserService {
   }
 
   public changePassword(oldPassword: string, newPassword: string): Promise<any> {
+    this._lastInteractionTime = Date.now();
     return new Promise((accept, reject) => {
       this.getUser().then((us: UserWithSession) => {
         let user = us.user;
@@ -183,6 +197,7 @@ export class UserService {
 
   private getUser(): Promise<UserWithSession> {
     console.log("getting user...");
+    this._lastInteractionTime = Date.now();
     let promise = Promise.resolve(this.loginService.cognitoUtil.getCurrentUser());
     // make sure we have a non-null user
     return promise.then(maybeUser => {
@@ -210,6 +225,7 @@ export class UserService {
     // reset the internal user information and then logout the user (so credentials are invalidated)
     this.loginService.logout();
     localStorage.removeItem(USER_STORAGE_KEY);
+    this._lastInteractionTime = 0;
     // unset the api key
     this.state.notifyDataChanged(UserService.API_KEY_STATE, null);
     this.apikey = null;
@@ -290,6 +306,8 @@ export class UserService {
 
   public withCredentials(func: WithUserCredentials) {
     let self = this;
+    // update the interaction time so we don't get a timeout
+    this._lastInteractionTime = Date.now();
     let wrapper = {
       with: func.with,
       noCredentials: function() {
@@ -318,11 +336,31 @@ export class UserService {
     this.apikey = key;
     this.state.notifyDataChanged(UserService.API_KEY_STATE, key);
   }
-}
 
-export interface WithUserCredentials {
-  with(access: string, secret: string, session: string);
-  fail(reason): void;
+  private logoutUnlessInteraction(): void {
+    let now = Date.now();
+    let max = this._lastInteractionTime + ONE_HOUR_MILLIS;
+    if (now < max) {
+      // wait around again to check
+      this.triggerAutoLogout();
+      return;
+    }
+
+    // we need to logout b/c the user hasn't changed
+    this.logout();
+  }
+
+  triggerAutoLogout(): void {
+    // reset the timeout info on the login credentials
+    let user = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
+    user.timeout = this._lastInteractionTime + ONE_HOUR_MILLIS;
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+    // wait an hour to see if we need to logout
+    let self = this;
+    setTimeout(function() {
+      self.logoutUnlessInteraction()
+    }, FIVE_MINS_MILLIS);
+  }
 }
 
 class UserWithSession {
@@ -360,6 +398,23 @@ class DelegatingLoggedIn implements LoggedIn {
   }
 }
 
+/**
+ * Start the auto logout timer on the UserService to monitor the user interations
+ */
+class TriggerLogoutWatchOnLogin extends DelegatingLoggedIn {
+  constructor(delegate: LoggedIn, private users: UserService) {
+    super(delegate);
+  }
+
+  loggedIn() {
+    this.users.triggerAutoLogout();
+    super.loggedIn();
+  }
+}
+
+/**
+ * Set the user credentials in local storage so we can get them back on page refresh or another tab
+ */
 class SetUserOnLogin extends DelegatingLoggedIn {
   constructor(delegate: LoggedIn, private password: string, private name: string) {
     super(delegate);
@@ -367,10 +422,10 @@ class SetUserOnLogin extends DelegatingLoggedIn {
 
   loggedIn() {
     let now = Date.now()
-    let valid_until = now + 1;//ONE_HOUR_MILLIS;
+    // expire the login credentials after an hour.
+    let valid_until = now + ONE_HOUR_MILLIS;
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({ name: this.name, password: this.password, timeout: valid_until }));
     super.loggedIn();
-    // this.delegate.loggedIn();
   }
 }
 
