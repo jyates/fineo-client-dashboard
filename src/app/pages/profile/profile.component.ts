@@ -70,13 +70,18 @@ export class Profile implements OnInit {
     if(this.user.apikey == null){
       this.fineo.meta.getApiKey().then(key => {
         this.user.setApiKey(key);
+      }).catch(err =>{
+        if(err.credentials){
+          return;
+        }
+        this.alertUser("Failed to load API Key!", err);
       });
     }
   }
 
     public updatePassword(): void {
       if (!this.passwords.valid) {
-        console.log("Atttempted to update password, but new passwork not valid");
+        console.log("Atttempted to update password, but new password not valid");
         return;
       }
 

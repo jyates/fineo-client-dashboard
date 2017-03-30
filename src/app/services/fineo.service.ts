@@ -3,8 +3,7 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 
 import { Observable } from 'rxjs/Observable';
 
-import { WithCredentials } from './cognito.service'
-import { UserService } from './user.service'
+import { UserService, WithUserCredentials } from './user.service'
 
 import { GlobalState } from '../global.state'
 import { environment } from '../environment'
@@ -87,8 +86,8 @@ class BaseExec {
         var apiGatewayClient = apiGateway.core.apiGatewayClientFactory.newClient(simpleHttpClientConfig, sigV4ClientConfig);
         func.doWithClient(apiGatewayClient);
       },
-      noCredentials: function() {
-        func.failBeforeClient("No credentials present");
+      fail: function(reason) {
+        func.failBeforeClient(reason);
       }
     });
   }
@@ -100,7 +99,7 @@ class BaseExec {
 
 interface WithApiGatewayClient {
   doWithClient(apiGatewayClient): void;
-  failBeforeClient(reason: string): void;
+  failBeforeClient(error): void;
 }
 
 class MetaLookup extends BaseExec {

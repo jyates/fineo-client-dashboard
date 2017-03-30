@@ -25,6 +25,11 @@ export class ViewAllDevicesComponent {
     this.devices.createDevice().then((result:DeviceInfo) =>{
       this.deviceTable.addDevice(result);
     }).catch(err =>{
+      if(err.credentials){
+        console.log("Credentials failed to load. Should revert back to login screen");
+        console.log("Credentials failed because:", err.message);
+        return;
+      }
       console.log("Failed to create a new device:");
       console.log(JSON.stringify(err));
       alert("Failed to create a new device! Please send console output to help@fineo.io");

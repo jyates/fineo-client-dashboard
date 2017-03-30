@@ -1,4 +1,5 @@
 import { Injectable, Inject } from "@angular/core";
+import { Router } from '@angular/router';
 
 import { GlobalState } from '../global.state'
 
@@ -71,7 +72,8 @@ export class UserService {
   private username: string;
 
   constructor( @Inject(UserLoginService) public loginService: UserLoginService,
-    @Inject(GlobalState) private state: GlobalState) {
+    @Inject(GlobalState) private state: GlobalState,
+    @Inject(Router) private router: Router) {
   }
 
   public login(email: string, password: string, onlogin: LoggedIn): void {
@@ -236,10 +238,15 @@ export class UserService {
    */
   private relogin(): Promise<any> {
     console.log("Attempting relogin");
+    let err = {
+      credentials: true
+    }
     var currentUser = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
     if (currentUser == null) {
       console.log(" -> no user found in local storage - done relogin()");
-      return Promise.reject("No user found in local storage.");
+      this.router.navigate(["/login"]);
+      err['message'] = "No user found in local storage.";
+      return Promise.reject(err);
     }
 
     let now = Date.now();
@@ -247,7 +254,9 @@ export class UserService {
       // remove the user key so we don't try again
       localStorage.removeItem(USER_STORAGE_KEY)
       console.log(" -> user info expired in local storage. Done relogin()");
-      return Promise.reject("User data expired");
+      this.router.navigate(["/login"]);
+      err['message'] = "User data expired";
+      return Promise.reject(err);
     }
 
     return new Promise((resolve, reject) => {
@@ -261,28 +270,39 @@ export class UserService {
           console.log(" -> relogin failed! Logging out");
           self.logout()
           console.log("-> Rejecting login attempt. Done relogin()")
-          reject(reason);
+          self.router.navigate(["/login"]);
+          err['message'] = reason;
+          reject(err);
         },
         resetPasswordRequired: function(attributesToUpdate, requiredAttributes, callback) {
-          reject("Reset password required");
+          self.router.navigate(["/login"]);
+          err["message"] = "Reset password required";
+          reject(err);
         },
         resetPasswordFailed: function(message) {
-          reject("Attempted to reset password on relogin. Failed: " + message);
+          self.router.navigate(["/login"]);
+          err['message'] = "Attempted to reset password on relogin. Failed: " + message
+          reject(err);
         }
       })
     });
   }
 
-  public withCredentials(func: WithCredentials) {
+  public withCredentials(func: WithUserCredentials) {
     let self = this;
     let wrapper = {
       with: func.with,
       noCredentials: function() {
         // attempt to relogin
         self.relogin().then(user => {
-          self.loginService.withCredentials(func);
+          self.loginService.withCredentials({
+            with: func.with,
+            noCredentials: function() {
+              func.fail("Unexpected error with credentials. They seemed to be obtained, but now they are missing.");
+            }
+          });
         }).catch(err => {
-          func.noCredentials();
+          func.fail(err);
         })
       }
     };
@@ -298,6 +318,11 @@ export class UserService {
     this.apikey = key;
     this.state.notifyDataChanged(UserService.API_KEY_STATE, key);
   }
+}
+
+export interface WithUserCredentials {
+  with(access: string, secret: string, session: string);
+  fail(reason): void;
 }
 
 class UserWithSession {
@@ -342,7 +367,7 @@ class SetUserOnLogin extends DelegatingLoggedIn {
 
   loggedIn() {
     let now = Date.now()
-    let valid_until = now + ONE_HOUR_MILLIS;
+    let valid_until = now + 1;//ONE_HOUR_MILLIS;
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({ name: this.name, password: this.password, timeout: valid_until }));
     super.loggedIn();
     // this.delegate.loggedIn();
