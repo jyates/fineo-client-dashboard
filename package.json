@@ -1,9 +1,9 @@
 {
-  "name": "ng2-admin",
-  "version": "0.9.0",
-  "description": "Angular 2 and Bootstrap 4 Admin Template.",
-  "author": "akveo",
-  "homepage": "http://akveo.github.io/ng2-admin/",
+  "name": "fineo-admin",
+  "version": "1.0.0",
+  "description": "Admin dashboard.",
+  "author": "fineo",
+  "homepage": "https://fineo.io",
   "license": "MIT",
   "dependencies": {
     "@angular/common": "2.4.9",
@@ -181,10 +181,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/akveo/ng2-admin.git"
+    "url": "https://github.com/jyates/fineo-client-dashboard"
   },
   "bugs": {
-    "url": "https://github.com/akveo/ng2-admin/issues"
+    "url": "https://github.com/jyates/fineo-client-dashboard/issues"
   },
   "engines": {
     "node": ">= 5.4.1 < 7"
