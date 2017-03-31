@@ -60,6 +60,41 @@ class BaseExec {
     this.pathComponent = this.url.substring(this.endpoint.length);
   }
 
+  public prepareCall(): Promise<ApiClient> {
+    let exec = this;
+    return new Promise((resolve, reject) => {
+      this.users.withCredentials({
+        with: function(access: string, secret: string, session: string) {
+          // setup signing the request
+          var sigV4ClientConfig = {
+          accessKey: access,
+          secretKey: secret,
+          sessionToken: session,
+          serviceName: 'execute-api',
+          region: 'us-east-1',
+          endpoint: exec.endpoint,
+          defaultContentType: APPL_JSON,
+          defaultAcceptType: APPL_JSON
+        };
+
+        var simpleHttpClientConfig = {
+          endpoint: exec.endpoint,
+          defaultContentType: APPL_JSON,
+          defaultAcceptType: APPL_JSON
+        };
+
+          // now we have a client
+          let client = apiGateway.core.apiGatewayClientFactory.newClient(simpleHttpClientConfig, sigV4ClientConfig);
+          resolve(client);
+        },
+        fail: function(reason) {
+          console.log("Failed to get credentials:", reason);
+          reject(reason);
+        }
+      });
+    });
+  }
+
   public makeCall(func: WithApiGatewayClient) {
     let exec = this;
     this.users.withCredentials({
@@ -97,6 +132,10 @@ class BaseExec {
   }
 }
 
+interface ApiClient {
+  makeRequest(request, type, additionalParams, apikey): Promise<any>;
+}
+
 interface WithApiGatewayClient {
   doWithClient(apiGatewayClient): void;
   failBeforeClient(error): void;
@@ -118,7 +157,7 @@ class MetaLookup extends BaseExec {
       console.log("got key result:", JSON.stringify(result))
       let key = result.apiKey;
       this.state.notifyDataChanged(UserService.API_KEY_STATE, key);
-      return key;
+      return Promise.resolve(key);
     });
   }
 }
@@ -348,43 +387,27 @@ class Api {
 
   private doCall(request: Object, options?: FineoRequestOptions): Promise<any> {
     let api = this;
-    return new Promise(function(resolve, reject) {
-      api.exec.makeCall({
-        doWithClient: function(apiGatewayClient) {
-          let promise = api.ensureApiKey(options);
-          promise.then(function(apikey) {
-            let response = apiGatewayClient.makeRequest(request, 'AWS_IAM', {}, apikey);
-            response.then(result => {
-              // handle the internal request. It may be that we got a 200 response, but
-              // the deployed function is actually returning an error message (e.g function
-              // was WAY wrong configured).
-              let data = result.data;
-              if (data === undefined) {
-                resolve({});
-              }
-              else if (data.errorMessage != undefined) {
-                console.log("rejecting result - it has an error message!")
-                reject(data);
-              } else {
-                resolve(data);
-              }
-            }).catch(error => {
-              console.log("Error: ", error);
-              reject({
-                request: request,
-                error: error
-              });
-            });
-          }).catch(err => {
-            console.log("Failed loading the api key! -- ", JSON.stringify(err));
-            reject(err);
-          });
-        },
-        // couldn't get client, fail!
-        failBeforeClient: function(reason) {
-          reject(reason);
-        }
-      });
+    return api.exec.prepareCall().then(apiGatewayClient => {
+      return api.ensureApiKey(options).then(key => {
+        return Promise.resolve({ key: key, client: apiGatewayClient });
+      })
+    }).then(obj => {
+      return obj.client.makeRequest(request, 'AWS_IAM', {}, obj.key);
+    }).then(result => {
+      // handle the internal request. It may be that we got a 200 response, but
+      // the deployed function is actually returning an error message (e.g function
+      // was WAY wrong configured).
+      let data = result.data;
+      if (data === undefined) {
+        data = {}
+      }
+
+      if (data.errorMessage != undefined) {
+        console.log("rejecting result - it has an error message!")
+        return Promise.reject(data);
+      } else {
+        return Promise.resolve(data);
+      }
     });
   }
 
@@ -394,7 +417,6 @@ class Api {
     }
 
     if (options != null && options.skipApiKey) {
-      console.log("Skipping api key lookup.");
       return Promise.resolve("");
     }
 

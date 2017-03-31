@@ -319,7 +319,7 @@ export class UserLoginService {
             return;
         }
         AWS.config.credentials.get(function(err) {
-            if (err){
+            if (err) {
               console.log(err);
               func.noCredentials();
             }

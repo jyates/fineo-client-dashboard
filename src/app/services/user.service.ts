@@ -80,6 +80,7 @@ export class UserService {
   public apikey: string;
   private username: string;
   private _lastInteractionTime: number = 0;
+  private pending_relogin: Promise<any>;
 
   constructor( @Inject(UserLoginService) public loginService: UserLoginService,
     @Inject(GlobalState) private state: GlobalState,
@@ -164,7 +165,7 @@ export class UserService {
     return this.getUser().then((us: UserWithSession) => {
       let user = us.user;
       let session = us.session;
-      return new Promise((accept, reject) => {
+      return <Promise<Attribute[]>> new Promise((accept, reject) => {
         user.getUserAttributes((err, result) => {
           if (err) {
             reject(err);
@@ -275,33 +276,46 @@ export class UserService {
       return Promise.reject(err);
     }
 
-    return new Promise((resolve, reject) => {
-      let self = this;
-      this.login(currentUser.name, currentUser.password, {
-        loggedIn: function() {
-          resolve(self.loginService.cognitoUtil.getCurrentUser());
-        },
+    // check to see that we don't have a pending login promise, to avoid attempting to login multiple times.
+    // logging in multiple times can cause a race where we set and then unset the credentials before we
+    // have a chance to use them, failing requests. This also saves RPC calls since we only do the lookup once
+    if (this.pending_relogin == null) {
+      console.log("Creating a new login request");
+      this.pending_relogin = new Promise((resolve, reject) => {
+        let self = this;
+        this.login(currentUser.name, currentUser.password, {
+          loggedIn: function() {
+            let user = self.loginService.cognitoUtil.getCurrentUser();
+            resolve(user);
+          },
+          // all the failures and haters
+          loginFailed: function(reason: string) {
+            console.log(" -> relogin failed! Logging out");
+            self.logout()
+            console.log("-> Rejecting login attempt. Done relogin()")
+            self.router.navigate(["/login"]);
+            err['message'] = reason;
+            reject(err);
+          },
+          resetPasswordRequired: function(attributesToUpdate, requiredAttributes, callback) {
+            self.router.navigate(["/login"]);
+            err["message"] = "Reset password required";
+            reject(err);
+          },
+          resetPasswordFailed: function(message) {
+            self.router.navigate(["/login"]);
+            err['message'] = "Attempted to reset password on relogin. Failed: " + message
+            reject(err);
+          }
+        })
+      }).then(user => this.pending_relogin = null)
+        .catch(err => {
+          this.pending_relogin = null;
+          return Promise.reject(err);
+        })
+    }
 
-        loginFailed: function(reason: string) {
-          console.log(" -> relogin failed! Logging out");
-          self.logout()
-          console.log("-> Rejecting login attempt. Done relogin()")
-          self.router.navigate(["/login"]);
-          err['message'] = reason;
-          reject(err);
-        },
-        resetPasswordRequired: function(attributesToUpdate, requiredAttributes, callback) {
-          self.router.navigate(["/login"]);
-          err["message"] = "Reset password required";
-          reject(err);
-        },
-        resetPasswordFailed: function(message) {
-          self.router.navigate(["/login"]);
-          err['message'] = "Attempted to reset password on relogin. Failed: " + message
-          reject(err);
-        }
-      })
-    });
+    return this.pending_relogin;
   }
 
   public withCredentials(func: WithUserCredentials) {

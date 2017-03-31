@@ -140,7 +140,7 @@ export class ViewDeviceComponent {
   }
 
   private alertError(msg: string, err): void {
-    console.log(msg, "\n", JSON.stringify(err));
+    console.log(msg, "\n", JSON.stringify(err), "\n", err);
     alert(msg + "! please send console output to help@fineo.io");
   }
 }
