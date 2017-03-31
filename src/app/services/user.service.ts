@@ -222,6 +222,15 @@ export class UserService {
     });
   }
 
+  public ensureUser(){
+    return this.getUser().catch(err =>{
+      if(err.credentials){
+        return;
+      }
+      return Promise.reject(err);
+    })
+  }
+
   public logout(): void {
     // reset the internal user information and then logout the user (so credentials are invalidated)
     this.loginService.logout();
