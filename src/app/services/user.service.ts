@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@angular/core";
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 
 import { GlobalState } from '../global.state'
 
@@ -81,10 +81,18 @@ export class UserService {
   private username: string;
   private _lastInteractionTime: number = 0;
   private pending_relogin: Promise<any>;
+  private route:string;
 
   constructor( @Inject(UserLoginService) public loginService: UserLoginService,
     @Inject(GlobalState) private state: GlobalState,
-    @Inject(Router) private router: Router) {
+    @Inject(Router) private router: Router,
+    @Inject(Router) private activeRoute: ActivatedRoute) {
+    let self = this;
+    console.log("Active url: ", activeRoute.url);
+    // activeRoute.url.subscribe(segments =>{
+    //   console.log("Current segments:", segments);
+    //   self.route = segments.map(segment => segment.path).join("/");
+    // })
   }
 
   public login(email: string, password: string, onlogin: LoggedIn): void {
@@ -264,13 +272,21 @@ export class UserService {
    */
   private relogin(): Promise<any> {
     console.log("Attempting relogin");
+    let url = ""+this.activeRoute.url;
     let err = {
       credentials: true
     }
+
+      // get the current route, so after login we can go back there
+    let navigationExtras: NavigationExtras = {
+      queryParams: { 'path': encodeURI(url) },
+    };
+
     var currentUser = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
     if (currentUser == null) {
       console.log(" -> no user found in local storage - done relogin()");
-      this.router.navigate(["/login"]);
+
+      this.router.navigate(['/login'], navigationExtras);
       err['message'] = "No user found in local storage.";
       return Promise.reject(err);
     }
@@ -280,7 +296,7 @@ export class UserService {
       // remove the user key so we don't try again
       localStorage.removeItem(USER_STORAGE_KEY)
       console.log(" -> user info expired in local storage. Done relogin()");
-      this.router.navigate(["/login"]);
+      this.router.navigate(['/login'], navigationExtras);
       err['message'] = "User data expired";
       return Promise.reject(err);
     }
@@ -302,17 +318,17 @@ export class UserService {
             console.log(" -> relogin failed! Logging out");
             self.logout()
             console.log("-> Rejecting login attempt. Done relogin()")
-            self.router.navigate(["/login"]);
+            this.router.navigate(['/login'], navigationExtras);
             err['message'] = reason;
             reject(err);
           },
           resetPasswordRequired: function(attributesToUpdate, requiredAttributes, callback) {
-            self.router.navigate(["/login"]);
+            this.router.navigate(['/login'], navigationExtras);
             err["message"] = "Reset password required";
             reject(err);
           },
           resetPasswordFailed: function(message) {
-            self.router.navigate(["/login"]);
+            this.router.navigate(['/login'], navigationExtras);
             err['message'] = "Attempted to reset password on relogin. Failed: " + message
             reject(err);
           }

@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import { FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import { Router} from '@angular/router';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { ModalDirective } from 'ng2-bootstrap';
 
@@ -24,35 +24,39 @@ import { SplitCamelCase } from './split.camelcase.pipe'
   styleUrls: ['./login.scss'],
   templateUrl: './login.html',
 })
-export class Login implements LoggedIn {
-  public form:FormGroup;
-  public email:AbstractControl;
-  public password:AbstractControl;
-  public errorMessage:string = null;
-  public submitted:boolean = false;
+export class Login implements LoggedIn, OnInit {
+  private static DEFAULT_HOME: string = '/pages/devices/view';
+
+  public form: FormGroup;
+  public email: AbstractControl;
+  public password: AbstractControl;
+  public errorMessage: string = null;
+  public submitted: boolean = false;
 
   @ViewChild('resetModal') passwordModal: ModalDirective;
   @ViewChild('forgotModal') forgotPasswordModal: ModalDirective;
   @ViewChild('failedReset') failedResetModal: ModalDirective;
 
-  public passwordAdditionalAttributes:Object;
-  public passwordAttributes:Object;
-  public newPassword:string = null;
+  public passwordAdditionalAttributes: Object;
+  public passwordAttributes: Object;
+  public newPassword: string = null;
   private passwordCallback;
-  private passwordResetReason:string ="";
+  private passwordResetReason: string = "";
 
   public doForgotPassword = false;
-  public forgotPasswordMessage:string = "";
-  public forgotPasswordReplacement:string = "";
-  public forgotVerificationCode:string = "";
-  public forgotPasswordCallback:Function;
+  public forgotPasswordMessage: string = "";
+  public forgotPasswordReplacement: string = "";
+  public forgotVerificationCode: string = "";
+  public forgotPasswordCallback: Function;
 
   private meta: Metadata;
+  private previousPath;
 
-  constructor(private fb:FormBuilder,
-              private router: Router,
-              private users: UserService,
-              private fineo: FineoApi) {
+  constructor(private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private users: UserService,
+    private fineo: FineoApi) {
     this.form = fb.group({
       'email': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
       'password': ['', Validators.compose([Validators.required, Validators.minLength(8)])]
@@ -63,12 +67,20 @@ export class Login implements LoggedIn {
     this.meta = this.fineo.meta;
   }
 
-  public onSubmit(values:Object):void {
-    if(this.submitted){
+  ngOnInit() {
+    this.route
+      .queryParams
+      .map(params => params['path'] || null).subscribe(path => {
+        this.previousPath = path;
+      });
+  }
+
+  public onSubmit(values: Object): void {
+    if (this.submitted) {
       console.log("Already submitted... going to wait instead.")
       return;
     }
-    console.log("Submitted: "+JSON.stringify(values))
+    console.log("Submitted: " + JSON.stringify(values))
 
     if (this.form.valid) {
       this.submitted = true;
@@ -77,7 +89,7 @@ export class Login implements LoggedIn {
   }
 
   // successful login, we are done!
-  loggedIn():void {
+  loggedIn(): void {
     console.log("Successfully logged in: ", this.email.value);
 
     // lookup and set the api key, so we have it for later requets
@@ -86,27 +98,32 @@ export class Login implements LoggedIn {
     this.getApiKey().then(key => {
       // users tells everyone interested when we get an api key
       this.users.setApiKey(key);
-    }).then(key =>{
-      this.router.navigate(['/pages/devices/view']);
+    }).then(key => {
+      let home = Login.DEFAULT_HOME;
+      // check to see if we have a previous route we should use instead of the default
+      if (this.previousPath != null) {
+        home = decodeURI(this.previousPath);
+      }
+      this.router.navigate([home]);
       this.submitted = false;
     }).catch(err => {
-        console.log("Failed to get api key because: ", err, "Transformed: ", UserService.transform(err));
-        self.users.logout();
-        self.loginFailed(err);
-      });
+      console.log("Failed to get api key because: ", err, "Transformed: ", UserService.transform(err));
+      self.users.logout();
+      self.loginFailed(err);
+    });
   }
 
-  private getApiKey():Promise<any>{
+  private getApiKey(): Promise<any> {
     console.log("Starting api key lookup");
     return this.meta.getApiKey();
   }
 
-  loginFailed(reason:string):void {
+  loginFailed(reason: string): void {
     this.errorMessage = reason;
     this.submitted = false;
   }
 
-  resetPasswordRequired(attributesToUpdate:Object, requiredAttributes, callback:(password:string) => void){
+  resetPasswordRequired(attributesToUpdate: Object, requiredAttributes, callback: (password: string) => void) {
     // show the reset password modal, but with the necessary reset information
     this.passwordCallback = callback;
     this.passwordAttributes = attributesToUpdate;
@@ -114,7 +131,7 @@ export class Login implements LoggedIn {
     this.passwordModal.show();
   }
 
-  cancelUpdatePassword():void{
+  cancelUpdatePassword(): void {
     this.passwordCallback = null;
     this.passwordAttributes = null;
     this.passwordAdditionalAttributes = null;
@@ -122,74 +139,74 @@ export class Login implements LoggedIn {
     this.passwordModal.hide();
   }
 
-  updatePasswordFromModal():void{
+  updatePasswordFromModal(): void {
     console.log("Updating password----")
     this.passwordCallback(this.newPassword);
     this.submitted = false;
     this.passwordModal.hide();
   }
 
-  resetPasswordFailed(message:string):void {
-    if(message.includes("PostConfirmation")){
+  resetPasswordFailed(message: string): void {
+    if (message.includes("PostConfirmation")) {
       console.log("Reset didn't fail, cognito just sends a confirm signup on password reset.")
       console.log("Error message:", message);
       return;
     }
-    console.log("Failed to reset password - "+message);
+    console.log("Failed to reset password - " + message);
     this.passwordResetReason = message;
     this.failedResetModal.show();
     this.submitted = false;
   }
 
-  hideFailedResetModal():void{
+  hideFailedResetModal(): void {
     this.submitted = false;
     this.failedResetModal.hide();
   }
 
-  forgotPassword():void{
+  forgotPassword(): void {
     console.log("starting forgot password")
     // reset the verification
-    this.doForgotPassword  = true;
+    this.doForgotPassword = true;
     this.forgotVerificationCode = "";
     this.forgotPasswordReplacement = "";
 
     let self = this;
     this.users.resetPassword(this.email.value, {
-      verificationCodeSent: function (location, confirm:ConfirmPasswordCallback){
+      verificationCodeSent: function(location, confirm: ConfirmPasswordCallback) {
         console.log("Verification code sent to: ", JSON.stringify(location));
 
-        self.forgotPasswordMessage =  "Verification code sent to: "+location.CodeDeliveryDetails.Destination;
+        self.forgotPasswordMessage = "Verification code sent to: " + location.CodeDeliveryDetails.Destination;
 
-        self.forgotPasswordCallback = function(){
-          confirm.confirm(self.forgotVerificationCode, self.forgotPasswordReplacement).then((result) =>{
+        self.forgotPasswordCallback = function() {
+          confirm.confirm(self.forgotVerificationCode, self.forgotPasswordReplacement).then((result) => {
             alert("Successfully reset password! Please try logging in again");
-          }).catch(err =>{
+          }).catch(err => {
             self.cancelForgotPassword();
             let message = JSON.stringify(err)
-            if(message.includes("PostConfirmation")){
+            if (message.includes("PostConfirmation")) {
               console.log("Reset didn't fail, cognito just sends a confirm signup on password reset.")
               console.log("Error message:", message);
               return;
             }
             console.log("Failed to reset password! \n", message);
-            alert("Failed to reset password! \nReason: "+message+"\n\nPlease try again.");
+            alert("Failed to reset password! \nReason: " + message + "\n\nPlease try again.");
           });
         }
         self.forgotPasswordModal.show();
       },
 
-      resetFailed: function(reason:string){
+      resetFailed: function(reason: string) {
         console.log("Failed to reset password: ", JSON.stringify(reason));
-        if(reason.includes("Member must have length greater than or equal to 1")){
+        if (reason.includes("Member must have length greater than or equal to 1")) {
           alert("Please enter an email address for which to reset the password.");
         } else {
-          alert("Failed to reset password! "+reason);
+          alert("Failed to reset password! " + reason);
         }
       }
     });
   }
 
-  cancelForgotPassword(){
+  cancelForgotPassword() {
     this.forgotPasswordModal.hide();
   }
 }
