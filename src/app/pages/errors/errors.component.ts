@@ -54,7 +54,7 @@ export class Errors {
     let columns = this.columns.map(col => {
       return col.name
     });
-    this.pager = new PageManager(new DataPager(service, columns, "error.stream"), this.config, () => { ref.detectChanges() });
+    this.pager = new PageManager(new DataPager(service, columns, "errors.stream"), this.config, () => { ref.detectChanges() });
     console.log("Initial data load");
     this.reloadData();
   }

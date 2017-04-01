@@ -64,14 +64,26 @@ export const environment = {
     stream: "stream/v1",
     batch: "batch/v1",
     meta: "meta/v1",
-    read: "read/v1"
+    read: "https://h8eka6v7nh.execute-api.us-east-1.amazonaws.com/v1"
   }
 };
 
-export const RETRY_TIMEOUT:number = 5000;
+if ('production' != ENV) {
+  // set the local debugging urls
+  environment.urls = {
+    api: "https://api.fineo.io/",
+    schema: "schema/v1",
+    stream: "schema/v1",
+    batch: "batch/v1",
+    meta: "meta/v1",
+    read: "http://localhost:5200"
+  }
+}
 
-if ('production' === ENV ) {
+export const RETRY_TIMEOUT: number = 5000;
+
+if ('production' === ENV) {
   // fineo's live, publishable, production key
-  environment.stripeToken =  'pk_live_qISv2nPFzdZkrDVdjrutvRpV'
+  environment.stripeToken = 'pk_live_qISv2nPFzdZkrDVdjrutvRpV'
 }
 

@@ -53,10 +53,10 @@ class BaseExec {
   constructor(protected users: UserService,
     path: string,
     protected lookup: MetaLookup) {
-    this.url = environment.urls.api + path;
+    this.url = path.startsWith("http") ? path : (environment.urls.api + path);
     this.api = new Api(this, lookup);
     // extract endpoint and path from url
-    this.endpoint = /(^https?:\/\/[^\/]+)/g.exec(this.url)[1];
+    this.endpoint = /(^(http(s)?)?:\/\/[^\/]+)/g.exec(this.url)[1];
     this.pathComponent = this.url.substring(this.endpoint.length);
   }
 
@@ -92,38 +92,6 @@ class BaseExec {
           reject(reason);
         }
       });
-    });
-  }
-
-  public makeCall(func: WithApiGatewayClient) {
-    let exec = this;
-    this.users.withCredentials({
-      with: function(access: string, secret: string, session: string) {
-        // setup signing the request
-        var sigV4ClientConfig = {
-          accessKey: access,
-          secretKey: secret,
-          sessionToken: session,
-          serviceName: 'execute-api',
-          region: 'us-east-1',
-          endpoint: exec.endpoint,
-          defaultContentType: APPL_JSON,
-          defaultAcceptType: APPL_JSON
-        };
-
-        var simpleHttpClientConfig = {
-          endpoint: exec.endpoint,
-          defaultContentType: APPL_JSON,
-          defaultAcceptType: APPL_JSON
-        };
-
-        // now we have a client
-        var apiGatewayClient = apiGateway.core.apiGatewayClientFactory.newClient(simpleHttpClientConfig, sigV4ClientConfig);
-        func.doWithClient(apiGatewayClient);
-      },
-      fail: function(reason) {
-        func.failBeforeClient(reason);
-      }
     });
   }
 
@@ -276,7 +244,7 @@ export class Read extends BaseExec {
   }
 
   public query(body:Object):Promise<any>{
-    return this.api.doGet("/query", body);  
+    return this.api.doPost("/query", body);  
   }  
 }
 

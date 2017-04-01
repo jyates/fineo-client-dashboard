@@ -15,6 +15,6 @@ export class DataReadService {
   }
 
   public read(sql:string):Promise<any>{
-    return this.service.query({request: sql});
+    return this.service.query({sql: sql});
   }
 }
