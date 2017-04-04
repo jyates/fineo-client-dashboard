@@ -17,7 +17,7 @@ export class Errors {
   @ViewChild('datepickerStart') customDateComponentStart: DatePickerComponent;
   @ViewChild('datepickerEnd') customDateComponentEnd: DatePickerComponent;
 
-  public ranges: Array<string> = ["all", "30s", "5m", "1hr", "6h", "1d", "1w"];
+  public ranges: Array<string> = ["all", "30s", "5m", "1h", "6h", "1d", "1w"];
 
   // fixed, for now
   private columns: Array<any> = [
