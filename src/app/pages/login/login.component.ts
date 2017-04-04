@@ -84,6 +84,8 @@ export class Login implements LoggedIn, OnInit {
 
     if (this.form.valid) {
       this.submitted = true;
+      // reset the error message
+      this.errorMessage = null;
       this.users.login(this.email.value, this.password.value, this);
     }
   }
