@@ -23,7 +23,8 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: false
+  HMR: false,
+  local_env: false
 });
 
 module.exports = function (env) {
@@ -118,9 +119,11 @@ module.exports = function (env) {
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
+        'LOCAL_ENV': JSON.stringify(METADATA.local_env),
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
+          'LOCAL_ENV': JSON.stringify(METADATA.local_env),
           'HMR': METADATA.HMR,
         }
       }),

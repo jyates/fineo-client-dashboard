@@ -22,13 +22,15 @@ const ngcWebpack = require('ngc-webpack');
 /*
  * Webpack Constants
  */
+const LOCAL_ENV = process.env.NODE_ENV == 'local-dev';
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
   title: 'Fineo Dashboard',
   description: 'Dashboard for manually manipulating Fineo APIs',
   baseUrl: '/',
-  isDevServer: helpers.isWebpackDevServer()
+  isDevServer: helpers.isWebpackDevServer(),
+  local_env: LOCAL_ENV
 };
 
 /*
