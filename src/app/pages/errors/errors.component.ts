@@ -19,11 +19,11 @@ export class Errors {
 
   // fixed, for now
   private columns: Array<any> = [
-    { title: 'Timestamp', name: 'ts_display', sort: 'desc' },
-    { title: 'Type', name: 'type' },
-    { title: 'Stage', name: 'stage' },
-    { title: 'Message', name: 'message' },
-    { title: 'Event', name: 'event'}
+    { title: 'Timestamp', name: 'ts_display', sort: 'desc', className: 'ts-col' },
+    { title: 'Type', name: 'type' , className: 'type-col'},
+    { title: 'Stage', name: 'stage' , className: 'stage-col'},
+    { title: 'Message', name: 'message', className: 'message-col' },
+    { title: 'Event', name: 'event', className: 'event-col'}
   ];
 
   // of the range we want to support
@@ -54,7 +54,6 @@ export class Errors {
       return col.name
     });
     this.pager = new PageManager(new DataPager(service, columns, "errors.stream"), this.config, () => { ref.detectChanges() });
-    console.log("Initial data load");
     this.reloadData();
   }
 
@@ -70,6 +69,7 @@ export class Errors {
   * Fixed set of possible time ranges for time
   */
   public applyRangeFilter(time: string): void {
+    console.log("Applying range: ", time);
     let now = Date.now();
     var inc = now;
     switch (time) {
@@ -161,8 +161,8 @@ class PageManager {
     let self = this;
     this.config.loading = true;
     this.morePages = true;
-    console.log("PageManager: Reloading data");
-    this.service.setRange(start, end).then(result => {
+    this.service.setRange(start, end);
+    this.service.getNextPage().then(result => {
       this.data = self.massage.apply(result.data);
       // didn't get any data, so don't try and load more pages
       if (this.data.length == 0) {
@@ -173,15 +173,13 @@ class PageManager {
       this.onChangeTable(this.config);
     }).catch(err => {
       this.config.loading = false;
-      if(err.credentials){
+      if (err.credentials) {
         console.log("Failed to load credentials:", err);
         return;
       }
       let content = JSON.stringify(err);
       console.log("Failed to complete error read request!", content);
       alert("Failed to read error data! Please send console output to help@fineo.io\n" + content);
-    }).then(a =>{
-      this.config.loading = false;
     })
   }
 
@@ -194,6 +192,7 @@ class PageManager {
   * service. It assumed (for now) that we keep all the data pages in memory... this won't work forever. #startup
   */
   public onChangeTable(config: any, page: any = { page: this.page, itemsPerPage: this.itemsPerPage }): any {
+    console.log("Table Change! Config: ", config, "Page: ", page);
     if (config.filtering) {
       Object.assign(this.config.filtering, config.filtering);
     }
@@ -201,8 +200,6 @@ class PageManager {
     if (config.sorting) {
       Object.assign(this.config.sorting, config.sorting);
     }
-    console.log("Table Change! Config: ", config, "Page: ", page);
-
     let filteredData = this.changeFilter(this.data, this.config);
     let sortedData = this.changeSort(filteredData, this.config);
     let output = page ? this.changePage(page, sortedData) : sortedData;
@@ -214,6 +211,9 @@ class PageManager {
     });
     this.length = sortedData.length;
 
+    // no more changes, as far as we know...
+    this.config.loading = false;
+
     // load the next page if we:
     //  a. have less than a full page of items
     //  b. are on the last page
@@ -222,8 +222,8 @@ class PageManager {
     console.log("More pages: ", this.morePages);
     console.log("Length:", this.length, ", itemsPerPage", this.itemsPerPage, ", this.page:", this.page, "numpages: ", this.numPages);
     if (shouldLoad && this.morePages) {
-      console.log("Attempting to load more data...:");
       // add a marker that we are doing some more loading for that last row
+      this.config.loading = true;
       this.rows.push({
         ts_display: "Loading",
         type: "more",
@@ -231,7 +231,7 @@ class PageManager {
         message: "...",
         event: ""
       });
-      this.config.loading = true;
+
 
       // do the actual next page load
       this.service.getNextPage().then(result => {
@@ -249,11 +249,10 @@ class PageManager {
         this.onChangeTable(this.config, page);
       }).catch(err => {
         this.rows.pop();// remove the loading row
+        this.config.loading = false;
         console.log("Failed to complete next page read request!", JSON.stringify(err));
         alert("Failed to complete next page read request! Please send console output to help@fineo.io");
-      }).then(a =>{
-        this.config.loading = false;
-      })
+      });
     }
 
     // avoid breaking with "Expression has changed after it was checked" error when paging and filtering.
@@ -273,7 +272,6 @@ class PageManager {
       return data;
     }
 
-    console.log("setting sort")
     let columns = this.config.sorting.columns || [];
     let columnName: string = void 0;
     let sort: string = void 0;
@@ -312,7 +310,6 @@ class PageManager {
 
   public changeFilter(data: any, config: any): any {
     let filteredData: Array<any> = data;
-    console.log("setting filter")
     this.config.columns.forEach((column: any) => {
       if (column.filtering) {
         filteredData = filteredData.filter((item: any) => {

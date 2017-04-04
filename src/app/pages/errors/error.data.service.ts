@@ -34,6 +34,7 @@ export class ErrorDataService {
 }
 
 export class Result {
+  public more_pages:boolean = false;
   constructor(public data: Array<any>, public error: string = null) { }
 }
 
