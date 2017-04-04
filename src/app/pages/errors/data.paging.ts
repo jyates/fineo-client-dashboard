@@ -111,12 +111,14 @@ export class DataPager {
     let eYear = dateEnd.getFullYear();
     tsRange += this.andRange("year", sYear, eYear);
     if (sYear === eYear) {
-      let sMonth = dateStart.getUTCMonth();
-      let eMonth = dateEnd.getUTCMonth()
+      // months start from 0
+      let sMonth = dateStart.getUTCMonth() +1;
+      let eMonth = dateEnd.getUTCMonth() +1;
       tsRange += this.andRange("month", sMonth, eMonth);
       if (sMonth === eMonth) {
-        let sDay = dateStart.getUTCDay();
-        let eDay = dateEnd.getUTCDay();
+        // dates start at 1
+        let sDay = dateStart.getUTCDate(); // hint: day() gets the day of the week
+        let eDay = dateEnd.getUTCDate();
         tsRange += this.andRange("day", sDay, eDay);
         if (sDay === eDay) {
           tsRange += this.andRange("hour", dateStart.getUTCHours(), dateEnd.getUTCHours());

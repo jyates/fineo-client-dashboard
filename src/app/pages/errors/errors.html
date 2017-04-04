@@ -17,10 +17,10 @@
           </div>
           <div class="row">
             <div style="display:inline-block;padding-left: 25px;">
-              <datepicker [(ngModel)]="custom.start" [showWeeks]="false"></datepicker>
+              <datepicker #datepickerStart [(ngModel)]="custom.start" [showWeeks]="false"></datepicker>
             </div>
             <div style="display:inline-block;">
-              <datepicker [(ngModel)]="custom.end" [showWeeks]="custom.showWeeks"></datepicker>
+              <datepicker #datepickerEnd [(ngModel)]="custom.end" [showWeeks]="custom.showWeeks"></datepicker>
             </div>
           </div>
           <div class="row">

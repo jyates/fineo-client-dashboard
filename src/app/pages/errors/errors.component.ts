@@ -4,7 +4,7 @@ import { Ng2TableModule } from 'ng2-table/ng2-table';
 import { ErrorDataService, Result } from "./error.data.service";
 import { DataPager } from './data.paging';
 import { DataMassage } from './data.massage';
-import { DropdownDirective } from 'ng2-bootstrap';
+import { DropdownDirective, DatePickerComponent } from 'ng2-bootstrap';
 
 @Component({
   selector: 'errors',
@@ -14,6 +14,8 @@ import { DropdownDirective } from 'ng2-bootstrap';
 export class Errors {
 
   @ViewChild('dropdownGroup') dropdown: DropdownDirective;
+  @ViewChild('datepickerStart') customDateComponentStart: DatePickerComponent;
+  @ViewChild('datepickerEnd') customDateComponentEnd: DatePickerComponent;
 
   public ranges: Array<string> = ["all", "30s", "5m", "1hr", "6h", "1d", "1w"];
 
@@ -70,6 +72,10 @@ export class Errors {
   */
   public applyRangeFilter(time: string): void {
     console.log("Applying range: ", time);
+    // cancel any custom range we have
+    this.cancelRange();
+
+    // figure out how far back we need to go
     let now = Date.now();
     var inc = now;
     switch (time) {
@@ -106,7 +112,6 @@ export class Errors {
    */
   public customRange(): void {
     console.log("Setting a custom range...")
-    this.cancelRange();// reset any previous and set the time back to 'now'
     this.dropdown.show()
   }
 
@@ -125,6 +130,9 @@ export class Errors {
     this.custom.start = new Date();
     this.custom.end = new Date();
     this.dropdown.hide();
+    // TODO get this to adjust the actual UI calendar to the start/end time.
+    this.customDateComponentStart.writeValue(this.custom.start);
+    this.customDateComponentEnd.writeValue(this.custom.end);
   }
 
   public onCellClick(data: any): any {
