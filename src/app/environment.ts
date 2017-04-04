@@ -68,7 +68,7 @@ export const environment = {
   }
 };
 
-if ('production' != ENV) {
+if ( LOCAL_ENV ) {
   // set the local debugging urls
   environment.urls = {
     api: "https://api.fineo.io/",
