@@ -64,7 +64,7 @@ export const environment = {
     stream: "stream/v1",
     batch: "batch/v1",
     meta: "meta/v1",
-    read: "https://h8eka6v7nh.execute-api.us-east-1.amazonaws.com/v1"
+    read: "read/v1"
   }
 };
 
