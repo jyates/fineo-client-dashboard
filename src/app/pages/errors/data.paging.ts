@@ -1,4 +1,4 @@
-import { DataService, Result } from "./error.data.service";
+import { ErrorDataService, Result } from "./error.data.service";
 
 export class DataPager {
 
@@ -8,7 +8,7 @@ export class DataPager {
   private page: Page = null;
   private pages: Array<Page> = [];
 
-  constructor(private service: DataService, private columns:Array<any>, private table:string) { }
+  constructor(private service: ErrorDataService, private columns:Array<any>, private table:string) { }
 
   public reload(): Promise<Result> {
     console.log("DataPager: reload");

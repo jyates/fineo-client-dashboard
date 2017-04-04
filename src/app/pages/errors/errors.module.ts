@@ -1,17 +1,15 @@
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AlertModule, ModalModule, PaginationModule, DropdownModule, DatepickerModule, TimepickerModule} from 'ng2-bootstrap';
+import { AlertModule, ModalModule, PaginationModule, DropdownModule, DatepickerModule, TimepickerModule } from 'ng2-bootstrap';
 import { Ng2TableModule } from 'ng2-table/ng2-table';
 
 import { NgaModule } from '../../theme/nga.module';
 
-import { Errors }              from './errors.component';
-import { routing }             from './errors.routing';
-
-// temporary data service - should be replaced with the actual source data service
-import { DataService } from './error.data.service';
+import { Errors } from './errors.component';
+import { routing } from './errors.routing';
+import { ErrorDataService } from './error.data.service';
 
 @NgModule({
   imports: [
@@ -31,9 +29,8 @@ import { DataService } from './error.data.service';
   declarations: [
     Errors
   ],
-  // jesse - temporary - should be removed
-  providers:[
-    DataService
+  providers: [
+    ErrorDataService
   ]
 })
 export class ErrorsModule {

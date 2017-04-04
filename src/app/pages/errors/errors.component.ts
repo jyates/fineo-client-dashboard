@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
 
 import { Ng2TableModule } from 'ng2-table/ng2-table';
-import { DataService, Result } from "./error.data.service";
+import { ErrorDataService, Result } from "./error.data.service";
 import { DataPager } from './data.paging';
 import { DataMassage } from './data.massage';
 import { DropdownDirective } from 'ng2-bootstrap';
@@ -46,9 +46,8 @@ export class Errors {
     end: new Date(),
     showWeeks: false
   }
-  // public mytime: Date = new Date();
 
-  constructor(service: DataService, private ref: ChangeDetectorRef) {
+  constructor(service: ErrorDataService, private ref: ChangeDetectorRef) {
     this.start = 0;
     this.end = Date.now()
     let columns = this.columns.map(col => {
@@ -165,7 +164,6 @@ class PageManager {
     console.log("PageManager: Reloading data");
     this.service.setRange(start, end).then(result => {
       this.data = self.massage.apply(result.data);
-      this.config.loading = false;
       // didn't get any data, so don't try and load more pages
       if (this.data.length == 0) {
         console.log("Didn't get any data from load, skipping looking for more pages");
@@ -182,7 +180,9 @@ class PageManager {
       let content = JSON.stringify(err);
       console.log("Failed to complete error read request!", content);
       alert("Failed to read error data! Please send console output to help@fineo.io\n" + content);
-    });
+    }).then(a =>{
+      this.config.loading = false;
+    })
   }
 
   /**
@@ -235,7 +235,6 @@ class PageManager {
 
       // do the actual next page load
       this.service.getNextPage().then(result => {
-        console.log("Jesse: Got next page: ", result);
         this.config.loading = false;
         if (result.data && result.data.length > 0) {
           this.data = this.data.concat(this.massage.apply(result.data));
@@ -249,11 +248,12 @@ class PageManager {
         console.log("updating the current page");
         this.onChangeTable(this.config, page);
       }).catch(err => {
-        this.config.loading = false;
         this.rows.pop();// remove the loading row
         console.log("Failed to complete next page read request!", JSON.stringify(err));
         alert("Failed to complete next page read request! Please send console output to help@fineo.io");
-      });
+      }).then(a =>{
+        this.config.loading = false;
+      })
     }
 
     // avoid breaking with "Expression has changed after it was checked" error when paging and filtering.

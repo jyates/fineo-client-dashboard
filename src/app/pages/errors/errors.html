@@ -51,7 +51,7 @@
         </pagination>
       </div>
       <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1 reload">
-        <button class="btn btn-sm btn-primary" (click)="reloadData()">Reload</button>
+        <button class="btn btn-sm btn-primary" [disabled]="config.loading" (click)="reloadData()">Reload</button>
       </div>
     </div>
   </div>

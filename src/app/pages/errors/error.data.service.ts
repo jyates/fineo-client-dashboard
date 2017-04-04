@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DataReadService } from '../../services/data.read.service'
 
 @Injectable()
-export class DataService {
+export class ErrorDataService {
   private readonly testing: boolean = false;
 
   constructor(private service: DataReadService) { }
