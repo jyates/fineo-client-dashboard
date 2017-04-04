@@ -56,7 +56,7 @@ export class DataPager {
     // just the stages we can currently search
     var tsRange = " WHERE (stage = 'raw' OR stage = 'staged') AND (type = 'error' OR type = 'malformed') AND "
     // and the timerange we have to be within
-    tsRange += `\`timestamp\` BETWEEN ${this.start} AND ${this.end}`;
+    tsRange += `\`handled_timestamp\` BETWEEN ${this.start} AND ${this.end}`;
     // but we can also limit based on the year, month, day and hour columns
     let dateStart = new Date(start);
     let dateEnd = new Date(end);
