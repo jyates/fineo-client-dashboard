@@ -13,7 +13,7 @@ export class DataMassage {
       // remove the company key from the message
       let event = JSON.parse(elem['event'])
       delete event['companykey']
-      elem['event'] = JSON.stringify(event);
+      elem['event'] = JSON.stringify(event, null, 2);
       return elem;
     });
     return m;
