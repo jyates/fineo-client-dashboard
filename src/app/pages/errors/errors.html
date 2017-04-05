@@ -7,7 +7,7 @@
     <!-- Select time filter -->
     <div class="range-filters col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
       <div *ngFor="let span of ranges" class="range-elem">
-        <a (click)="applyRangeFilter(span)">{{span}}</a>
+        <a (click)="applyRangeFilter(span.value)">{{span.ui}}</a>
       </div>
       <div class="custom-group" [autoClose]="'disabled'" #dropdownGroup="bs-dropdown" dropdown>
         <a id="custom-timerange" (click)="customRange()">custom</a>

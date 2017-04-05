@@ -17,15 +17,23 @@ export class Errors {
   @ViewChild('datepickerStart') customDateComponentStart: DatePickerComponent;
   @ViewChild('datepickerEnd') customDateComponentEnd: DatePickerComponent;
 
-  public ranges: Array<string> = ["all", "30s", "5m", "1h", "6h", "1d", "1w"];
+  public ranges: Array<Object> = [
+    { ui: "all", value: 0 },
+    { ui: "5m", value: 300000 },
+    { ui: "10m", value: 600000 },
+    { ui: "1h", value: 3600000 },
+    { ui: "6h", value: 21600000 },
+    { ui: "1d", value: 86400000 },
+    { ui: "1w", value: 604800000 }
+  ];
 
   // fixed, for now
   private columns: Array<any> = [
     { title: 'Timestamp', name: 'ts_display', sort: 'desc', className: 'ts-col' },
-    { title: 'Type', name: 'type' , className: 'type-col'},
-    { title: 'Stage', name: 'stage' , className: 'stage-col'},
+    { title: 'Type', name: 'type', className: 'type-col' },
+    { title: 'Stage', name: 'stage', className: 'stage-col' },
     { title: 'Message', name: 'message', className: 'message-col' },
-    { title: 'Event', name: 'event', className: 'event-col'}
+    { title: 'Event', name: 'event', className: 'event-col' }
   ];
 
   // of the range we want to support
@@ -70,34 +78,13 @@ export class Errors {
   /**
   * Fixed set of possible time ranges for time
   */
-  public applyRangeFilter(time: string): void {
-    console.log("Applying range: ", time);
+  public applyRangeFilter(decrement:number ): void {
+    console.log("Applying range: ", decrement);
     // cancel any custom range we have
     this.cancelRange();
 
-    // figure out how far back we need to go
     let now = Date.now();
-    var inc = now;
-    switch (time) {
-      case 'all':
-        break;
-      case '30s':
-        inc = 30000;
-        break;
-      case '5m':
-        inc = 300000;
-        break;
-      case '1h':
-        inc = 3600000;
-        break;
-      case '6h':
-        inc = 21600000;
-        break;
-      case '1w':
-        inc = 604800000;
-        break;
-    }
-    this.setRange(now - inc, now);
+    this.setRange(now - decrement, now);
   }
 
   private setRange(start: number, end: number): void {
