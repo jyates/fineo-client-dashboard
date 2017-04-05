@@ -1,8 +1,5 @@
-<small-spinner
-  [visible]="loading"
-  [holding]="false">
+<small-spinner [visible]="loading" [holding]="false">
 </small-spinner>
-
 <form [formGroup]="form" (ngSubmit)="saveAttributes()" class="form-horizontal">
   <div class="form-group row">
     <div class="col-lg-10">
@@ -12,7 +9,6 @@
       </div>
     </div>
   </div>
-
   <div *ngIf="attributes">
     <div *ngFor="let attrib of attributes; let i = index" class="form-group row">
       <div class="col-lg-10">
@@ -23,67 +19,59 @@
       </div>
     </div>
   </div>
-
   <div class="form-group row">
     <div class="col-md-1">
       <button type="submit" [disabled]="!form.valid || loading" class="btn btn-success btn-md btn-raised">Save</button>
     </div>
   </div>
 </form>
-
 <hr>
-<form [formGroup]="passwords" (ngSubmit)="updatePassword()" class="form-horizontal">
-  <h1>Password</h1>
-
-  <div class="form-group row"
-    [class.has-error]="((!oPassword.valid) && oPassword.touched)"
-    [class.has-success]="(oPassword.valid && oPassword.touched)">
-    <div class="col-lg-10">
-      <label for="oldPassword" class="col-sm-3 control-label control-label-name">Current Password</label>
-      <div class="col-sm-9">
-        <input [formControl]="oPassword" type="password" class="form-control" id="oldPassword">
+<div class="row">
+  <div class="verticalLineRight col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <form [formGroup]="passwords" (ngSubmit)="updatePassword()" class="form-horizontal">
+      <h1>Password</h1>
+      <div class="form-group row" [class.has-error]="((!oPassword.valid) && oPassword.touched)" [class.has-success]="(oPassword.valid && oPassword.touched)">
+        <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-xs-12">
+          <label for="oldPassword" class="col-xl-4 col-lg-4 col-md-12 col-sm-11 col-xs-12 control-label control-label-name">Current Password</label>
+          <div class="col-xl-8 col-lg-8 col-md-11 col-sm-11 col-xs-12">
+            <input [formControl]="oPassword" type="password" class="form-control" id="oldPassword">
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="form-group row"
-    [class.has-error]="((!nPassword.valid) && nPassword.touched)"
-    [class.has-success]="(nPassword.valid && nPassword.touched)">
-    <div class="col-lg-10">
-      <label for="newPassword" class="col-sm-3 control-label control-label-name">New Password</label>
-      <div class="col-sm-9">
-        <input [formControl]="nPassword" type="password" class="form-control" id="newPassword">
+      <div class="form-group row" [class.has-error]="((!nPassword.valid) && nPassword.touched)" [class.has-success]="(nPassword.valid && nPassword.touched)">
+        <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-xs-12">
+          <label for="newPassword" class="col-xl-4 col-lg-4 col-md-12 col-sm-11 col-xs-12 control-label control-label-name">New Password</label>
+          <div class="col-xl-8 col-lg-8 col-md-11 col-sm-11 col-xs-12">
+            <input [formControl]="nPassword" type="password" class="form-control" id="newPassword">
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="form-group row"
-    [class.has-error]="((!rPassword.valid || !passwords.valid) && rPassword.touched)"
-    [class.has-success]="(rPassword.valid && passwords.valid && rPassword.touched)">
-    <div class="col-lg-10">
-      <label for="repeatPassword" class="col-sm-3 control-label control-label-name">Confirm Password</label>
-      <div class="col-sm-9">
-        <input [formControl]="rPassword" type="password" class="form-control" id="repeatPassword">
+      <div class="form-group row" [class.has-error]="((!rPassword.valid || !passwords.valid) && rPassword.touched)" [class.has-success]="(rPassword.valid && passwords.valid && rPassword.touched)">
+        <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-xs-12">
+          <label for="repeatPassword" class="col-xl-4 col-lg-4 col-md-12 col-sm-11 col-xs-12 control-label control-label-name">Confirm Password</label>
+          <div class="col-xl-8 col-lg-8 col-md-11 col-sm-11 col-xs-12">
+            <input [formControl]="rPassword" type="password" class="form-control" id="repeatPassword">
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-md-1">
-            <button type="submit" [disabled]="!passwords.valid || loading" class="btn btn-success btn-md btn-raised">Update Password</button>
-    </div>
-  </div>
-</form>
-
-<hr>
-<form (ngSubmit)="updatePassword()" class="form-horizontal">
-  <h1>API Key</h1>
-
-  <div class="form-group row">
-    <div class="col-lg-10">
-      <label for="apikey" class="col-sm-2 control-label control-label-name">Key</label>
-      <div class="col-sm-10">
-        <input value="{{user.apikey}}" type="text" class="form-control" id="apikey" placeholder="<LOADING>" readonly>
+      <div class="form-group row">
+        <div class="col-md-1">
+          <button type="submit" [disabled]="!passwords.valid || loading" class="btn btn-success btn-md btn-raised">Update Password</button>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
+  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <form class="form-horizontal">
+      <h1>API Key</h1>
+      <div class="form-group row">
+        <div class="col-lg-10">
+          <label for="apikey" class="col-sm-2 control-label control-label-name">Key</label>
+          <div class="col-sm-10">
+            <input value="{{user.apikey}}" type="text" class="form-control" id="apikey" placeholder="<LOADING>" readonly>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
