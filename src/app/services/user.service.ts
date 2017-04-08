@@ -271,8 +271,8 @@ export class UserService {
    * Attempt to relogin the user from local storage
    */
   private relogin(): Promise<any> {
-    console.log("Attempting relogin");
     let url = ""+this.activeRoute.url;
+    console.log("Attempting relogin with previous route: ", url);
     let err = {
       credentials: true
     }

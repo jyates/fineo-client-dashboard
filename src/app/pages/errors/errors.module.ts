@@ -10,6 +10,7 @@ import { NgaModule } from '../../theme/nga.module';
 import { Errors } from './errors.component';
 import { routing } from './errors.routing';
 import { ErrorDataService } from './error.data.service';
+import { CanDeactivateGuard } from './can.deactivate.guard'
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { ErrorDataService } from './error.data.service';
     Errors
   ],
   providers: [
-    ErrorDataService
+    ErrorDataService,
+    CanDeactivateGuard
   ]
 })
 export class ErrorsModule {

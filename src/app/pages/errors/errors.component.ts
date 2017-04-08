@@ -1,10 +1,14 @@
 import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+
+import { Observable } from 'rxjs/Observable';
 
 import { Ng2TableModule } from 'ng2-table/ng2-table';
+import { DropdownDirective, DatePickerComponent } from 'ng2-bootstrap';
+
 import { ErrorDataService, Result } from "./error.data.service";
 import { DataPager } from './data.paging';
 import { DataMassage } from './data.massage';
-import { DropdownDirective, DatePickerComponent } from 'ng2-bootstrap';
 
 @Component({
   selector: 'errors',
@@ -57,13 +61,19 @@ export class Errors {
     showWeeks: false
   }
 
-  constructor(service: ErrorDataService, private ref: ChangeDetectorRef) {
+  private careAboutResult: ResultCaring = new ResultCaring();
+
+  constructor(service: ErrorDataService, private ref: ChangeDetectorRef, private route: ActivatedRoute, private router: Router) {
+    console.log("Creating new error component")
     this.start = 0;
     this.end = Date.now()
     let columns = this.columns.map(col => {
       return col.name
     });
-    this.pager = new PageManager(new DataPager(service, columns, "errors.stream"), this.config, () => { ref.detectChanges() });
+    this.pager = new PageManager(this.careAboutResult, new DataPager(service, columns, "errors.stream"), this.config, () => { ref.detectChanges() });
+  }
+
+  public ngOnInit(): void {
     this.reloadData();
   }
 
@@ -71,14 +81,17 @@ export class Errors {
     this.pager.reloadData(this.start, this.end);
   }
 
-  public ngOnInit(): void {
-    // this.pager.onChangeTable(this.config);
+  // gaurd to ensure that we cancel any outstanding requests (or at least stop caring about the result)
+  public canDeactivate(): boolean {
+    console.log("Deactiving current error component");
+    this.careAboutResult.cancel();
+    return true;
   }
 
   /**
   * Fixed set of possible time ranges for time
   */
-  public applyRangeFilter(decrement:number ): void {
+  public applyRangeFilter(decrement: number): void {
     console.log("Applying range: ", decrement);
     // cancel any custom range we have
     this.cancelRange();
@@ -136,6 +149,19 @@ class TableConfig {
 }
 
 
+class ResultCaring {
+
+  private careAboutResult: boolean = true;
+
+  public cares() {
+    return this.careAboutResult;
+  }
+
+  public cancel() {
+    this.careAboutResult = false;
+  }
+}
+
 class PageManager {
   private massage: DataMassage = new DataMassage();
   public page: number = 1;
@@ -150,7 +176,7 @@ class PageManager {
   private data: Array<any> = [];
   private morePages: boolean = true;
 
-  constructor(private service: DataPager, private config: TableConfig, private onChange: (this: void) => void) { }
+  constructor(private careAboutResult: ResultCaring, private service: DataPager, private config: TableConfig, private onChange: (this: void) => void) { }
 
   public reloadData(start: number, end: number): void {
     let self = this;
@@ -158,6 +184,10 @@ class PageManager {
     this.morePages = true;
     this.service.setRange(start, end);
     this.service.getNextPage().then(result => {
+      if (!this.careAboutResult.cares()) {
+        console.log("Got a result from the next page, but don't care anymore");
+        return;
+      }
       this.data = self.massage.apply(result.data);
       // didn't get any data, so don't try and load more pages
       if (this.data.length == 0) {
@@ -168,6 +198,11 @@ class PageManager {
       this.onChangeTable(this.config);
     }).catch(err => {
       this.config.loading = false;
+      if (!this.careAboutResult.cares()) {
+        console.log("Got an error reading from Fineo:", err, "\n ==== \nBut don't care about result!");
+        return;
+      }
+
       if (err.credentials) {
         console.log("Failed to load credentials:", err);
         return;
@@ -227,10 +262,16 @@ class PageManager {
         event: ""
       });
 
-
       // do the actual next page load
       this.service.getNextPage().then(result => {
         this.config.loading = false;
+
+        if (!this.careAboutResult.cares()) {
+          console.log("Don't care about any more results, skipping page ready");
+          return;
+        }
+
+        // we have some more data, append it to the current data we are tracking
         if (result.data && result.data.length > 0) {
           this.data = this.data.concat(this.massage.apply(result.data));
         } else {
@@ -240,9 +281,18 @@ class PageManager {
         }
         return result;
       }).then(result => {
+        if (!this.careAboutResult.cares()) {
+          console.log("Got a result reading from Fineo, don't care!");
+          return;
+        }
         console.log("updating the current page");
         this.onChangeTable(this.config, page);
       }).catch(err => {
+        if (!this.careAboutResult.cares()) {
+          console.log("Got an error reading from Fineo:", err, "\n ==== \nBut don't care about result!");
+          return;
+        }
+
         this.rows.pop();// remove the loading row
         this.config.loading = false;
         console.log("Failed to complete next page read request!", JSON.stringify(err));
