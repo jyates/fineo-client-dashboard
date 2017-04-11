@@ -266,7 +266,6 @@ class ChartData {
       out.push(add);
     }
     this.dataProvider = out;
-    debugger;
   }
 
   // updateGraphs gets called by amChart.. and we don't want to do that.

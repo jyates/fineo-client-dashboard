@@ -36,7 +36,6 @@ export class BaAmChart {
   }
 
   ngAfterViewInit() {
-    debugger;
     let chart = AmCharts.makeChart(this._selector.nativeElement, this.baAmChartConfiguration);
     this.onChartReady.emit(chart);
   }
