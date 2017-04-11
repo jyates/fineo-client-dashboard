@@ -50,10 +50,6 @@ export class CreateItem implements OnInit {
     })
   }
 
-  public hanldeR(config){
-    this.handleRefresh(config);
-  }
-
   public handleRefresh(config: ItemConfig) {
     this.refreshing = true;
     console.log("Attempting to refresh data for query:", config.queries);

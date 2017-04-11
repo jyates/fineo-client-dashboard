@@ -29,11 +29,12 @@ export class BaseComponent<T> implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     console.log("got changes:", changes)
-    if (changes['data']) {
-      this.updateData();
-    }
-    else if (changes['config']){
+    // config and data can change at the same time, e.g. on initialize. Update config first b/c that could contain infor pertinent to processing the data
+    if (changes['config']) {
       this.updateConfig();
+    }
+    if (changes['data']){
+      this.updateData();
     }
   }
 

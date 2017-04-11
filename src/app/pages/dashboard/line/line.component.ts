@@ -3,6 +3,8 @@ import { Component, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges
 import { BaseComponent, ItemConfig, Query } from './../baseComponent';
 import { layoutPaths } from '../../../theme';
 
+var nextLineId = 0;
+
 @Component({
   selector: 'line-chart',
   styleUrls: ['./line.scss'],
@@ -10,14 +12,76 @@ import { layoutPaths } from '../../../theme';
 })
 export class Line extends BaseComponent<LineConfig> {
 
+  public static DEMO_DATA = {
+    // query id 1
+    "1": [
+      { date: new Date(2012, 11), value: 0 },
+      { date: new Date(2013, 0), value: 15000 },
+      { date: new Date(2013, 1), value: 30000 },
+      { date: new Date(2013, 2), value: 25000 },
+      { date: new Date(2013, 3), value: 21000 },
+      { date: new Date(2013, 4), value: 24000 },
+      { date: new Date(2013, 5), value: 31000 },
+      { date: new Date(2013, 6), value: 40000 },
+      { date: new Date(2013, 7), value: 37000 },
+      { date: new Date(2013, 8), value: 18000 },
+      { date: new Date(2013, 9), value: 5000 },
+      { date: new Date(2013, 10), value: 40000 },
+      { date: new Date(2013, 11), value: 20000 },
+      { date: new Date(2014, 0), value: 5000 },
+      { date: new Date(2014, 1), value: 3000 },
+      { date: new Date(2014, 2), value: 1800 },
+      { date: new Date(2014, 3), value: 10400 },
+      { date: new Date(2014, 4), value: 25500 },
+      { date: new Date(2014, 5), value: 2100 },
+      { date: new Date(2014, 6), value: 6500 },
+      { date: new Date(2014, 7), value: 1100 },
+      { date: new Date(2014, 8), value: 17200 },
+      { date: new Date(2014, 9), value: 26900 },
+      { date: new Date(2014, 10), value: 14100 },
+      { date: new Date(2014, 11), value: 35300 },
+      { date: new Date(2015, 0), value: 54800 },
+      { date: new Date(2015, 1), value: 49800 }
+    ],
+    // query 2
+    "2": [
+      { date: new Date(2012, 11), value: 0 },
+      { date: new Date(2013, 0), value: 19000 },
+      { date: new Date(2013, 1), value: 20000 },
+      { date: new Date(2013, 2), value: 22000 },
+      { date: new Date(2013, 3), value: 25000 },
+      { date: new Date(2013, 4), value: 29000 },
+      { date: new Date(2013, 5), value: 26000 },
+      { date: new Date(2013, 6), value: 25000 },
+      { date: new Date(2013, 7), value: 20000 },
+      { date: new Date(2013, 8), value: 22000 },
+      { date: new Date(2013, 9), value: 26000 },
+      { date: new Date(2013, 10), value: 30000 },
+      { date: new Date(2013, 11), value: 25000 },
+      { date: new Date(2014, 0), value: 13000 },
+      { date: new Date(2014, 1), value: 13000 },
+      { date: new Date(2014, 2), value: 13000 },
+      { date: new Date(2014, 3), value: 13000 },
+      { date: new Date(2014, 4), value: 13000 },
+      { date: new Date(2014, 5), value: 13000 },
+      { date: new Date(2014, 6), value: 13000 },
+      { date: new Date(2014, 7), value: 13000 },
+      { date: new Date(2014, 8), value: 13000 },
+      { date: new Date(2014, 9), value: 13000 },
+      { date: new Date(2014, 10), value: 13000 },
+      { date: new Date(2014, 11), value: 13000 },
+      { date: new Date(2015, 0), value: 13000 },
+      { date: new Date(2015, 1), value: 13000 }
+    ]
+  };
+
+  @Input()
+  public id = `line-${nextLineId++}`;
+
   public chartData: ChartData = new ChartData(layoutPaths.images.amChart);
 
   constructor() {
     super("line-chart-container");
-  }
-
-  private getChartClass() {
-    return "dashboard-line-chart";// + this.config.size;
   }
 
   private getSize() {
@@ -29,7 +93,9 @@ export class Line extends BaseComponent<LineConfig> {
 
   // callback when chart is ready 
   initChart(chart: any) {
+    console.log("Chart is initialized");
     let zoomChart = () => {
+      // TODO replace the initial zoom
       chart.zoomToDates(new Date(2013, 3), new Date(2014, 0));
     };
 
@@ -39,6 +105,9 @@ export class Line extends BaseComponent<LineConfig> {
     if (chart.zoomChart) {
       chart.zoomChart();
     }
+    chart.addListener('rendered', () => {
+      console.log("Chart is done rendering!");
+    })
   }
 
   protected updateData() {
@@ -48,7 +117,7 @@ export class Line extends BaseComponent<LineConfig> {
   protected updateConfig() {
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;
-    this.chartData.updateGraphs(this.config.queries);
+    this.chartData.updateGraphQueries(this.config.queries);
   }
 }
 
@@ -64,45 +133,50 @@ export class LineConfig extends ItemConfig {
 
 export class LineQuery extends Query {
   constructor(text, name,
-              public id:string,
-              public color: string,
-              public chart:QueryChartConfig) {
+    public color: string,
+    public chart: QueryChartConfig) {
     super(text, name);
   }
 }
 
-export class QueryChartConfig{
-  constructor(public xfield:string, public yfield){
+export class QueryChartConfig {
+  // each query needs its own yvalue field name, otherwise, charts can't distinguish them, i guess
+  public outY: string;
+  constructor(public queryId, public xfield: string, private yfield) {
     if (!xfield)
       throw new ReferenceError("Must provide an xfield name");
     if (!yfield)
       throw new ReferenceError("Must provide a yfield name");
+    this.outY = yfield + "_" + queryId;
   }
 
-  public translate(rows:Object[], targetX:string):Object[]{
-    let ret = [];
+  public translate(rows: Object[], targetX: string): Object {
+    let ret = {};
     rows.forEach(kv => {
       let x = kv[this.xfield];
-      if(!x){
+      if (!x) {
         console.log("Row is missing value for x-coordinate:", this.xfield);
         return;
       }
-      let xfield = targetX ? targetX: this.xfield;
-      let yfield = this.yfield;
-      ret.push({
-        xfield: x,
-        yfield: kv[this.yfield]
-      });
+      let self = this;
+      let xfield = targetX ? targetX : self.xfield;
+      let value = kv[self.yfield];
+      let val = {};
+      val[self.outY] = value;
+      if (ret[x]) {
+        console.log("Overwriting key: ", ret[x], "with value:", val);
+      }
+      ret[x] = val;
     });
     return ret;
   }
 }
 
 export class Xaxis {
-  public boldPeriodBeginning = false;
-  public gridAlpha: 0;
+  // public boldPeriodBeginning = false;
+  public gridAlpha = 0;
 
-  constructor(public name:string, public parseDates: boolean = true, public color: string, public axisColor: string) { };
+  constructor(public name: string, public parseDates: boolean = true, public color: string, public axisColor: string) { };
 }
 
 class ChartData {
@@ -111,93 +185,118 @@ class ChartData {
   public graphs: GraphInfo[];
   public categoryAxis: Xaxis = new Xaxis("xfield", false, "white", "white");
   public categoryField;
-  public chartCursor: Cursor = new Cursor();
-  public export: {
+  public chartCursor: UserCursor = new UserCursor();
+  public export = {
     enabled: true
   };
-  public dataDateFormat: 'DD MM YYYY';
-  public creditsPosition: 'bottom-right';
-  public zoomOutButton: {
-    backgroundColor: '#fff',
-    backgroundAlpha: 1
-  };
-  public zoomOutText: 'zoom out';
-  public type: 'serial';
-  public theme: 'blur';
-  public marginTop: 15;
-  public marginRight: 15;
-  public responsive: {
+  public dataDateFormat = 'DD MM YYYY';
+  public creditsPosition = 'bottom-right';
+  // public zoomOutButton = {
+  //   backgroundColor: '#fff',
+  //   backgroundAlpha: 1
+  // };
+  // public zoomOutText = 'zoom out';
+  public type = 'serial';
+  public theme = 'blur';
+  public marginTop = 15;
+  public marginRight = 15;
+  public responsive = {
     'enabled': true
   };
+
+  public valueAxes = [{
+    axisColor: "#ffffff",
+    color: "#ffffff",
+    graphAlpha: 0,
+    minVerticalGap: 50
+  }];
 
   private queries: LineQuery[];
   private dataInternal: Object;
 
-  constructor(public pathToImages){}
+  constructor(public pathToImages) { }
 
   // Update the data provider with new data
+  // see the DEMO_DATA for the format of the data, but basically, {queryId: [{x:val, y:val}]}
   public data(data: Object): void {
     this.dataInternal = data;
-    /*
-     * data will be formatted as:
-     {
-        [
-          queryId:{
-            [
-              column: value
-            ]
-          }
-        ]
-     }
-     */
+    // didn't get any data, be done early
+    if (!data) {
+      return;
+    }
     // parse the results according to the current queries we have
-    let newProvider = [];
-    if(!this.queries){
+    let newProvider = {};
+    if (!this.queries) {
       return;
     }
 
-    this.queries.forEach(query =>{
-      let id = query.id;
+    let xaxis = this.categoryAxis.name;
+    this.queries.forEach(query => {
+      let id = query.chart.queryId;
       let rows = <Object[]>data[id];
-      if(!rows){
+      if (!rows) {
         console.log("No rows recieved for query:", query);
         return;
       }
-      rows = query.chart.translate(rows, this.categoryAxis.name)
-      newProvider.push(rows);
+
+      // translate the rows into <xvalue>: {yname: yvalue}
+      let converted = query.chart.translate(rows, xaxis);
+
+      // add all the converted rows into the newprovider
+      for (var key in converted) {
+        let adds = converted[key];
+        let val = newProvider[key]
+        if (val) {
+          for(var valuekey in adds){
+             val[valuekey] = adds[valuekey];
+          }
+        }else{
+          newProvider[key] = adds;
+        }
+      }
     });
 
-    this.dataProvider = newProvider;  
+    // convert the newprovider into the expected format:
+    //  [{xaxis: xvalue, yaxis1: yvalue1, yaxis2: yvalue2...}]
+    let out = [];
+    for(var xvalue in newProvider){
+      let add = newProvider[xvalue];
+      add[xaxis] = xvalue;
+      out.push(add);
+    }
+    this.dataProvider = out;
+    debugger;
   }
 
-  public updateGraphs(queries: LineQuery[]): void {
+  // updateGraphs gets called by amChart.. and we don't want to do that.
+  public updateGraphQueries(queries: LineQuery[]): void {
     this.queries = queries;
     // convert queries to graph infos
-    this.graphs = queries.map(query =>{
-      return new GraphInfo(query.id, query.color, query.chart.yfield);
+    this.graphs = queries.map(query => {
+      return new GraphInfo(query.chart.queryId, query.color, query.chart.outY);
     });
     this.data(this.dataInternal);
   }
 }
 
-class Cursor {
-  // public categoryBalloonDateFormat: 'MM YYYY';
-  // public categoryBalloonColor: '#4285F4';
-  public categoryBalloonAlpha: 0.7;
-  public cursorAlpha: 0;
-  public valueLineEnabled: true;
-  public valueLineBalloonEnabled: true;
-  public valueLineAlpha: 0.5;
+class UserCursor {
+  public categoryBalloonDateFormat = 'MM YYYY';
+  public categoryBalloonColor = '#4285F4';
+  public categoryBalloonAlpha = 0.7;
+  public cursorAlpha = 0;
+  public valueLineEnabled = true;
+  public valueLineBalloonEnabled = true;
+  public valueLineAlpha = 0.5;
 }
 
 export class GraphInfo {
-  public bullet = 'none';
-  public useLineColorForBulletBorder = true;
-  public lineThickness = 1;
-  public negativeLineColor: "red";
-  public type: 'smoothedLine';
-  public fillAlphas = 1;
-  public fillColorsField: 'lineColor';
+  public bullet: string = 'none';
+  public useLineColorForBulletBorder: boolean = true;
+  public lineThickness: number = 1;
+  public negativeLineColor: string = "red";
+  public type: string = 'smoothedLine';
+  public fillAlphas: number = 1;
+  public fillColorsField: string = 'lineColor';
 
   constructor(public id: string, public lineColor: string, public valueField: string) { };
 }

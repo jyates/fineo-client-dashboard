@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../theme';
-import { Xaxis, GraphInfo } from '../line';
+import { Xaxis, Line, QueryChartConfig, LineQuery } from '../line';
 
 @Component({
   selector: 'create-dashboard-item',
@@ -55,33 +55,23 @@ export class CreateComponent {
     }
 
     this.line = {
-      data:{
-
-      },
-      config:{
+      data: Line.DEMO_DATA,
+      config: {
         title: "Line Chart",
         size: "large",
         queries: [
-          {
-            id: "1",
-            color: colorHelper.hexToRgbA(graphColor, 0.3),
-            chart:{
-              xfield: "x",
-              yfield: "y"
-            }
-          },
-          {
-            id: "2",
-            color: colorHelper.hexToRgbA(graphColor, 0.15),
-            chart:{
-              xfield: "x",
-              yfield: "y"
-            }
-          }
+          new LineQuery("SELECT timestamp, date from table1",
+            "query1",
+            colorHelper.hexToRgbA(graphColor, 0.3),
+            new QueryChartConfig("1", "date", "value")),
+          // new LineQuery("SELECT timestamp, date from table1",
+          //   "query2",
+          //   colorHelper.hexToRgbA(graphColor, 0.15),
+          //   new QueryChartConfig("2", "date", "value")),
         ],
-        xAxisIsDate: false,
-        xAxis: new Xaxis("x", false, layoutColors.defaultText, layoutColors.defaultText),
-        info:{
+        xAxisIsDate: true,
+        xAxis: new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText),
+        info: {
 
         }
       }

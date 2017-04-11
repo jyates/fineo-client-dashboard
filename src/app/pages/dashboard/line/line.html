@@ -5,6 +5,6 @@
     [ngClass]="getSize()"
     [deletable]="deletable"
     [editable]="editable">
-    <ba-am-chart baAmChartClass="getChartClass()" [baAmChartConfiguration]="chartData" (onChartReady)="initChart($event)"></ba-am-chart>
+    <ba-am-chart baAmChartClass="dashboard-line-chart" [baAmChartConfiguration]="chartData" (onChartReady)="initChart($event)"></ba-am-chart>
   </ba-card>
 </div>
