@@ -15,63 +15,63 @@ export class Line extends BaseComponent<LineConfig> {
   public static DEMO_DATA = {
     // query id 1
     "1": [
-      { date: new Date(2012, 11), value: 0 },
-      { date: new Date(2013, 0), value: 15000 },
-      { date: new Date(2013, 1), value: 30000 },
-      { date: new Date(2013, 2), value: 25000 },
-      { date: new Date(2013, 3), value: 21000 },
-      { date: new Date(2013, 4), value: 24000 },
-      { date: new Date(2013, 5), value: 31000 },
-      { date: new Date(2013, 6), value: 40000 },
-      { date: new Date(2013, 7), value: 37000 },
-      { date: new Date(2013, 8), value: 18000 },
-      { date: new Date(2013, 9), value: 5000 },
-      { date: new Date(2013, 10), value: 40000 },
-      { date: new Date(2013, 11), value: 20000 },
-      { date: new Date(2014, 0), value: 5000 },
-      { date: new Date(2014, 1), value: 3000 },
-      { date: new Date(2014, 2), value: 1800 },
-      { date: new Date(2014, 3), value: 10400 },
-      { date: new Date(2014, 4), value: 25500 },
-      { date: new Date(2014, 5), value: 2100 },
-      { date: new Date(2014, 6), value: 6500 },
-      { date: new Date(2014, 7), value: 1100 },
-      { date: new Date(2014, 8), value: 17200 },
-      { date: new Date(2014, 9), value: 26900 },
-      { date: new Date(2014, 10), value: 14100 },
-      { date: new Date(2014, 11), value: 35300 },
-      { date: new Date(2015, 0), value: 54800 },
-      { date: new Date(2015, 1), value: 49800 }
+      { date: new Date(2012, 11).getTime(), value: 0 },
+      { date: new Date(2013, 0).getTime(), value: 15000 },
+      { date: new Date(2013, 1).getTime(), value: 30000 },
+      { date: new Date(2013, 2).getTime(), value: 25000 },
+      { date: new Date(2013, 3).getTime(), value: 21000 },
+      { date: new Date(2013, 4).getTime(), value: 24000 },
+      { date: new Date(2013, 5).getTime(), value: 31000 },
+      { date: new Date(2013, 6).getTime(), value: 40000 },
+      { date: new Date(2013, 7).getTime(), value: 37000 },
+      { date: new Date(2013, 8).getTime(), value: 18000 },
+      { date: new Date(2013, 9).getTime(), value: 5000 },
+      { date: new Date(2013, 10).getTime(), value: 40000 },
+      { date: new Date(2013, 11).getTime(), value: 20000 },
+      { date: new Date(2014, 0).getTime(), value: 5000 },
+      { date: new Date(2014, 1).getTime(), value: 3000 },
+      { date: new Date(2014, 2).getTime(), value: 1800 },
+      { date: new Date(2014, 3).getTime(), value: 10400 },
+      { date: new Date(2014, 4).getTime(), value: 25500 },
+      { date: new Date(2014, 5).getTime(), value: 2100 },
+      { date: new Date(2014, 6).getTime(), value: 6500 },
+      { date: new Date(2014, 7).getTime(), value: 1100 },
+      { date: new Date(2014, 8).getTime(), value: 17200 },
+      { date: new Date(2014, 9).getTime(), value: 26900 },
+      { date: new Date(2014, 10).getTime(), value: 14100 },
+      { date: new Date(2014, 11).getTime(), value: 35300 },
+      { date: new Date(2015, 0).getTime(), value: 54800 },
+      { date: new Date(2015, 1).getTime(), value: 49800 }
     ],
     // query 2
     "2": [
-      { date: new Date(2012, 11), value: 0 },
-      { date: new Date(2013, 0), value: 19000 },
-      { date: new Date(2013, 1), value: 20000 },
-      { date: new Date(2013, 2), value: 22000 },
-      { date: new Date(2013, 3), value: 25000 },
-      { date: new Date(2013, 4), value: 29000 },
-      { date: new Date(2013, 5), value: 26000 },
-      { date: new Date(2013, 6), value: 25000 },
-      { date: new Date(2013, 7), value: 20000 },
-      { date: new Date(2013, 8), value: 22000 },
-      { date: new Date(2013, 9), value: 26000 },
-      { date: new Date(2013, 10), value: 30000 },
-      { date: new Date(2013, 11), value: 25000 },
-      { date: new Date(2014, 0), value: 13000 },
-      { date: new Date(2014, 1), value: 13000 },
-      { date: new Date(2014, 2), value: 13000 },
-      { date: new Date(2014, 3), value: 13000 },
-      { date: new Date(2014, 4), value: 13000 },
-      { date: new Date(2014, 5), value: 13000 },
-      { date: new Date(2014, 6), value: 13000 },
-      { date: new Date(2014, 7), value: 13000 },
-      { date: new Date(2014, 8), value: 13000 },
-      { date: new Date(2014, 9), value: 13000 },
-      { date: new Date(2014, 10), value: 13000 },
-      { date: new Date(2014, 11), value: 13000 },
-      { date: new Date(2015, 0), value: 13000 },
-      { date: new Date(2015, 1), value: 13000 }
+      { date: new Date(2012, 11).getTime(), value: 0 },
+      { date: new Date(2013, 0).getTime(), value: 19000 },
+      { date: new Date(2013, 1).getTime(), value: 20000 },
+      { date: new Date(2013, 2).getTime(), value: 22000 },
+      { date: new Date(2013, 3).getTime(), value: 25000 },
+      { date: new Date(2013, 4).getTime(), value: 29000 },
+      { date: new Date(2013, 5).getTime(), value: 26000 },
+      { date: new Date(2013, 6).getTime(), value: 25000 },
+      { date: new Date(2013, 7).getTime(), value: 20000 },
+      { date: new Date(2013, 8).getTime(), value: 22000 },
+      { date: new Date(2013, 9).getTime(), value: 26000 },
+      { date: new Date(2013, 10).getTime(), value: 30000 },
+      { date: new Date(2013, 11).getTime(), value: 25000 },
+      { date: new Date(2014, 0).getTime(), value: 13000 },
+      { date: new Date(2014, 1).getTime(), value: 13000 },
+      { date: new Date(2014, 2).getTime(), value: 13000 },
+      { date: new Date(2014, 3).getTime(), value: 13000 },
+      { date: new Date(2014, 4).getTime(), value: 13000 },
+      { date: new Date(2014, 5).getTime(), value: 13000 },
+      { date: new Date(2014, 6).getTime(), value: 13000 },
+      { date: new Date(2014, 7).getTime(), value: 13000 },
+      { date: new Date(2014, 8).getTime(), value: 13000 },
+      { date: new Date(2014, 9).getTime(), value: 13000 },
+      { date: new Date(2014, 10).getTime(), value: 13000 },
+      { date: new Date(2014, 11).getTime(), value: 13000 },
+      { date: new Date(2015, 0).getTime(), value: 13000 },
+      { date: new Date(2015, 1).getTime(), value: 13000 }
     ]
   };
 
@@ -151,7 +151,7 @@ export class QueryChartConfig {
   }
 
   public translate(rows: Object[], targetX: string): Object {
-    let ret = [];//{};
+    let ret = {};
     rows.forEach(kv => {
       let x = kv[this.xfield];
       if (!x) {
@@ -161,16 +161,12 @@ export class QueryChartConfig {
       let self = this;
       let xfield = targetX ? targetX : self.xfield;
       let value = kv[self.yfield];
-      // let val = {};
-      // val[self.outY] = value;
-      // if (ret[x]) {
-      //   console.log("Overwriting key: ", ret[x], "with value:", val);
-      // }
-      // ret[x] = val;
-      let row = {};
-      row[xfield] = x;
-      row[self.outY] = value;
-      ret.push(row);
+      let val = {};
+      val[self.outY] = value;
+      if (ret[x]) {
+        console.log("Overwriting key: ", ret[x], "with value:", val);
+      }
+      ret[x] = val;
     });
     return ret;
   }
@@ -229,12 +225,12 @@ class ChartData {
       return;
     }
     // parse the results according to the current queries we have
-    
+
     if (!this.queries) {
       return;
     }
 
-    let newProvider = [];
+    let newProvider = {};
     let xaxis = this.categoryAxis.name;
     this.queries.forEach(query => {
       let id = query.chart.queryId;
@@ -248,29 +244,28 @@ class ChartData {
       let converted = query.chart.translate(rows, xaxis);
 
       // add all the converted rows into the newprovider
-      newProvider = newProvider.concat(converted);
-      // for (var key in converted) {
-      //   let adds = converted[key];
-      //   let val = newProvider[key]
-      //   if (val) {
-      //     for(var valuekey in adds){
-      //        val[valuekey] = adds[valuekey];
-      //     }
-      //   }else{
-      //     newProvider[key] = adds;
-      //   }
-      // }
+      for (var key in converted) {
+        let adds = converted[key];
+        let val = newProvider[key]
+        if (val) {
+          for (var valuekey in adds) {
+            val[valuekey] = adds[valuekey];
+          }
+        } else {
+          newProvider[key] = adds;
+        }
+      }
     });
 
     // convert the newprovider into the expected format:
     //  [{xaxis: xvalue, yaxis1: yvalue1, yaxis2: yvalue2...}]
-    // let out = [];
-    // for(var xvalue in newProvider){
-    //   let add = newProvider[xvalue];
-    //   add[xaxis] = xvalue;
-    //   out.push(add);
-    // }
-    this.dataProvider = newProvider;
+    let out = [];
+    for (var xvalue in newProvider) {
+      let add = newProvider[xvalue];
+      add[xaxis] = new Date(parseInt(xvalue));
+      out.push(add);
+    }
+    this.dataProvider = out;
     debugger;
   }
 
