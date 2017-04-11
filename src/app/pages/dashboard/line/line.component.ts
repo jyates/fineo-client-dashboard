@@ -94,17 +94,17 @@ export class Line extends BaseComponent<LineConfig> {
   // callback when chart is ready 
   initChart(chart: any) {
     console.log("Chart is initialized");
-    let zoomChart = () => {
-      // TODO replace the initial zoom
-      chart.zoomToDates(new Date(2013, 3), new Date(2014, 0));
-    };
+    // let zoomChart = () => {
+    //   // TODO replace the initial zoom
+    //   chart.zoomToDates(new Date(2013, 3), new Date(2014, 0));
+    // };
 
-    chart.addListener('rendered', zoomChart);
-    zoomChart();
+    // chart.addListener('rendered', zoomChart);
+    // zoomChart();
 
-    if (chart.zoomChart) {
-      chart.zoomChart();
-    }
+    // if (chart.zoomChart) {
+    //   chart.zoomChart();
+    // }
     chart.addListener('rendered', () => {
       console.log("Chart is done rendering!");
     })
@@ -151,7 +151,7 @@ export class QueryChartConfig {
   }
 
   public translate(rows: Object[], targetX: string): Object {
-    let ret = {};
+    let ret = [];//{};
     rows.forEach(kv => {
       let x = kv[this.xfield];
       if (!x) {
@@ -161,12 +161,16 @@ export class QueryChartConfig {
       let self = this;
       let xfield = targetX ? targetX : self.xfield;
       let value = kv[self.yfield];
-      let val = {};
-      val[self.outY] = value;
-      if (ret[x]) {
-        console.log("Overwriting key: ", ret[x], "with value:", val);
-      }
-      ret[x] = val;
+      // let val = {};
+      // val[self.outY] = value;
+      // if (ret[x]) {
+      //   console.log("Overwriting key: ", ret[x], "with value:", val);
+      // }
+      // ret[x] = val;
+      let row = {};
+      row[xfield] = x;
+      row[self.outY] = value;
+      ret.push(row);
     });
     return ret;
   }
@@ -225,11 +229,12 @@ class ChartData {
       return;
     }
     // parse the results according to the current queries we have
-    let newProvider = {};
+    
     if (!this.queries) {
       return;
     }
 
+    let newProvider = [];
     let xaxis = this.categoryAxis.name;
     this.queries.forEach(query => {
       let id = query.chart.queryId;
@@ -243,28 +248,29 @@ class ChartData {
       let converted = query.chart.translate(rows, xaxis);
 
       // add all the converted rows into the newprovider
-      for (var key in converted) {
-        let adds = converted[key];
-        let val = newProvider[key]
-        if (val) {
-          for(var valuekey in adds){
-             val[valuekey] = adds[valuekey];
-          }
-        }else{
-          newProvider[key] = adds;
-        }
-      }
+      newProvider = newProvider.concat(converted);
+      // for (var key in converted) {
+      //   let adds = converted[key];
+      //   let val = newProvider[key]
+      //   if (val) {
+      //     for(var valuekey in adds){
+      //        val[valuekey] = adds[valuekey];
+      //     }
+      //   }else{
+      //     newProvider[key] = adds;
+      //   }
+      // }
     });
 
     // convert the newprovider into the expected format:
     //  [{xaxis: xvalue, yaxis1: yvalue1, yaxis2: yvalue2...}]
-    let out = [];
-    for(var xvalue in newProvider){
-      let add = newProvider[xvalue];
-      add[xaxis] = xvalue;
-      out.push(add);
-    }
-    this.dataProvider = out;
+    // let out = [];
+    // for(var xvalue in newProvider){
+    //   let add = newProvider[xvalue];
+    //   add[xaxis] = xvalue;
+    //   out.push(add);
+    // }
+    this.dataProvider = newProvider;
     debugger;
   }
 
