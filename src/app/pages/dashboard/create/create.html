@@ -1,49 +1,35 @@
 <div class="create-dashboard-container">
   <!-- create an example panel for each type: pie, line, number, etc -->
-<!--   <div class="row elem" (click)="select('gauge')">
+  <div class="row elem" (click)="select('gauge')">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <!-- general description -
-        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
-           <h1>Gauge</h1>
-      <br>
-          <span>A simple gauge for a number. Can inlude a percent calculation and icon</span>
+      <!-- general description -->
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <h1>Gauge</h1>
+        <br>
+        <span>A simple gauge for a number. Can inlude a percent calculation and icon</span>
       </div>
-        <gauge
-          [data]="gauge.data"
-          [config]="gauge.config"
-          [editable]="false"
-          [deletable]="false"
-          ></gauge>
+      <gauge [data]="gauge.data" [config]="gauge.config" [editable]="false" [deletable]="false"></gauge>
     </div>
-  </div> -->
+  </div>
   <hr>
   <!-- "traffic chart" is really more of a pie chart, while pie chart is really more of a gauge -->
-  <!-- <div class="row elem" (click)="select('donut')">
-     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+  <div class="row elem" (click)="select('donut')">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
       <h1>Donut Chart</h1>
       <br>
-          <span>Optional summation field. Has specific call outs for each sub-group</span>
-      </div>
-    <donut-chart
-      [data]="donut.data"
-      [config]="donut.config"
-      [colorOptions]="donut.colors"
-      [editable]="false"
-      [deletable]="false">
-      </donut-chart>
-  </div>-->
+      <span>Optional summation field. Has specific call outs for each sub-group</span>
+    </div>
+    <donut-chart [data]="donut.data" [config]="donut.config" [colorOptions]="donut.colors" [editable]="false" [deletable]="false">
+    </donut-chart>
+  </div>
   <hr>
   <div class="row elem" (click)="select('line')">
-     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
-       <h1>Line Chart</h1>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+      <h1>Line Chart</h1>
       <br>
       <span>Line chart to track multipler events over a time range  .</span>
-      </div>
-      <line-chart
-        [data]="line.data"
-        [config]="line.config"
-        [editable]="false"
-        [deletable]="false">
+    </div>
+    <line-chart [data]="line.data" [config]="line.config" [editable]="false" [deletable]="false">
       ></line-chart>
   </div>
 </div>
