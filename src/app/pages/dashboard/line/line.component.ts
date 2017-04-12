@@ -1,7 +1,8 @@
-import { Component, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ViewChild, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 
 import { BaseComponent, ItemConfig, Query } from './../baseComponent';
 import { layoutPaths } from '../../../theme';
+import { BaAmChart } from '../../../theme/components/baAmChart'
 
 var nextLineId = 0;
 
@@ -78,8 +79,10 @@ export class Line extends BaseComponent<LineConfig> {
   @Input()
   public id = `line-${nextLineId++}`;
 
-  public chartData: ChartData = new ChartData(layoutPaths.images.amChart);
+  @ViewChild(BaAmChart) public chartElem: BaAmChart;
 
+  public chartData: ChartData = new ChartData(layoutPaths.images.amChart);
+  private chartReady: boolean = false;
   constructor() {
     super("line-chart-container");
   }
@@ -87,15 +90,16 @@ export class Line extends BaseComponent<LineConfig> {
   private getSize() {
     let elems = {};
     this.setSize("small", 4, elems);
-    this.setSize("large", 6, elems);
+    this.setSize("medium", 6, elems);
+    this.setSize("large", 12, elems);
     return elems;
   }
 
   // callback when chart is ready 
   initChart(chart: any) {
     console.log("Chart is initialized");
+    // TODO replace the initial zoom
     // let zoomChart = () => {
-    //   // TODO replace the initial zoom
     //   chart.zoomToDates(new Date(2013, 3), new Date(2014, 0));
     // };
 
@@ -107,11 +111,16 @@ export class Line extends BaseComponent<LineConfig> {
     // }
     chart.addListener('rendered', () => {
       console.log("Chart is done rendering!");
-    })
+    });
+    this.chartReady = true;
   }
 
   protected updateData() {
+    console.log("Updating data for line chart")
     this.chartData.data(this.data);
+    if (this.chartReady) {
+      this.chartElem.updateData(this.chartData.dataProvider);
+    }
   }
 
   protected updateConfig() {
@@ -124,8 +133,8 @@ export class Line extends BaseComponent<LineConfig> {
 export class LineConfig extends ItemConfig {
 
   constructor(title: string,
-    queries: LineQuery[],
     size: string,
+    queries: LineQuery[],
     public xAxis: Xaxis) {
     super(title, queries, size);
   }
@@ -142,25 +151,45 @@ export class LineQuery extends Query {
 export class QueryChartConfig {
   // each query needs its own yvalue field name, otherwise, charts can't distinguish them, i guess
   public outY: string;
-  constructor(public queryId, public xfield: string, private yfield) {
+  constructor(public queryId, public xfield: string, public yfield = null) {
     if (!xfield)
       throw new ReferenceError("Must provide an xfield name");
-    if (!yfield)
-      throw new ReferenceError("Must provide a yfield name");
-    this.outY = yfield + "_" + queryId;
+    this.outY = "y_" + queryId;
   }
 
   public translate(rows: Object[], targetX: string): Object {
     let ret = {};
+    console.log("Converting rows:", rows);
     rows.forEach(kv => {
+      console.log("Converting row:", kv);
       let x = kv[this.xfield];
       if (!x) {
         console.log("Row is missing value for x-coordinate:", this.xfield);
         return;
       }
+
+      // we have a yfield, life is good
+      let yfield = null;
+      if (this.yfield) {
+        yfield = this.yfield;
+      } else {
+        // no yfield, use the first, non-xfield column we find
+        for (var key in kv) {
+          if (key === this.xfield) {
+            continue;
+          }
+          yfield = key;
+          break;
+        }
+        if (yfield === null) {
+          throw new ReferenceError("No y-axis value found!");
+        }
+      }
+
       let self = this;
       let xfield = targetX ? targetX : self.xfield;
-      let value = kv[self.yfield];
+      console.log("Got fields. x:", xfield, "y:", yfield);
+      let value = kv[yfield];
       let val = {};
       val[self.outY] = value;
       if (ret[x]) {
@@ -219,14 +248,17 @@ class ChartData {
   // Update the data provider with new data
   // see the DEMO_DATA for the format of the data, but basically, {queryId: [{x:val, y:val}]}
   public data(data: Object): void {
+    console.log("Setting data internal");
     this.dataInternal = data;
     // didn't get any data, be done early
     if (!data) {
+      console.log("no data recieved");
       return;
     }
     // parse the results according to the current queries we have
 
     if (!this.queries) {
+      console.log("no queries to go with data");
       return;
     }
 
@@ -240,8 +272,10 @@ class ChartData {
         return;
       }
 
+      console.log("Converting rows for query:", query, "Rows:", rows);
       // translate the rows into <xvalue>: {yname: yvalue}
       let converted = query.chart.translate(rows, xaxis);
+      console.log("Got converted row:", converted);
 
       // add all the converted rows into the newprovider
       for (var key in converted) {
@@ -265,6 +299,7 @@ class ChartData {
       add[xaxis] = new Date(parseInt(xvalue));
       out.push(add);
     }
+    console.log("Providing data:", out);
     this.dataProvider = out;
   }
 

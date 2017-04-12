@@ -1,0 +1,25 @@
+.preview-header {
+  padding-bottom: 15px;
+}
+
+// need the deep selector so the child card gets the forced value
+/deep/ .card.query-card {
+  height: 100%;
+  >.card-body {
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 8px;
+    button {
+      margin-right: 3px;
+    }
+  }
+}
+
+.fa {
+  line-height: 30px;
+  padding-left: 20px;
+}
+
+.add-query-button {
+  padding-top: 5px;
+}

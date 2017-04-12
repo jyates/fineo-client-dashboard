@@ -33,7 +33,7 @@ export class BaseComponent<T> implements AfterViewInit, OnChanges {
     if (changes['config']) {
       this.updateConfig();
     }
-    if (changes['data']){
+    if (changes['data']) {
       this.updateData();
     }
   }
@@ -80,12 +80,12 @@ export class ItemConfig {
     console.log("Setting up config with query:", query);
     if (typeof query == "string") {
       this.queries = [new Query(query)]
-    }else{
+    } else {
       this.queries = query;
     }
   }
 }
 
-export class Query{
-  constructor(public text, public name:string = ""){}
+export class Query {
+  constructor(public text, public name: string = "") { }
 }

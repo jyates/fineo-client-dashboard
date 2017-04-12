@@ -69,11 +69,7 @@ export class CreateComponent {
             colorHelper.hexToRgbA(graphColor, 0.15),
             new QueryChartConfig("2", "date", "value")),
         ],
-        xAxisIsDate: true,
-        xAxis: new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText),
-        info: {
-
-        }
+        xAxis: new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText)
       }
     }
   }

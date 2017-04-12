@@ -17,9 +17,15 @@
       (refresh)="handleRefresh($event)">
     </create-donut>
   </div>
-  <!-- <div class="row" *ngIf="(type == 'line')">
-    <create-line></create-line>
-  </div> -->
+  <div class="row" *ngIf="(type == 'line')">
+    <create-line-chart
+      [saving]="saving"
+      [refreshing]="refreshing"
+      [dataIn]="data"
+      (save)="handleSave($event)"
+      (refresh)="handleRefresh($event)">
+    </create-line-chart>
+  </div>
   <small-spinner
     [visible]="saving || refreshing">
   </small-spinner>

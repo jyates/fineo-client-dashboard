@@ -1,0 +1,125 @@
+<div class="edit-line-container">
+  <!-- create an example panel for each type: pie, line, number, etc -->
+  <div class="row">
+    <h1>Line Chart</h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-5 preview-header">
+      <span>Preview</span>
+      <button type="submit" (click)="onRefresh()" style="margin-left: 10px" class="btn btn-default">Refresh</button>
+    </div>
+  </div>
+  <div class="row">
+    <line-chart [data]="dataOut" [config]="config" [editable]="false" [deletable]="false">
+    </line-chart>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
+    <div class="row">
+      <div class="row" style="padding-bottom: 10px">
+        <div class="col-md-1">
+          <button type="submit" [disabled]="!form.valid || saving" class="btn btn-success btn-md btn-raised">Save</button>
+        </div>
+        <br/>
+      </div>
+    </div>
+    <!-- Meta -->
+    <div class="row form-group">
+      <div class="col-lg-5">
+        <label for="lineTitle" class="col-sm-2 control-label">Title</label>
+        <div class="col-sm-10">
+          <input [formControl]="form.controls['title']" type="text" class="form-control" id="lineTitle">
+        </div>
+      </div>
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
+        <div class="row">
+          <!-- 1/2 the space on the next "row" in this column -->
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h5 class="panel-subtitle">Size</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="size" value="small" [formControl]="form.controls['size']">
+                  <span>Small</span>
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="size" value="medium" [formControl]="form.controls['size']">
+                  <span>Medium</span>
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap last-radio">
+                  <input type="radio" name="size" value="large" [formControl]="form.controls['size']">
+                  <span>Large</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <h5 class="panel-subtitle">Queries</h5>
+    <div class="form-group">
+      <div class="row" *ngFor="let query of getQueriesArray(); let i = index">
+        <ba-card class="col-xlg-12 col-xl-12 col-lg-12 col-sm-12 col-xs-12" 
+          baCardClass="query-card"
+          [editable]="false" 
+          [deletable]="true" 
+          (deleteEvent)="removeQuery(i)" 
+          [style.height.px]="query.controls['card-height'].value"
+          >
+          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <label for="nameQuery" class="control-label col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">Name</label>
+            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-xs-9">
+              <input [formControl]="query.controls['name']" type="text-area" class="form-control" id="nameQuery">
+            </div>
+          </div>
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <label for="querySql" class="col-sm-2 control-label">Query</label>
+            <div class="col-sm-12">
+              <textarea [formControl]="query.controls['query']" type="textarea" class="form-control" id="querySql"></textarea>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+              <label for="nameQuery" class="control-label col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">Advanced</label>
+              <i class="fa fa-angle-down" title="Show Advanced" (click)="expandCard(i)" *ngIf="!isExpanded(query.controls['card-height'])"></i>
+              <i class="fa fa-angle-up" title="Hide Advanced" (click)="collapseCard(i)" *ngIf="isExpanded(query.controls['card-height'])"></i>
+            </div>
+          </div>
+          <!-- Advanced options -->
+          <div *ngIf="isExpanded(query.controls['card-height'])">
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <label for="tsFormat" class="control-label col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">Timestamp Format</label>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <input [formControl]="query.controls['ts-format']" type="text-area" class="form-control" id="tsFormat" [tooltip]="time_tooltip">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <label for="yaxis" class="control-label col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">Y-Axis Column</label>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <input [formControl]="query.controls['y-axis']" type="text-area" class="form-control" id="yaxis" [tooltip]="y_tooltip">
+                </div>
+              </div>
+            </div>
+          </div> <!-- End options -->
+        </ba-card>
+      </div>
+      <!-- Add another query? -->
+      <div class="row">
+        <div class="add-query-button col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2" align="left">
+          <button (click)="addQuery()" [disabled]="!allowMoreQueries()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -57,14 +57,17 @@ export class CreateItem implements OnInit {
     new Promise((accept, reject) => {
       setTimeout(() => {
         // send a fake result
-        accept([{
-          "c1": 75,
-          "c2": 125,
-          "c3": 60,
-          "c4": 30,
-          "c5": 40,
-          "c6": 70,
-        }]);
+        accept(
+          // line data
+          [
+            // first query result
+            [
+              { timestamp: new Date(2012, 11).getTime(), value: 0 },
+              { timestamp: new Date(2012, 12).getTime(), value: 100 }
+            ],
+            // second query result
+            []
+          ]);
       }, 200)
     }).then(result => {
       console.log("Got query result:", JSON.stringify(result));

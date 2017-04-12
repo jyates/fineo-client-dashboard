@@ -1,6 +1,9 @@
 import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { TooltipModule } from 'ng2-bootstrap';
+
 import { NgaModule } from '../../theme/nga.module';
 
 import { Dashboard } from './dashboard.component';
@@ -30,7 +33,7 @@ import { TrafficChartService } from './trafficChart/trafficChart.service';
 import { UsersMapService } from './usersMap/usersMap.service';
 
 import {CreateComponent} from './create'
-import {CreateItem, GaugeItem, DonutItem} from './createItem'
+import {CreateItem, GaugeItem, DonutItem, LineItem} from './createItem'
 
 @NgModule({
   imports: [
@@ -38,6 +41,7 @@ import {CreateItem, GaugeItem, DonutItem} from './createItem'
     FormsModule,
     ReactiveFormsModule,
     NgaModule,
+    TooltipModule.forRoot(),
     routing
   ],
   declarations: [
@@ -57,6 +61,7 @@ import {CreateItem, GaugeItem, DonutItem} from './createItem'
     // individual items that can be created
     GaugeItem,
     DonutItem,
+    LineItem,
     //LineChartItem
     // custom components from the standard ng2-admin dashaboard
     Gauge,

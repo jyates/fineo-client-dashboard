@@ -1,36 +1,36 @@
-import { Component, AfterViewInit, EventEmitter, Input, Output, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, AfterViewInit, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormControl} from '@angular/forms';
+import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormControl } from '@angular/forms';
 
-import { Subject }  from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject';
 
-import {BaThemeConfigProvider, colorHelper} from '../../../../../theme';
+import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
 import { ItemConfig } from '../../../baseComponent';
 
 
 /*
  * Item building for a gauge
  */
- @Component({
+@Component({
   selector: 'base-item',
 })
-export class BaseItem implements OnChanges, AfterViewInit{
+export class BaseItem implements OnChanges, AfterViewInit {
 
   // data from the underlying query
   @Input()
-  public dataIn:Object = null;
+  public dataIn: Object = null;
   // configuration for the underlying viz component
   @Input()
   public config;
 
   // translation from the input data and passed along to the viz component
-  public dataOut: Object = null; 
+  public dataOut: Object = null;
 
   // are we in the process of doing an outside task?
   @Input()
-  public saving:boolean = false;
+  public saving: boolean = false;
   @Input()
-  public refreshing:boolean = false;
+  public refreshing: boolean = false;
 
   // used in the template, so exposed here
   public form: FormGroup;
@@ -43,7 +43,7 @@ export class BaseItem implements OnChanges, AfterViewInit{
 
   private _init: boolean = false;
 
-  constructor(protected fb:FormBuilder, private name:string) {
+  constructor(protected fb: FormBuilder, private name: string) {
   }
 
   ngAfterViewInit() {
@@ -63,7 +63,7 @@ export class BaseItem implements OnChanges, AfterViewInit{
     }
   }
 
-  protected updateData(result): Object { return null;}
+  protected updateData(result): Object { return null; }
 
   /**
    * Constantly update the target with information as it becomes available.
@@ -71,19 +71,19 @@ export class BaseItem implements OnChanges, AfterViewInit{
    * NameMap is used to translate the form control name to the name in the target.
    * If there is no match in the nameMap, the control name is used in the target
    */
-  protected listenForChanges(target:Object, skip:string[] = [], nameMap={}){
+  protected listenForChanges(target: Object, skip: string[] = [], nameMap = {}) {
     let controls = this.form.controls;
     Object.keys(controls)
-      .filter(name =>{
-        return !(skip.indexOf(name) > 0);
+      .filter(name => {
+        return !skip.includes(name);
       })
-      .forEach(name =>{
+      .forEach(name => {
         let control = <AbstractControl>controls[name];
-        control.statusChanges.subscribe(status =>{
-          if(status == "VALID"){
-            // console.log("Setting ", this.name, ":", name,"to", controls[name].value)
+        control.statusChanges.subscribe(status => {
+          if (status == "VALID") {
+            console.log("Setting ", this.name, ":", name,"to", controls[name].value)
             var targetName = nameMap[name];
-            if(!targetName){
+            if (!targetName) {
               targetName = name;
             }
             target[targetName] = controls[name].value;
@@ -92,8 +92,8 @@ export class BaseItem implements OnChanges, AfterViewInit{
       })
   }
 
-  public onSave():void{
-    console.log("["+this.name+"] Triggering save");
+  public onSave(): void {
+    console.log("[" + this.name + "] Triggering save");
     this.save.next(this.getConfig());
   }
 
@@ -103,5 +103,5 @@ export class BaseItem implements OnChanges, AfterViewInit{
     this.refresh.next(config);
   }
 
-  protected getConfig(): Object { return null;}
+  protected getConfig(): Object { return null; }
 }

@@ -34,14 +34,14 @@ export class GaugeItem extends BaseItem{
     // create the form to describe the gauge
     // the form groups match the fields in the gauge, not the config
     this.form = fb.group({
-      'description': [this.config.title, Validators.compose([Validators.required, Validators.minLength(1)])],
+      'title': [this.config.title, Validators.compose([Validators.required, Validators.minLength(1)])],
       'icon': [this.config.icon, []],
       'size': [this.config.size, Validators.compose([Validators.required, Validators.minLength(3)])],
       'query': [this.config.queries[0].text, Validators.compose([Validators.required, Validators.minLength(3)])],
       'stats': [this.config.value,  Validators.compose([Validators.minLength(1)])],
       'percent': [this.config.percent,  Validators.compose([Validators.required, Validators.minLength(1)])]
     });
-    this.listenForChanges(this.form, [ "stats", "percent"], {description: 'title'});
+    this.listenForChanges(this.config, [ "stats", "percent"]);
   }
 
   protected updateData(result):Object{
@@ -78,7 +78,7 @@ export class GaugeItem extends BaseItem{
   }
 
   protected getConfig():GaugeConfig{
-    return new GaugeConfig(this.form.controls['description'].value,
+    return new GaugeConfig(this.form.controls['title'].value,
                            this.form.controls['query'].value,
                            this.form.controls['icon'].value,
                            this.form.controls['size'].value,
