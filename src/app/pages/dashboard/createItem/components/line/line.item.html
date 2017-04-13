@@ -62,18 +62,37 @@
           </div>
         </div>
       </div>
+      <!-- 
+      Smoothed vs. Regular line. We use regular because we can't get smoothed to trigger on refresh. Maybe later #startup
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h5 class="panel-subtitle">Type</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="type" value="line" [formControl]="form.controls['type']">
+                  <span>Regular</span>
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="radio-inline custom-radio nowrap">
+                  <input type="radio" name="type" value="smoothedLine" [formControl]="form.controls['type']">
+                  <span>Smoothed Line</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>-->
     </div>
     <hr />
     <h5 class="panel-subtitle">Queries</h5>
     <div class="form-group">
       <div class="row" *ngFor="let query of getQueriesArray(); let i = index">
-        <ba-card class="col-xlg-12 col-xl-12 col-lg-12 col-sm-12 col-xs-12" 
-          baCardClass="query-card"
-          [editable]="false" 
-          [deletable]="true" 
-          (deleteEvent)="removeQuery(i)" 
-          [style.height.px]="query.controls['card-height'].value"
-          >
+        <ba-card class="col-xlg-12 col-xl-12 col-lg-12 col-sm-12 col-xs-12" baCardClass="query-card" [editable]="false" [deletable]="true" (deleteEvent)="removeQuery(i)" [style.height.px]="query.controls['card-height'].value">
           <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <label for="nameQuery" class="control-label col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">Name</label>
             <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-xs-9">
@@ -103,7 +122,8 @@
                 </div>
               </div>
             </div>
-          </div> <!-- End options -->
+          </div>
+          <!-- End options -->
         </ba-card>
       </div>
       <!-- Add another query? -->

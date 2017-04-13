@@ -43,8 +43,9 @@ export class LineItem extends BaseItem {
             "query1",
             this.getNextColor(),
             new QueryChartConfig("0", "timestamp", "value"))
-        ], this.xAxis(),
-      );
+        ],
+        this.xAxis(),
+        "line");
     }
 
     // create the form to describe the gauge
@@ -52,6 +53,7 @@ export class LineItem extends BaseItem {
     this.form = fb.group({
       'title': [this.config.title, Validators.compose([Validators.required, Validators.minLength(1)])],
       'size': [this.config.size, Validators.compose([Validators.required, Validators.minLength(3)])],
+      'type': [this.config.type, []],
       'queries': this.fb.array([]),
     });
     this.listenForChanges(this.config, ["queries"]);
@@ -154,12 +156,14 @@ export class LineItem extends BaseItem {
     for (var i = 0; i < queries.length; i++) {
       var controls = queries[i].controls;
       lines.push(new LineQuery(controls['query'].value, controls['name'].value, controls['color'].value,
-        new QueryChartConfig(i.toString(), "timestamp", controls['y-axis'])));
+        new QueryChartConfig(i.toString(), "timestamp", controls['y-axis'].value)));
     }
 
-    return new LineConfig(this.form.controls['title'].value,
-      this.form.controls['size'].value,
+    let fcontrols = this.form.controls;
+    return new LineConfig(fcontrols['title'].value,
+      fcontrols['size'].value,
       lines,
-      this.xAxis());
+      this.xAxis(), 
+      fcontrols['type'].value);
   }
 }

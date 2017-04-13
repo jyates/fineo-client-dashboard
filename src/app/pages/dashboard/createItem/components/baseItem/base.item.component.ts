@@ -89,7 +89,7 @@ export class BaseItem implements OnChanges, AfterViewInit {
             target[targetName] = controls[name].value;
           }
         })
-      })
+      });
   }
 
   public onSave(): void {

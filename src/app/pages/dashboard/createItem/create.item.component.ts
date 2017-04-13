@@ -65,7 +65,8 @@ export class CreateItem implements OnInit {
               { timestamp: 1491538857000, value: 1000 },
               { timestamp: 1491800957000, value: 2000 },
               { timestamp: 1492038957000, value: 2500 },
-              { timestamp: 1492049957000, value: 1250 }
+              { timestamp: 1492049957000, value: 1250 },
+              { timestamp: 1493049957000, value: 1350 }
             ],
             // second query result
             []

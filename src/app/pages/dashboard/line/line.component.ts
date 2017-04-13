@@ -126,6 +126,7 @@ export class Line extends BaseComponent<LineConfig> {
   protected updateConfig() {
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;
+    this.chartData.graphType = this.config.type;
     this.chartData.updateGraphQueries(this.config.queries);
   }
 }
@@ -135,7 +136,8 @@ export class LineConfig extends ItemConfig {
   constructor(title: string,
     size: string,
     queries: LineQuery[],
-    public xAxis: Xaxis) {
+    public xAxis: Xaxis,
+    public type:string) {
     super(title, queries, size);
   }
 }
@@ -204,6 +206,7 @@ export class QueryChartConfig {
 export class Xaxis {
   // public boldPeriodBeginning = false;
   public gridAlpha = 0;
+  public minPeriod = "mm"
 
   constructor(public name: string, public parseDates: boolean = true, public color: string, public axisColor: string) { };
 }
@@ -211,6 +214,7 @@ export class Xaxis {
 class ChartData {
 
   public dataProvider = [];
+  public graphType:string;
   public graphs: GraphInfo[];
   public categoryAxis: Xaxis = new Xaxis("xfield", false, "white", "white");
   public categoryField;
@@ -218,7 +222,7 @@ class ChartData {
   public export = {
     enabled: true
   };
-  public dataDateFormat = 'DD MM YYYY';
+  public dataDateFormat = 'DD MMMM YYYY JJ NN SS QQ';
   public creditsPosition = 'bottom-right';
   // public zoomOutButton = {
   //   backgroundColor: '#fff',
@@ -296,7 +300,9 @@ class ChartData {
     let out = [];
     for (var xvalue in newProvider) {
       let add = newProvider[xvalue];
-      add[xaxis] = new Date(parseInt(xvalue));
+      var d = new Date(parseInt(xvalue));
+      // parse the date into the expected format so we can send it 'cleanly'
+      add[xaxis] = AmCharts.formatDate(d, this.dataDateFormat);
       out.push(add);
     }
     console.log("Providing data:", out);
@@ -308,7 +314,7 @@ class ChartData {
     this.queries = queries;
     // convert queries to graph infos
     this.graphs = queries.map(query => {
-      return new GraphInfo(query.chart.queryId, query.color, query.chart.outY);
+      return new GraphInfo(query.chart.queryId, query.color, query.chart.outY, this.graphType);
     });
     this.data(this.dataInternal);
   }
@@ -329,9 +335,8 @@ export class GraphInfo {
   public useLineColorForBulletBorder: boolean = true;
   public lineThickness: number = 1;
   public negativeLineColor: string = "red";
-  public type: string = 'smoothedLine';
   public fillAlphas: number = 1;
   public fillColorsField: string = 'lineColor';
 
-  constructor(public id: string, public lineColor: string, public valueField: string) { };
+  constructor(public id: string, public lineColor: string, public valueField: string, public type:string = "smoothedLine") { };
 }
