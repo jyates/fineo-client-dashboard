@@ -1,10 +1,10 @@
-import {Component, AfterViewInit, EventEmitter, Input, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, AfterViewInit, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormControl} from '@angular/forms';
+import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormControl } from '@angular/forms';
 
-import { Subject }  from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject';
 
-import {BaThemeConfigProvider, colorHelper} from '../../../../../theme';
+import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
 import { DonutConfig } from '../../../donut';
 import { BaseItem } from '../baseItem/base.item.component';
 
@@ -27,9 +27,10 @@ export class DonutItem extends BaseItem {
     console.log("setting up donut")
     // setup the base donut
     if (!this.config) {
-      this.config = new DonutConfig("Donut",
-        "SELECT 75 as c1, 125 as c2, 60 as c3, 30 as c4, 40 as c5, 70 as c6",
-        "large", "percent", true, "Total Value");
+      this.config =
+        new DonutConfig("Donut",
+          "SELECT 75 as c1, 125 as c2, 60 as c3, 30 as c4, 40 as c5, 70 as c6 FROM (VALUES (1))",
+          "large", "percent", true, "Total Value");
     }
 
     // name and a value to display

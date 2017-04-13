@@ -27,7 +27,7 @@ export class GaugeItem extends BaseItem{
     console.log("setting up gauge")
     if(this.config == null){
      this.config = new GaugeConfig("Gauge", 
-        "SELECT 75 as percent, 125 as result",
+        "SELECT 75 as `percent`, 125 as `result` FROM (VALUES (1))",
         "medium","refresh", "result", "percent", _baConfig.get().colors.custom.dashboardPieChart);
     }
 
