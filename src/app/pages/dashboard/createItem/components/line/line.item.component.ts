@@ -20,7 +20,7 @@ import { BaseItem } from '../baseItem/base.item.component';
 export class LineItem extends BaseItem {
 
   private static GRAPH_TRANSPARENCTY_PERCENT = [0.30, 0.15];
-  private static EXPANDED_CARD_SIZE = 320;
+  private static EXPANDED_CARD_SIZE = 270;
   private static COLLAPSED_CARD_SIZE = 220;
 
   private time_tooltip: string = "e.g. 'MM DD'. If empty, rounds to the nearest second";
@@ -38,7 +38,8 @@ export class LineItem extends BaseItem {
     if (this.config == null) {
       this.config = new LineConfig("Line Chart", "large",
         [
-          new LineQuery("SELECT timestamp, value from table1",
+          // simple demo query with four points
+          new LineQuery("SELECT `timestamp`,val FROM (VALUES (1,'1000'),(2,'2000'), (3, '2500'), (4, '1200')) as MyTable(`timestamp`,val)",
             "query1",
             this.getNextColor(),
             new QueryChartConfig("0", "timestamp", "value"))
@@ -90,7 +91,6 @@ export class LineItem extends BaseItem {
     return this.fb.group({
       'name': [name, Validators.compose([Validators.required, Validators.minLength(1)])],
       'query': [query, Validators.compose([Validators.required, Validators.minLength(3)])],
-      'ts-format': ["", []],
       'y-axis': [yvalue, []],
       'card-height': [LineItem.COLLAPSED_CARD_SIZE, []],
       'color': [color, []]
@@ -101,16 +101,15 @@ export class LineItem extends BaseItem {
     return sizeControl.value == LineItem.EXPANDED_CARD_SIZE
   }
 
-  public expandCard(index: number) {
+  public toggleCard(index: number) {
     let queries = this.getQueries();
     let group = <FormGroup>queries.controls[index];
-    group.controls['card-height'].setValue(LineItem.EXPANDED_CARD_SIZE);
-  }
-
-  public collapseCard(index: number) {
-    let queries = this.getQueries();
-    let group = <FormGroup>queries.controls[index];
-    group.controls['card-height'].setValue(LineItem.COLLAPSED_CARD_SIZE);
+    let control = group.controls['card-height'];
+    if (control.value === LineItem.COLLAPSED_CARD_SIZE) {
+      control.setValue(LineItem.EXPANDED_CARD_SIZE);
+    } else {
+      control.setValue(LineItem.COLLAPSED_CARD_SIZE);
+    }
   }
 
   public allowMoreQueries() {
@@ -121,7 +120,8 @@ export class LineItem extends BaseItem {
     console.log("Removing query", index);
     let queries = this.getQueries();
     queries.removeAt(index);
-    this.getQueriesArray();
+    // refresh the data on remove!
+    this.onRefresh();
   }
 
   private getQueries(): FormArray {

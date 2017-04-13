@@ -87,22 +87,14 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
-              <label for="nameQuery" class="control-label col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">Advanced</label>
-              <i class="fa fa-angle-down" title="Show Advanced" (click)="expandCard(i)" *ngIf="!isExpanded(query.controls['card-height'])"></i>
-              <i class="fa fa-angle-up" title="Hide Advanced" (click)="collapseCard(i)" *ngIf="isExpanded(query.controls['card-height'])"></i>
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4" (click)="toggleCard(i)">
+              <label for="nameQuery" class="control-label col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 advanced-options">Advanced</label>
+              <i class="fa fa-angle-down advanced-options" title="Show Advanced" *ngIf="!isExpanded(query.controls['card-height'])"></i>
+              <i class="fa fa-angle-up advanced-options" title="Hide Advanced" *ngIf="isExpanded(query.controls['card-height'])"></i>
             </div>
           </div>
           <!-- Advanced options -->
           <div *ngIf="isExpanded(query.controls['card-height'])">
-            <div class="row">
-              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <label for="tsFormat" class="control-label col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">Timestamp Format</label>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                  <input [formControl]="query.controls['ts-format']" type="text-area" class="form-control" id="tsFormat" [tooltip]="time_tooltip">
-                </div>
-              </div>
-            </div>
             <div class="row">
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <label for="yaxis" class="control-label col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">Y-Axis Column</label>
