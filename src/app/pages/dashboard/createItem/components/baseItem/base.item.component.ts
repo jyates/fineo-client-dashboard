@@ -71,7 +71,7 @@ export class BaseItem implements OnChanges, AfterViewInit {
    * NameMap is used to translate the form control name to the name in the target.
    * If there is no match in the nameMap, the control name is used in the target
    */
-  protected listenForChanges(target: Object, skip: string[] = [], nameMap = {}) {
+  protected listenForChanges(target: Object, skip: string[] = [], nameMap = {}, onMatch = {}) {
     let controls = this.form.controls;
     Object.keys(controls)
       .filter(name => {
@@ -81,12 +81,16 @@ export class BaseItem implements OnChanges, AfterViewInit {
         let control = <AbstractControl>controls[name];
         control.statusChanges.subscribe(status => {
           if (status == "VALID") {
-            console.log("Setting ", this.name, ":", name,"to", controls[name].value)
+            console.log("Setting ", this.name, ":", name, "to", controls[name].value)
             var targetName = nameMap[name];
             if (!targetName) {
               targetName = name;
             }
             target[targetName] = controls[name].value;
+            let func = onMatch[name];
+            if (func) {
+              func();
+            }
           }
         })
       });

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, AfterViewInit, EventEmitter, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormControl } from '@angular/forms';
 
@@ -25,6 +25,8 @@ export class LineItem extends BaseItem {
 
   private time_tooltip: string = "e.g. 'MM DD'. If empty, rounds to the nearest second";
   private y_tooltip: string = "Name of the yaxis field, if there are more than two columns (one being timestamp) in the result.";
+
+  @ViewChild(Line) public chart: Line;
 
   private colorIndex = 0;
   private graphColor;
@@ -56,8 +58,13 @@ export class LineItem extends BaseItem {
       'type': [this.config.type, []],
       'queries': this.fb.array([]),
     });
-    this.listenForChanges(this.config, ["queries"]);
+    this.listenForChanges(this.config, ["queries"], {}, {"type": this.resetConfig.bind(this)});
     this.addQueries(this.getQueries());
+  }
+
+  private resetConfig(){
+    console.log("re-setting config to force line object to respond")
+    this.chart.updateConfigExternal();
   }
 
   private xAxis(): Xaxis {

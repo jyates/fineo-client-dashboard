@@ -41,6 +41,29 @@ export class BaAmChart {
     this.onChartReady.emit(this.chart);
   }
 
+
+  public updateGraphs(graphs: Array<any>) {
+    if (!this.chart) {
+      console.log("Skipping updating graphs becuase no current chart");
+      return;
+    }
+    for (var i = 0; i < graphs.length; i++) {
+      var graph = graphs[i];
+      var current = this.chart.graphs[i];
+      if (!current) {
+        console.log("Adding graph because none was found at: ", i);
+        var graph = new AmCharts.AmGraph();
+        this.chart.addGraph(graph);
+        continue;
+      }
+      current.type = graph.type;
+      current.valueField = graph.valueField;
+      current.color = graph.color;
+    }
+    this.chart.invalidateSize();
+    this.chart.animateAgain();
+  }
+
   public updateData(dataProvider) {
     this.chart.dataProvider = dataProvider;
     this.chart.validateData();

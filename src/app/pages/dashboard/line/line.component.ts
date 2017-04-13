@@ -123,11 +123,16 @@ export class Line extends BaseComponent<LineConfig> {
     }
   }
 
+  public updateConfigExternal(){
+    this.updateConfig();
+  }
+
   protected updateConfig() {
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;
     this.chartData.graphType = this.config.type;
     this.chartData.updateGraphQueries(this.config.queries);
+    this.chartElem.updateGraphs(this.chartData.graphs);
   }
 }
 
@@ -215,7 +220,7 @@ class ChartData {
 
   public dataProvider = [];
   public graphType:string;
-  public graphs: GraphInfo[];
+  public graphs: Array<GraphInfo>;
   public categoryAxis: Xaxis = new Xaxis("xfield", false, "white", "white");
   public categoryField;
   public chartCursor: UserCursor = new UserCursor();
