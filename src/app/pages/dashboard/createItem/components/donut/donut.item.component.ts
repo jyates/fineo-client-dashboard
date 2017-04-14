@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
 import { DonutConfig } from '../../../donut';
-import { BaseItem } from '../baseItem/base.item.component';
+import { BaseCreateItem } from '../base.create.item.component';
 
 
 /*
@@ -17,14 +17,13 @@ import { BaseItem } from '../baseItem/base.item.component';
   styleUrls: ['./donut.item.scss'],
   templateUrl: './donut.item.html'
 })
-export class DonutItem extends BaseItem {
+export class DonutItem extends BaseCreateItem {
 
   private colorOptions = [];
 
   constructor(private _baConfig: BaThemeConfigProvider,
     fb: FormBuilder) {
     super(fb, 'donut');
-    console.log("setting up donut")
     // setup the base donut
     if (!this.config) {
       this.config =

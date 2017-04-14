@@ -2,8 +2,11 @@
   <ba-card 
     [ngClass]="getSize()"
     [title]="config.title"
-    [editable]="editable"
-    [deletable]="deletable"
+    (deleteEvent)="handleDelete($event)"
+    (editEvent)="handleEdit($event)"
+    [editable]="card.editable"
+    [deletable]="card.deletable"
+    [sortable]="card.sortable"
     baCardClass="traffic-panel medium-card">
     <div class="channels-block">
       <div class="chart-bg"></div>

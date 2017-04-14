@@ -1,0 +1,13 @@
+<div>
+  <ba-card 
+    baCardClass="medium-card"
+    [title]="config.title"
+    (deleteEvent)="handleDelete($event)"
+    (editEvent)="handleEdit($event)"
+    [ngClass]="getSize()"
+    [deletable]="card.deletable"
+    [editable]="card.editable"
+    [sortable]="card.sortable">
+    <ba-am-chart baAmChartClass="dashboard-line-chart" [baAmChartConfiguration]="chartData" (onChartReady)="initChart($event)"></ba-am-chart>
+  </ba-card>
+</div>

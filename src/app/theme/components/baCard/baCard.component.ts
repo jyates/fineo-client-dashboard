@@ -11,6 +11,7 @@ export class BaCard {
   @Input() baCardClass:String;
   @Input() deletable:boolean = true;
   @Input() editable:boolean = true;
+  @Input() sortable:boolean = false;
 
   public deleteEvent = new EventEmitter();
   public editEvent = new EventEmitter();

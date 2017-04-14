@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../theme';
 import { Xaxis, Line, QueryChartConfig, LineQuery, LineConfig } from '../line';
+import { CardConfig } from '../components'
 
 @Component({
   selector: 'create-dashboard-item',
@@ -12,6 +13,7 @@ import { Xaxis, Line, QueryChartConfig, LineQuery, LineConfig } from '../line';
 })
 export class CreateComponent {
 
+  public card: CardConfig;
   private gauge: Object;
   private donut: Object;
   private line: Object;
@@ -22,6 +24,8 @@ export class CreateComponent {
     let pieColor = this._baConfig.get().colors.custom.dashboardPieChart;
     var layoutColors = this._baConfig.get().colors;
     var graphColor = this._baConfig.get().colors.custom.dashboardLineChart;
+
+    this.card = new CardConfig(false, false, false);
 
     this.gauge = {
       config: {
@@ -56,10 +60,10 @@ export class CreateComponent {
 
     this.line = {
       data: Line.DEMO_DATA,
-      config:  new LineConfig("Line Chart", "medium",[
-          new LineQuery("DEMO QUERY", "query1", colorHelper.hexToRgbA(graphColor, 0.3), new QueryChartConfig("0", "date", "value")),
-          new LineQuery("DEMO QUERY","query2", colorHelper.hexToRgbA(graphColor, 0.15), new QueryChartConfig("1", "date", "value")),
-        ],
+      config: new LineConfig("Line Chart", "medium", [
+        new LineQuery("DEMO QUERY", "query1", colorHelper.hexToRgbA(graphColor, 0.3), new QueryChartConfig("0", "date", "value")),
+        new LineQuery("DEMO QUERY", "query2", colorHelper.hexToRgbA(graphColor, 0.15), new QueryChartConfig("1", "date", "value")),
+      ],
         new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText, 'DD'), "smoothedLine");
     }
   }

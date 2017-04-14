@@ -6,7 +6,7 @@ import { Subject }  from 'rxjs/Subject';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
 import { GaugeConfig } from '../../../gauge';
-import { BaseItem } from '../baseItem/base.item.component';
+import { BaseCreateItem } from '../base.create.item.component';
 
 
 /*
@@ -17,7 +17,7 @@ import { BaseItem } from '../baseItem/base.item.component';
   styleUrls: ['./gauge.item.scss'],
   templateUrl: './gauge.item.html'
 })
-export class GaugeItem extends BaseItem{
+export class GaugeItem extends BaseCreateItem {
 
   private icons = ["face", "refresh", "person", "money"];//, "shopping-cart", "comments"]
 

@@ -3,10 +3,11 @@ import { CommonModule }  from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TooltipModule } from 'ng2-bootstrap';
+import {DndModule} from 'ng2-dnd';
 
 import { NgaModule } from '../../theme/nga.module';
 
-import { Dashboard } from './dashboard.component';
+import { Dashboard, DashboardDataService } from './dashboard.component';
 import { DashboardOutlet } from './dashboard.outlet.component';
 import { routing }       from './dashboard.routing';
 
@@ -15,7 +16,7 @@ import { PopularApp } from './popularApp';
 import { PieChart } from './pieChart';
 import { Gauge } from './gauge';
 import { Donut } from './donut'
-import { Line } from './line'
+import { Line, LineComponent } from './line'
 
 import { TrafficChart } from './trafficChart';
 import { UsersMap } from './usersMap';
@@ -42,6 +43,7 @@ import {CreateItem, GaugeItem, DonutItem, LineItem} from './createItem'
     ReactiveFormsModule,
     NgaModule,
     TooltipModule.forRoot(),
+    DndModule.forRoot(),
     routing
   ],
   declarations: [
@@ -54,6 +56,7 @@ import {CreateItem, GaugeItem, DonutItem, LineItem} from './createItem'
     Todo,
     Calendar,
     Dashboard,
+    DashboardDataService,
     DashboardOutlet,
     CreateComponent,
     // creating items for the dashboard

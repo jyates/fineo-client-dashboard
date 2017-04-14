@@ -10,8 +10,7 @@
     </div>
   </div>
   <div class="row">
-    <line-chart [data]="dataOut" [config]="config" [editable]="false" [deletable]="false">
-    </line-chart>
+    <dashboard-card [data]="data" [config]="config" [card]="card" [type]='line' [noRefresh]="true"></dashboard-card>
   </div>
   <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
     <div class="row">

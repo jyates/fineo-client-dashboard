@@ -1,8 +1,7 @@
 import { Component, ElementRef, Input, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Chart } from './donut.loader.ts';
-import { BaseComponent, ItemConfig } from './../baseComponent'
-import { colorHelper } from '../../../theme';
+import { BaseCardComponent, ItemConfig } from '../components'
 
 var nextDonutId = 0;
 
@@ -25,7 +24,7 @@ var nextDonutId = 0;
      ]
  * }
  */
-export class Donut extends BaseComponent<DonutConfig> {
+export class Donut extends BaseCardComponent<DonutConfig> {
 
   @Input()
   public id = `donut-${nextDonutId++}`;

@@ -1,10 +1,8 @@
-<div>
-  <ba-card 
-    baCardClass="medium-card"
-    [title]="config.title"
-    [ngClass]="getSize()"
-    [deletable]="deletable"
-    [editable]="editable">
-    <ba-am-chart baAmChartClass="dashboard-line-chart" [baAmChartConfiguration]="chartData" (onChartReady)="initChart($event)"></ba-am-chart>
-  </ba-card>
-</div>
+<line-chart-component
+  [data]="dataOut"
+  [config]="config"
+  [card]="card"
+  (deleteEvent)="handleDelete($event)"
+  (editEvent)="handleEdit($event)"
+>
+</line-chart-component>

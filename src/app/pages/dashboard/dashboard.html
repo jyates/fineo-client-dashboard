@@ -1,23 +1,30 @@
-<div class="row">
+<h4>Simple Drag-and-Drop</h4>
+<ul dnd-sortable-container [sortableData]="container">
+  <li *ngFor="let item of container; let i = index" dnd-sortable [sortableIndex]="i">
+    <span dnd-sortable-handle>=</span>&nbsp;
+    {{item}}
+  </li>
+</ul>
+
+<small-spinner
+    [visible]="loading">
+</small-spinner>
+<!-- <div class="row">
   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <pie-chart></pie-chart>
   </div>
 </div>
-
 <div class="row">
-  <ba-card class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-xs-12"
-                     title="Acquisition Channels" baCardClass="traffic-panel medium-card">
+  <ba-card dnd-draggable class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-xs-12" title="Acquisition Channels" baCardClass="traffic-panel medium-card">
+    traffic card
     <traffic-chart></traffic-chart>
   </ba-card>
-
-  <ba-card class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-xs-12"
-               title="Revenue" baCardClass="medium-card">
+  <ba-card class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-xs-12" title="Revenue" baCardClass="medium-card">
     <dline-chart></dline-chart>
   </ba-card>
 </div>
-
 <div class="row">
   <div class="col-sm-1" align="left">
     <button (click)="addDashboardElement()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
   </div>
-</div>
+</div> -->

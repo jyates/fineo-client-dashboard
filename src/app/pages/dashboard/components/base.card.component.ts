@@ -1,18 +1,16 @@
-import { Component, ViewEncapsulation, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
-
-@Component({
-  selector: "base-dashboard-component"
-})
-export class BaseComponent<T> implements AfterViewInit, OnChanges {
+import { ViewEncapsulation, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import {CardConfig} from './card.config'
+/**
+* Wrapper around a 'baCard' that outputs the edit and delete event
+*/
+export class BaseCardComponent<T> implements AfterViewInit, OnChanges {
 
   @Input()
   public data: Object = null;
   @Input()
   public config: T = null;
   @Input()
-  public editable: boolean = true;
-  @Input()
-  public deletable: boolean = true;
+  public card: CardConfig;
 
   private _init: boolean = false;
 
@@ -70,22 +68,4 @@ export class BaseComponent<T> implements AfterViewInit, OnChanges {
     })
     to[this.item_prefix + "-" + size] = enabled;
   }
-}
-
-export class ItemConfig {
-  public queries;
-  constructor(public title: string,
-    query, public size: string) {
-    // support single or multi-query components
-    console.log("Setting up config with query:", query);
-    if (typeof query == "string") {
-      this.queries = [new Query(query)]
-    } else {
-      this.queries = query;
-    }
-  }
-}
-
-export class Query {
-  constructor(public text, public name: string = "") { }
 }
