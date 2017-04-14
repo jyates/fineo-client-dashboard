@@ -1,22 +1,37 @@
 import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
-import { BaseComponent, ItemConfig } from './../baseComponent';
-
-var nextId = 0;
+import { BaseElemHandler } from '../components';
+import { GaugeConfig } from './gauge.ui.component';
 
 /**
  * Wrapper around a GaugeUI that translates the data into the presentation layer of the GaugeUI component
  */
- @Component({
+@Component({
   selector: 'gauge',
-  styles: [require('./gauge.scss')],
   template: require('./gauge.html'),
 })
-export class Gauge {
+export class Gauge extends BaseElemHandler<GaugeConfig> {
 
-  @Input()
-  public editable:boolean = true;
-  @Input()
-  public deletable:boolean = true;
-  @Input()
-  public sortable:boolean = true;
+  protected updateData(result): Object {
+    console.log("got a data event: ", result);
+    let row = result ? result[0] : null;
+    if (!row) {
+      return null;
+    }
+
+    console.log("updating gauge")
+    // get the name of the value column
+    let column = this.config.value;
+    let out = {};
+    if (column) {
+      let value = row[column] ? row[column] : "0";
+      out['stats'] = "" + value;
+    }
+    // and the name of the percent column
+    let percent = this.config.percent;
+    if (percent) {
+      let pvalue = row[percent] ? row[percent] : 0;
+      out['percent'] = pvalue;
+    }
+    return out;
+  }
 }

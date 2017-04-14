@@ -1,18 +1,19 @@
 import { AfterViewInit, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 
-import { CardConfig } from '../../components';
+import { CardConfig, ItemConfig } from '../../components';
 
 /**
 * Base class for items that need to be saved
 */
-export class BaseCreateItem {
+export class BaseCreateItem<T extends ItemConfig>{
 
   // create/edit items are not editable/deletable via the usual mechanisms
   public card: CardConfig = new CardConfig(false, false, false);
 
   // used in the template, so exposed here
   public form: FormGroup;
+  public config:T;
 
   // from when we trigger a manual refresh
   @Input()

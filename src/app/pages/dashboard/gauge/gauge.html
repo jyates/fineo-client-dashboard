@@ -1,7 +1,7 @@
  <gauge
-      [data]="dataOut"
-      [config]="config"
-      [editable]="editable"
-      [deletable]="editable"
-      [sortable]="editable">
+  [data]="dataOut"
+  [config]="config"
+  [card]="card"
+  (deleteEvent)="handleDelete($event)"
+  (editEvent)="handleEdit($event)">
 </gauge>

@@ -1,5 +1,6 @@
 import { Component, ViewChild, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseDataItem, ItemConfig, Query } from '../components';
+import { LineConfig } from './line.chart.component'
 
 var nextLineId = 0;
 
@@ -10,10 +11,9 @@ var nextLineId = 0;
 */
 @Component({
   selector: 'line-chart',
-  styleUrls: ['./line.scss'],
   templateUrl: './line.html'
 })
-export class LineComponent extends BaseDataItem {
+export class LineComponent extends BaseDataItem<LineConfig> {
 
   protected updateData(results): Object {
     console.log("got a data event: ", results);

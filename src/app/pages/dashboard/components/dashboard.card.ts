@@ -7,7 +7,6 @@ import { ItemConfig, Query, CardConfig } from './index'
 */
 @Component({
   selector: 'dashboard-card',
-  styleUrls: ['./dashboard.card.scss'],
   templateUrl: './dashboard.card.html'
 })
 export class DashboardCard implements OnInit {

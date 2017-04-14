@@ -2,11 +2,11 @@
   <ba-card
     class="pie-chart-item-container"
     [ngClass]="getChartSize()"
-    [editable]="editable"
-    [deletable]="deletable"
+    [editable]="card.editable"
+    [deletable]="card/deletable"
+    [sortable]="card.sortable"
     (deleteEvent)="handleDelete($event)"
-    (editEvent)="handleEdit($event)"
-    [sortable]="sortable">
+    (editEvent)="handleEdit($event)">
     <div class="pie-chart-item">
       <div class="chart" [attr.data-rel]="config.color" [attr.data-percent]="data.percent">
         <span class="percent"></span>

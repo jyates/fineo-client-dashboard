@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
 import { Xaxis, Line, QueryChartConfig, LineQuery, LineConfig } from '../../../line';
-import { BaseItem } from '../baseItem/base.item.component';
+import { BaseCreateItem } from '../base.create.item';
 
 
 /*
@@ -17,7 +17,7 @@ import { BaseItem } from '../baseItem/base.item.component';
   styleUrls: ['./line.item.scss'],
   templateUrl: './line.item.html'
 })
-export class LineItem extends BaseItem {
+export class LineItem extends BaseCreateItem<LineConfig> {
 
   private static GRAPH_TRANSPARENCTY_PERCENT = [0.30, 0.15];
   private static EXPANDED_CARD_SIZE = 270;

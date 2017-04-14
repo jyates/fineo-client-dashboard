@@ -14,9 +14,9 @@ import { routing } from './dashboard.routing';
 import { Gauge } from './gauge';
 import { Donut } from './donut'
 import { Line, LineComponent } from './line'
-import { DashboardDataService } from './dashboard.data.service'
+// import { DashboardDataService } from './dashboard.data.service'
 
-import {DashboardCard} from './components'
+import { DashboardCard } from './components'
 
 import { CreateComponent } from './create'
 import { CreateItem, GaugeItem, DonutItem, LineItem } from './createItem'
@@ -34,7 +34,7 @@ import { CreateItem, GaugeItem, DonutItem, LineItem } from './createItem'
     declarations: [
         Dashboard,
         DashboardCard,
-        DashboardDataService,
+        // DashboardDataService,
         DashboardOutlet,
         CreateComponent,
         // creating items for the dashboard

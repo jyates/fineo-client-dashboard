@@ -8,7 +8,7 @@ import { ItemConfig } from './item.config'
 /*
  * Base wrapper for managing the data to and from a dashboard item. Takes in data from 'dataIn' and exposes it as 'dataOut'.
  */
-export class BaseDataItem<T extends ItemConfig> implements OnChanges, AfterViewInit {
+export class BaseElemHandler<T extends ItemConfig> implements OnChanges {
 
   @Input()
   public config: T;

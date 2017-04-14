@@ -7,7 +7,7 @@ import {
   DataReadService
 } from '../../../services/data.read.service';
 
-import { ItemConfig } from '../baseComponent';
+import { ItemConfig } from '../components';
 
 @Component({
   selector: 'create-dashboard-item-instance',

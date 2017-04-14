@@ -6,7 +6,7 @@ import { Subject }  from 'rxjs/Subject';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
 import { GaugeConfig } from '../../../gauge';
-import { BaseCreateItem } from '../base.create.item.component';
+import { BaseCreateItem } from '../base.create.item';
 
 
 /*
@@ -17,7 +17,7 @@ import { BaseCreateItem } from '../base.create.item.component';
   styleUrls: ['./gauge.item.scss'],
   templateUrl: './gauge.item.html'
 })
-export class GaugeItem extends BaseCreateItem {
+export class GaugeItem extends BaseCreateItem<GaugeConfig> {
 
   private icons = ["face", "refresh", "person", "money"];//, "shopping-cart", "comments"]
 
@@ -44,28 +44,7 @@ export class GaugeItem extends BaseCreateItem {
     this.listenForChanges(this.config, [ "stats", "percent"]);
   }
 
-  protected updateData(result):Object{
-    console.log("got a data event: ", result);
-    let row = result? result[0]: null;
-    if(!row){
-      return null;
-    }
 
-    console.log("updating gauge")
-    let config = this.getConfig();
-    let column = config.value;
-    let out = {};
-    if(column){
-      let value = row[column] ? row[column] : "0";
-      out['stats'] = ""+value;
-    }
-    let percent = config.percent;
-    if(percent){
-      let pvalue = row[percent] ? row[percent] : 0;
-      out['percent'] = pvalue;
-    }
-    return out;
-  }
 
   private selectIcon(name:string){
     this.config.icon = name;

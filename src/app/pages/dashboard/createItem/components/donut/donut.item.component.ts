@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
 import { DonutConfig } from '../../../donut';
-import { BaseCreateItem } from '../base.create.item.component';
+import { BaseCreateItem } from '../base.create.item';
 
 
 /*
@@ -17,7 +17,7 @@ import { BaseCreateItem } from '../base.create.item.component';
   styleUrls: ['./donut.item.scss'],
   templateUrl: './donut.item.html'
 })
-export class DonutItem extends BaseCreateItem {
+export class DonutItem extends BaseCreateItem<DonutConfig> {
 
   private colorOptions = [];
 
