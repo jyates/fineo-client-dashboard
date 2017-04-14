@@ -11,27 +11,9 @@ import { Dashboard, DashboardDataService } from './dashboard.component';
 import { DashboardOutlet } from './dashboard.outlet.component';
 import { routing }       from './dashboard.routing';
 
-import { PopularApp } from './popularApp';
-
-import { PieChart } from './pieChart';
 import { Gauge } from './gauge';
 import { Donut } from './donut'
 import { Line, LineComponent } from './line'
-
-import { TrafficChart } from './trafficChart';
-import { UsersMap } from './usersMap';
-import { LineChart } from './lineChart';
-import { Feed } from './feed';
-import { Todo } from './todo';
-import { Calendar } from './calendar';
-
-import { CalendarService } from './calendar/calendar.service';
-import { FeedService } from './feed/feed.service';
-import { LineChartService } from './lineChart/lineChart.service';
-import { PieChartService } from './pieChart/pieChart.service';
-import { TodoService } from './todo/todo.service';
-import { TrafficChartService } from './trafficChart/trafficChart.service';
-import { UsersMapService } from './usersMap/usersMap.service';
 
 import {CreateComponent} from './create'
 import {CreateItem, GaugeItem, DonutItem, LineItem} from './createItem'
@@ -47,14 +29,6 @@ import {CreateItem, GaugeItem, DonutItem, LineItem} from './createItem'
     routing
   ],
   declarations: [
-    PopularApp,
-    PieChart,
-    TrafficChart,
-    UsersMap,
-    LineChart,
-    Feed,
-    Todo,
-    Calendar,
     Dashboard,
     DashboardDataService,
     DashboardOutlet,
@@ -69,16 +43,10 @@ import {CreateItem, GaugeItem, DonutItem, LineItem} from './createItem'
     // custom components from the standard ng2-admin dashaboard
     Gauge,
     Donut,
-    Line
+    Line,
+    LineComponent
   ],
   providers: [
-    CalendarService,
-    FeedService,
-    LineChartService,
-    PieChartService,
-    TodoService,
-    TrafficChartService,
-    UsersMapService
   ]
 })
 export class DashboardModule {}
