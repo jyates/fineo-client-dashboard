@@ -1,2 +1,2 @@
 export * from './gauge.component';
-export * from './gauge.ui.component'
+export * from './gauge.ui.component';
