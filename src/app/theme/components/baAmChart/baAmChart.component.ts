@@ -37,10 +37,17 @@ export class BaAmChart {
   }
 
   ngAfterViewInit() {
+    debugger;
+    console.log("Creating chart with config:", this.baAmChartConfiguration);
     this.chart = AmCharts.makeChart(this._selector.nativeElement, this.baAmChartConfiguration);
     this.onChartReady.emit(this.chart);
   }
 
+
+  public resetChart(config){
+    // this.chart = AmCharts.makeChart(this._selector.nativeElement, config);
+    // this.onChartReady.emit(this.chart);
+  }
 
   public updateGraphs(graphs: Array<any>) {
     if (!this.chart) {
@@ -65,6 +72,7 @@ export class BaAmChart {
   }
 
   public updateData(dataProvider) {
+    return;
     this.chart.dataProvider = dataProvider;
     this.chart.validateData();
   }

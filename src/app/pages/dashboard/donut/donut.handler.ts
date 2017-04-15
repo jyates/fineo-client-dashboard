@@ -20,7 +20,6 @@ export class DonutHandler extends BaseElemHandler<DonutConfig> {
   }
 
   protected updateData(row): DonutData {
-    debugger;
     if (!row) {
       console.log("No data row. Skipping!");
       return new DonutData();

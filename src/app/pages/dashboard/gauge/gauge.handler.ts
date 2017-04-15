@@ -17,13 +17,11 @@ export class GaugeHandler extends BaseElemHandler<GaugeConfig> {
   }]
 
   protected updateData(result): Object {
-    console.log("got a data event: ", result);
     if (!result) {
       return null;
     }
     let row = this.getOneRow(result);
 
-    console.log("updating gauge data")
     // get the name of the value column
     let column = this.config.value;
     let out = {};

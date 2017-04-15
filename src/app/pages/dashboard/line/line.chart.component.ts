@@ -20,6 +20,8 @@ export class Line extends BaseCardComponent<LineConfig> {
 
   public chartData: ChartData = new ChartData(layoutPaths.images.amChart);
   private chartReady: boolean = false;
+  private pendingData: boolean = false;
+
   constructor() {
     super("line-chart-container");
   }
@@ -35,6 +37,7 @@ export class Line extends BaseCardComponent<LineConfig> {
   // callback when chart is ready 
   initChart(chart: any) {
     console.log("Chart is initialized");
+    this.chartReady = true;
     // TODO replace the initial zoom
     // let zoomChart = () => {
     //   chart.zoomToDates(new Date(2013, 3), new Date(2014, 0));
@@ -46,17 +49,24 @@ export class Line extends BaseCardComponent<LineConfig> {
     // if (chart.zoomChart) {
     //   chart.zoomChart();
     // }
+    debugger;
     chart.addListener('rendered', () => {
       console.log("Chart is done rendering!");
+      if (this.pendingData) {
+        this.pendingData = false;
+        console.log("Updating chart with pending data");
+        this.chartElem.updateData(this.chartData.dataProvider);
+      }
     });
-    this.chartReady = true;
   }
 
   protected updateData() {
-    console.log("Updating data for line chart")
+    console.log("Updating data for line chart, data:", this.data);
     this.chartData.data(this.data);
     if (this.chartReady) {
       this.chartElem.updateData(this.chartData.dataProvider);
+    } else {
+      this.pendingData = true;
     }
   }
 
@@ -65,11 +75,14 @@ export class Line extends BaseCardComponent<LineConfig> {
   }
 
   protected updateConfig() {
+    console.log("Updating config");
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;
     this.chartData.graphType = this.config.type;
     this.chartData.updateGraphQueries(this.config.queries);
-    this.chartElem.updateGraphs(this.chartData.graphs);
+    // this.chartElem.updateGraphs(this.chartData.graphs);
+    this.chartElem.resetChart(this.chartData);
+    console.log("-- DONE Updating config --");
   }
 }
 
@@ -193,7 +206,7 @@ class ChartData {
   // Update the data provider with new data
   // see the DEMO_DATA for the format of the data, but basically, {queryId: [{x:val, y:val}]}
   public data(data: Object): void {
-    console.log("Setting data internal");
+    console.log("Setting data internal: ", data);
     this.dataInternal = data;
     // didn't get any data, be done early
     if (!data) {
@@ -257,12 +270,13 @@ class ChartData {
     this.graphs = queries.map(query => {
       return new GraphInfo(query.chart.queryId, query.color, query.chart.outY, this.graphType);
     });
+    console.log("Updating data for current queries from current internal data:", this.dataInternal);
     this.data(this.dataInternal);
   }
 }
 
 class UserCursor {
-  public categoryBalloonDateFormat ='DD MMMM YYYY JJ NN SS QQ';
+  public categoryBalloonDateFormat = 'DD MMMM YYYY JJ NN SS QQ';
   public categoryBalloonColor = '#4285F4';
   public categoryBalloonAlpha = 0.7;
   public cursorAlpha = 0;
