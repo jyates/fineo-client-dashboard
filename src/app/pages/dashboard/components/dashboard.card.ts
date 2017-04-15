@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { DashboardDataService } from '../dashboard.component'
+// import { DashboardDataService } from '../dashboard.component'
 import { ItemConfig, Query, CardConfig } from './index'
+import { DataReadService } from '../../../services'
 
 /**
 * Display the dashboard item type and manage getting refreshes of the data
@@ -20,13 +21,13 @@ export class DashboardCard implements OnInit {
   public type: string;
 
   @Input()
-  public card:CardConfig = new CardConfig();
+  public card: CardConfig = new CardConfig();
   @Input()
   public noRefresh: boolean = false;
   @Input()
   public data: any;
 
-  constructor(private dataService: DashboardDataService) {
+  constructor(private dataService: DataReadService) {
   }
 
   ngOnInit() {

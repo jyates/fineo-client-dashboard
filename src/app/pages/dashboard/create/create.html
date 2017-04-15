@@ -8,7 +8,7 @@
         <br>
         <span>A simple gauge for a number. Can inlude a percent calculation and icon</span>
       </div>
-      <dashboard-card [data]="gauge.data" [config]="gauge.config" [card]="card" [type]='gauge'></dashboard-card>
+      <gauge [data]="gauge.data" [config]="gauge.config" [card]="card"></gauge>
     </div>
   </div>
   <hr>
@@ -19,7 +19,7 @@
       <br>
       <span>Optional summation field. Has specific call outs for each sub-group</span>
     </div>
-    <dashboard-card [data]="donut.data" [config]="donut.config" [card]="card" [type]='donut'></dashboard-card>
+    <donut-chart [data]="donut.data" [config]="donut.config" [card]="card"></donut-chart>
   </div>
   <hr>
   <div class="row elem" (click)="select('line')">
@@ -28,6 +28,6 @@
       <br>
       <span>Line chart to track multipler events over a time range  .</span>
     </div>
-    <dashboard-card [data]="line.data" [config]="line.config" [card]="card" [type]='line'></dashboard-card>
+    <line-chart [data]="line.data" [config]="line.config" [card]="card"></line-chart>
   </div>
 </div>

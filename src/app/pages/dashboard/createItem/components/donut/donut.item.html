@@ -11,11 +11,9 @@
   </div>
   <div class="row">
     <donut-chart 
-      [data]="dataOut"
-      [colorOptions]="colorOptions"
+      [data]="data"
       [config]="config"
-      [editable]="false" 
-      [deletable]="false">
+      [card]="card">
     </donut-chart>
   </div>
    <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">

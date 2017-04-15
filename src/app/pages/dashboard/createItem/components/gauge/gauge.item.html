@@ -11,10 +11,9 @@
   </div>
   <div class="row">
     <gauge
-      [data]="dataOut"
+      [data]="data"
       [config]="config"
-      [editable]="false"
-      [deletable]="false">
+      [card]="card">
     </gauge>
   </div>
   <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">

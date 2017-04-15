@@ -1,37 +1,79 @@
 import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
-import { BaseElemHandler } from '../components';
-import { GaugeConfig } from './gauge.ui.component';
+import './gauge.loader.ts';
 
-/**
- * Wrapper around a GaugeUI that translates the data into the presentation layer of the GaugeUI component
- */
+import { BaseCardComponent, ItemConfig } from '../components';
+
+var nextId = 0;
+
 @Component({
-  selector: 'gauge',
+  selector: 'gauge-chart',
+  encapsulation: ViewEncapsulation.None,
+  styles: [require('./gauge.scss')],
   template: require('./gauge.html'),
 })
-export class Gauge extends BaseElemHandler<GaugeConfig> {
+export class Gauge extends BaseCardComponent<GaugeConfig> {
+  @Input()
+  id = `gauge-${nextId++}`;
 
-  protected updateData(result): Object {
-    console.log("got a data event: ", result);
-    let row = result ? result[0] : null;
-    if (!row) {
-      return null;
-    }
+  constructor(){
+    super("pie-chart-container");
+  }
 
-    console.log("updating gauge")
-    // get the name of the value column
-    let column = this.config.value;
-    let out = {};
-    if (column) {
-      let value = row[column] ? row[column] : "0";
-      out['stats'] = "" + value;
-    }
-    // and the name of the percent column
-    let percent = this.config.percent;
-    if (percent) {
-      let pvalue = row[percent] ? row[percent] : 0;
-      out['percent'] = pvalue;
-    }
-    return out;
+  private getChartSize() {
+    let elems = {};
+    this.setSize("small", 3, elems);
+    this.setSize("medium", 4, elems);
+    this.setSize("large", 6, elems);
+    return elems;
+  }
+
+  public init() {
+    let select = this.select();
+    jQuery(select).each(function() {
+      let chart = jQuery(this);
+      chart.easyPieChart({
+        easing: 'easeOutBounce',
+        onStep: function(from, to, percent) {
+          jQuery(this.el).find('.percent').text(Math.round(percent));
+        },
+        barColor: jQuery(this).attr('data-rel'),
+        trackColor: 'rgba(0,0,0,0)',
+        size: 84,
+        scaleLength: 0,
+        animation: 2000,
+        lineWidth: 9,
+        lineCap: 'round',
+      });
+    });
+  }
+
+  protected updateData(){
+    this.updateChart(this.data['percent'])
+  }
+
+  private updateChart(percent: number) {
+    let select = this.select();
+    console.log("Updating chart with selection:", select, "-", percent);
+    jQuery(select).each(function(index, chart) {
+      console.log("Updating chart:", index, "=>", chart)
+      jQuery(chart).data('easyPieChart').update(percent);
+    });
+  }
+
+  private select():string{
+    return "#" + this.id + " .chart";
+  }
+}
+
+export class GaugeConfig extends ItemConfig {
+
+  constructor(title:string,
+              query:string,
+              size:string,
+              public icon:string,
+              public value:string,
+              public percent:string,
+              public color: string = "#ffffff"){
+    super(title, query, size);
   }
 }

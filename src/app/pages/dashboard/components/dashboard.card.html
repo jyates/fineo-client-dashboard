@@ -1,12 +1,18 @@
 <div class="dashboard-card-container">
     <gauge *ngIf="(type == 'gauge')"
-      [data]="data" [config]="config" [card]="card"
+      [data]="data"
+      [config]="config"
+      [card]="card"
       (deleteEvent)="handleDelete($event)"(editEvent)="handleEdit($event)"
       ></gauge>
     <donut-chart *ngIf="(type == 'donut')"
-      [data]="data" [config]="config" [card]="card"
+      [data]="data"
+      [config]="config"
+      [card]="card"
       (deleteEvent)="handleDelete($event)"(editEvent)="handleEdit($event)"></donut-chart>
     <line-chart *ngIf="(type == 'line')"
-    [data]="data" [config]="config" [card]="card"
+    [data]="data"
+    [config]="config"
+    [card]="card"
     (deleteEvent)="handleDelete($event)"(editEvent)="handleEdit($event)"></line-chart>
 </div>

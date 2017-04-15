@@ -141,21 +141,6 @@ export class LineItem extends BaseCreateItem<LineConfig> {
     return <FormGroup[]>this.getQueries().controls;
   }
 
-  protected updateData(results): Object {
-    console.log("got a data event: ", results);
-    if (!results) {
-      return {};
-    }
-    // convert the results into 'nice' format for the component
-    let out = {}
-    for (var i = 0; i < results.length; i++) {
-      let queryResult = results[i];
-      out[i] = queryResult;
-    }
-    console.log("Converted to:", out);
-    return out;
-  }
-
   protected getConfig(): LineConfig {
     // convert the queries into line queries
     let queries = this.getQueriesArray();

@@ -53,14 +53,6 @@ export class DonutItem extends BaseCreateItem<DonutConfig> {
     this.listenForChanges(this.config);
   }
 
-  protected updateData(result): Object {
-    console.log("got a data event: ", result);
-    if (!result) {
-      return null;
-    }
-    return result;
-  }
-
   protected getConfig(): DonutConfig {
     return new DonutConfig(this.form.controls['title'].value,
       this.form.controls['query'].value,

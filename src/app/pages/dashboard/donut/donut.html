@@ -14,7 +14,7 @@
         <div class="canvas-holder" [attr.id]="id">
           <canvas class="chart-area" width="300px" height="300px"></canvas>
           <div class="traffic-text" *ngIf="config.centerEnabled">
-            {{donutData.total}}
+            {{data.total}}
             <span>{{config.centerLabel}}</span>
           </div>
         </div>
@@ -22,7 +22,7 @@
       </div>
       <div class="channels-info">
         <div>
-          <div class="channels-info-item" *ngFor="let item of donutData.items">
+          <div class="channels-info-item" *ngFor="let item of data.items">
             <div class="legend-color" [ngStyle]="{'background-color': item.color }"></div>
             <p>{{ item.label }}<span class="channel-number">{{ itemDisplay(item) }}</span></p>
             <div class="progress progress-sm channel-progress">

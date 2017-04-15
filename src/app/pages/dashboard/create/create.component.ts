@@ -2,7 +2,9 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../theme';
-import { Xaxis, Line, QueryChartConfig, LineQuery, LineConfig } from '../line';
+import { LineHandler, Xaxis, QueryChartConfig, LineQuery, LineConfig } from '../line';
+import { GaugeHandler } from '../gauge'
+import { DonutHandler } from '../donut'
 import { CardConfig } from '../components'
 
 @Component({
@@ -25,41 +27,34 @@ export class CreateComponent {
     var layoutColors = this._baConfig.get().colors;
     var graphColor = this._baConfig.get().colors.custom.dashboardLineChart;
 
+    // all the display cards are _not_ editable, deletable or sortable
     this.card = new CardConfig(false, false, false);
 
+    // setup the basic configurations for each graph that we support
     this.gauge = {
       config: {
         color: pieColor,
         title: 'Gauge',
         icon: 'person',
         size: 'large',
+        value: 'stats',
+        percent: 'percent'
       },
-      data: {
-        stats: '57,820',
-        percent: 75
-      }
+      data: GaugeHandler.DEMO_DATA
     };
-
     this.donut = {
       config: {
         title: "Donut Chart",
         size: 'large',
         valueType: 'percent',
         centerEnabled: true,
-        centerLabel: 'Total Value'
+        centerLabel: 'Total Value',
+        colorOptions: CreateComponent.donutColors(this._baConfig)
       },
-      data: {
-        column1: 10,
-        column2: 20,
-        column3: 75,
-        column4: 35,
-        column5: 122
-      },
-      colors: CreateComponent.donutColors(this._baConfig)
+      data: DonutHandler.DEMO_DATA
     }
-
     this.line = {
-      data: Line.DEMO_DATA,
+      data: LineHandler.DEMO_DATA,
       config: new LineConfig("Line Chart", "medium", [
         new LineQuery("DEMO QUERY", "query1", colorHelper.hexToRgbA(graphColor, 0.3), new QueryChartConfig("0", "date", "value")),
         new LineQuery("DEMO QUERY", "query2", colorHelper.hexToRgbA(graphColor, 0.15), new QueryChartConfig("1", "date", "value")),

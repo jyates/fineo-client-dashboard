@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 
 import {
   DataReadService
-} from '../../../services/data.read.service';
+} from '../../../services';
 
 import { ItemConfig } from '../components';
 
@@ -16,15 +16,16 @@ import { ItemConfig } from '../components';
 })
 export class CreateItem implements OnInit {
 
-  // private handleRefresh:EventEmitter<ItemConfig>;
+  private static DASHBOARD = "/pages/dashboard";
+
   private type: string;
   private saving: boolean = false;
   private refreshing: boolean = false;
   public data: Object = null;
 
   constructor(private route: ActivatedRoute,
-    private router: Router) {
-    //private service: DataReadService) {
+    private router: Router,
+    private service: DataReadService) {
   }
 
   ngOnInit() {
@@ -44,6 +45,7 @@ export class CreateItem implements OnInit {
       }, 2000)
     }).then(success => {
       this.saving = false;
+      this.router.navigate([CreateItem.DASHBOARD]);
     }).catch(err => {
       this.saving = false;
       this.alertUser("Failed to save " + this.type + "[" + config.title + "]!", err);

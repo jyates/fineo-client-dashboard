@@ -18,18 +18,31 @@ export class BaseElemHandler<T extends ItemConfig> implements OnChanges {
 
   // data from the underlying query
   @Input()
-  public dataIn: Object = null;
+  public data: Object = null;
 
   // translation from the input data and passed along to the viz component
   public dataOut: Object = null;
 
   ngOnChanges(changes: SimpleChanges) {
     // only run when property "data" changed
-    if (changes['dataIn']) {
-      let result = this.updateData(this.dataIn);
+    if (changes['data']) {
+      let result = this.updateData(this.data);
+      console.log("Using data from handler:", result);
       // reset the data to trigger a change event on the child
       this.dataOut = Object.create(result);
     }
+  }
+
+  protected getOneRow(result: any): Object {
+    // just get the first element, if there are multiple rows
+    if (result instanceof Array || Array.isArray(result)) {
+      if (result.length == 1) {
+        return result[0];
+      } else {
+        throw new TypeError("This only support a single row of data! Got result:\n" + result);
+      }
+    }
+    return result;
   }
 
   protected updateData(result): Object { return null; }

@@ -44,8 +44,6 @@ export class GaugeItem extends BaseCreateItem<GaugeConfig> {
     this.listenForChanges(this.config, [ "stats", "percent"]);
   }
 
-
-
   private selectIcon(name:string){
     this.config.icon = name;
     var val = name

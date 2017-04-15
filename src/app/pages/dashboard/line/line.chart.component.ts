@@ -13,67 +13,6 @@ var nextLineId = 0;
 })
 export class Line extends BaseCardComponent<LineConfig> {
 
-  public static DEMO_DATA = {
-    "0": [
-      { date: new Date(2012, 11, 1, 1, 1, 1, 1).getTime(), value: 0 },
-      { date: new Date(2013, 0, 1, 1, 1, 1, 1).getTime(), value: 15000 },
-      { date: new Date(2013, 1, 1, 1, 1, 1, 1).getTime(), value: 30000 },
-      { date: new Date(2013, 2).getTime(), value: 25000 },
-      { date: new Date(2013, 3).getTime(), value: 21000 },
-      { date: new Date(2013, 4).getTime(), value: 24000 },
-      { date: new Date(2013, 5).getTime(), value: 31000 },
-      { date: new Date(2013, 6).getTime(), value: 40000 },
-      { date: new Date(2013, 7).getTime(), value: 37000 },
-      { date: new Date(2013, 8).getTime(), value: 18000 },
-      { date: new Date(2013, 9).getTime(), value: 5000 },
-      { date: new Date(2013, 10).getTime(), value: 40000 },
-      { date: new Date(2013, 11).getTime(), value: 20000 },
-      { date: new Date(2014, 0).getTime(), value: 5000 },
-      { date: new Date(2014, 1).getTime(), value: 3000 },
-      { date: new Date(2014, 2).getTime(), value: 1800 },
-      { date: new Date(2014, 3).getTime(), value: 10400 },
-      { date: new Date(2014, 4).getTime(), value: 25500 },
-      { date: new Date(2014, 5).getTime(), value: 2100 },
-      { date: new Date(2014, 6).getTime(), value: 6500 },
-      { date: new Date(2014, 7).getTime(), value: 1100 },
-      { date: new Date(2014, 8).getTime(), value: 17200 },
-      { date: new Date(2014, 9).getTime(), value: 26900 },
-      { date: new Date(2014, 10).getTime(), value: 14100 },
-      { date: new Date(2014, 11).getTime(), value: 35300 },
-      { date: new Date(2015, 0).getTime(), value: 54800 },
-      { date: new Date(2015, 1).getTime(), value: 49800 }
-    ],
-    "1": [
-      { date: new Date(2012, 11, 1, 1, 1, 1, 1).getTime(), value: 0 },
-      { date: new Date(2013, 0, 1, 1, 1, 1, 1).getTime(), value: 19000 },
-      { date: new Date(2013, 1, 1, 1, 1, 1, 1).getTime(), value: 20000 },
-      { date: new Date(2013, 2).getTime(), value: 22000 },
-      { date: new Date(2013, 3).getTime(), value: 25000 },
-      { date: new Date(2013, 4).getTime(), value: 29000 },
-      { date: new Date(2013, 5).getTime(), value: 26000 },
-      { date: new Date(2013, 6).getTime(), value: 25000 },
-      { date: new Date(2013, 7).getTime(), value: 20000 },
-      { date: new Date(2013, 8).getTime(), value: 22000 },
-      { date: new Date(2013, 9).getTime(), value: 26000 },
-      { date: new Date(2013, 10).getTime(), value: 30000 },
-      { date: new Date(2013, 11).getTime(), value: 25000 },
-      { date: new Date(2014, 0).getTime(), value: 13000 },
-      { date: new Date(2014, 1).getTime(), value: 13000 },
-      { date: new Date(2014, 2).getTime(), value: 13000 },
-      { date: new Date(2014, 3).getTime(), value: 13000 },
-      { date: new Date(2014, 4).getTime(), value: 13000 },
-      { date: new Date(2014, 5).getTime(), value: 13000 },
-      { date: new Date(2014, 6).getTime(), value: 13000 },
-      { date: new Date(2014, 7).getTime(), value: 13000 },
-      { date: new Date(2014, 8).getTime(), value: 13000 },
-      { date: new Date(2014, 9).getTime(), value: 13000 },
-      { date: new Date(2014, 10).getTime(), value: 13000 },
-      { date: new Date(2014, 11).getTime(), value: 13000 },
-      { date: new Date(2015, 0).getTime(), value: 13000 },
-      { date: new Date(2015, 1).getTime(), value: 13000 }
-    ]
-  };
-
   @Input()
   public id = `line-${nextLineId++}`;
 
@@ -166,7 +105,7 @@ export class QueryChartConfig {
     let ret = {};
     console.log("Converting rows:", rows);
     rows.forEach(kv => {
-      console.log("Converting row:", kv);
+      // console.log("Converting row:", kv);
       let x = kv[this.xfield];
       if (!x) {
         console.log("Row is missing value for x-coordinate:", this.xfield);
@@ -193,7 +132,7 @@ export class QueryChartConfig {
 
       let self = this;
       let xfield = targetX ? targetX : self.xfield;
-      console.log("Got fields. x:", xfield, "y:", yfield);
+      // console.log("Got fields. x:", xfield, "y:", yfield);
       let value = kv[yfield];
       let val = {};
       val[self.outY] = value;
