@@ -5,7 +5,7 @@ import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormCon
 import { Subject } from 'rxjs/Subject';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
-import { Xaxis, Line, QueryChartConfig, LineQuery, LineConfig } from '../../../line';
+import { Xaxis, LineHandler, QueryChartConfig, LineQuery, LineConfig } from '../../../line';
 import { BaseCreateItem } from '../base.create.item';
 
 
@@ -26,7 +26,7 @@ export class LineItem extends BaseCreateItem<LineConfig> {
   private time_tooltip: string = "e.g. 'MM DD'. If empty, rounds to the nearest second";
   private y_tooltip: string = "Name of the yaxis field, if there are more than two columns (one being timestamp) in the result.";
 
-  @ViewChild(Line) public chart: Line;
+  @ViewChild(LineHandler) public chart: LineHandler;
 
   private colorIndex = 0;
   private graphColor;
@@ -59,13 +59,17 @@ export class LineItem extends BaseCreateItem<LineConfig> {
       'resolution': [this.config.xAxis.minPeriod, []]
       'queries': this.fb.array([]),
     });
-    this.listenForChanges(this.config, ["queries", "resolution"], {}, {"type": this.resetConfig.bind(this)});
+    this.listenForChanges(this.config, ["queries", "resolution"], {}, {
+      // just generically update the configuration
+      "type": this.resetConfig.bind(this), // bind ensures that we use 'this' as the context in the method
+      "resolution": this.resetConfig.bind(this)}
+    });
     this.addQueries(this.getQueries());
   }
 
   private resetConfig(){
     console.log("re-setting config to force line object to respond")
-    this.chart.updateConfigExternal();
+    this.chart.config = this.getConfig();
   }
 
   private xAxis(resolution = 'mm'): Xaxis {

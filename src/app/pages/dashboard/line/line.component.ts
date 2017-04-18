@@ -77,15 +77,7 @@ export class Line extends BaseCardComponent<LineConfig> {
   protected updateData() {
     console.log("Updating data for line chart, data:", this.data);
     this.chartData.data(this.data);
-    if (this.chartReady) {
-      this.chartElem.updateData(this.chartData.dataProvider);
-    } else {
-      this.pendingData = true;
-    }
-  }
-
-  public updateConfigExternal() {
-    this.updateConfig();
+    this.updateChartData();
   }
 
   protected updateConfig() {
@@ -102,9 +94,18 @@ export class Line extends BaseCardComponent<LineConfig> {
     // make the updates to the graph
     this.chartElem.updateXaxis(this.chartData.categoryAxis);
     this.chartElem.updateGraphs(this.chartData.graphs);
-    this.chartElem.updateData(this.chartData.dataProvider);
-    // this.chartElem.resetChart(this.chartData);
+    this.updateChartData();
     console.log("-- DONE Updating config --");
+  }
+
+  private updateChartData() {
+    if(this.chartData.dataProvider && this.chartData.dataProvider.length > 0) {
+      if (this.chartReady) {
+          this.chartElem.updateData(this.chartData.dataProvider);
+      } else {
+        this.pendingData = true;
+      }
+    }
   }
 }
 
