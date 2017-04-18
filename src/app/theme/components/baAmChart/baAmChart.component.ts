@@ -37,16 +37,20 @@ export class BaAmChart {
   }
 
   ngAfterViewInit() {
-    debugger;
     console.log("Creating chart with config:", this.baAmChartConfiguration);
     this.chart = AmCharts.makeChart(this._selector.nativeElement, this.baAmChartConfiguration);
     this.onChartReady.emit(this.chart);
   }
 
+  public resetChart(config:Object){
+    this.baAmChartConfiguration = config;
+    this.chart = AmCharts.makeChart(this._selector.nativeElement, config);
+    this.onChartReady.emit(this.chart);
+  }
 
-  public resetChart(config){
-    // this.chart = AmCharts.makeChart(this._selector.nativeElement, config);
-    // this.onChartReady.emit(this.chart);
+  public updateXaxis(axis:Object){
+    debugger;
+    this.chart.categoryAxis = axis;
   }
 
   public updateGraphs(graphs: Array<any>) {
@@ -58,8 +62,10 @@ export class BaAmChart {
       var graph = graphs[i];
       var current = this.chart.graphs[i];
       if (!current) {
-        console.log("Adding graph because none was found at: ", i);
-        var graph = new AmCharts.AmGraph();
+        console.log(i,") Adding graph", graph,"because none found");
+        // var add = new AmCharts.AmGraph();
+        // add.id = graph.id;
+        // add.type = graph.type;
         this.chart.addGraph(graph);
         continue;
       }
@@ -67,12 +73,9 @@ export class BaAmChart {
       current.valueField = graph.valueField;
       current.color = graph.color;
     }
-    this.chart.invalidateSize();
-    this.chart.animateAgain();
   }
 
   public updateData(dataProvider) {
-    return;
     this.chart.dataProvider = dataProvider;
     this.chart.validateData();
   }

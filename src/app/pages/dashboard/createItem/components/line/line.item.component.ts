@@ -122,7 +122,7 @@ export class LineItem extends BaseCreateItem<LineConfig> {
   }
 
   public allowMoreQueries() {
-    return this.getQueriesArray().length < 2;
+    return this.getQueriesArray() && this.getQueriesArray().length < 2;
   }
 
   public removeQuery(index: number) {

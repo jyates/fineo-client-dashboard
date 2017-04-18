@@ -4,12 +4,19 @@ import { BaseCardComponent, ItemConfig, Query } from '../components';
 import { layoutPaths } from '../../../theme';
 import { BaAmChart } from '../../../theme/components/baAmChart'
 
-var nextLineId = 0;
+// force the line css import, which solves the /deep/ issue
+import 'style-loader!./line.scss';
 
+var nextLineId = 0;
+/**
+* Usually, this would be a LineHandler that does the transformation of the data. However, the data transformation
+* and config changes are pretty closely tied to how the line chart gets updated. As such, we just have a single
+* class for making the changes
+*/
 @Component({
   selector: 'line-chart-component',
-  styleUrls: ['./line.chart.scss'],
-  templateUrl: './line.chart.html'
+  // styleUrls: ['./line.scss'],
+  templateUrl: './line.html'
 })
 export class Line extends BaseCardComponent<LineConfig> {
 
@@ -21,6 +28,7 @@ export class Line extends BaseCardComponent<LineConfig> {
   public chartData: ChartData = new ChartData(layoutPaths.images.amChart);
   private chartReady: boolean = false;
   private pendingData: boolean = false;
+  private pendingConfig: boolean = false;
 
   constructor() {
     super("line-chart-container");
@@ -49,10 +57,16 @@ export class Line extends BaseCardComponent<LineConfig> {
     // if (chart.zoomChart) {
     //   chart.zoomChart();
     // }
-    debugger;
     chart.addListener('rendered', () => {
       console.log("Chart is done rendering!");
-      if (this.pendingData) {
+      if(this.pendingConfig){
+        this.pendingConfig = false;
+        this.pendingData = false;
+        console.log("Updating chart with pending config")
+        this.updateConfig();
+      }
+      else if (this.pendingData) {
+        debugger;
         this.pendingData = false;
         console.log("Updating chart with pending data");
         this.chartElem.updateData(this.chartData.dataProvider);
@@ -75,13 +89,22 @@ export class Line extends BaseCardComponent<LineConfig> {
   }
 
   protected updateConfig() {
+    // early exit if the chart has not been created yet
+    if(!this.chartReady){
+      this.pendingConfig = true;
+      return;
+    }
     console.log("Updating config");
+    debugger;
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;
     this.chartData.graphType = this.config.type;
     this.chartData.updateGraphQueries(this.config.queries);
-    // this.chartElem.updateGraphs(this.chartData.graphs);
-    this.chartElem.resetChart(this.chartData);
+    // make the updates to the graph
+    this.chartElem.updateXaxis(this.chartData.categoryAxis);
+    this.chartElem.updateGraphs(this.chartData.graphs);
+    this.chartElem.updateData(this.chartData.dataProvider);
+    // this.chartElem.resetChart(this.chartData);
     console.log("-- DONE Updating config --");
   }
 }
@@ -167,11 +190,29 @@ export class Xaxis {
 
 class ChartData {
 
-  public dataProvider = [];
+  public dataProvider;
+  //  = [
+  //   { date: new Date(2012, 11, 1, 1, 1, 1, 1), y_g0: 0, y_g1: 0},
+  //   { date: new Date(2013, 0, 1, 1, 1, 1, 1), y_g0: 2000, y_g1: 19000 },
+  // ];
   public graphType: string;
-  public graphs: Array<GraphInfo>;
-  public categoryAxis: Xaxis = new Xaxis("xfield", false, "white", "white");
-  public categoryField;
+  public graphs: Array<GraphInfo> ;
+  // = [
+  //   {
+  //     valueField: "y_g0",
+  //     bullet : "none",
+  //     useLineColorForBulletBorder: false,
+  //     lineThickness: 1,
+  //     negativeLineColor: "red",
+  //     fillAlphas: 1,
+  //     fillColorsField: 'lineColor',
+  //     id: "g0",
+  //     lineColor: "rgba(255, 255, 255, 0.3)",
+  //     type: "smoothedLine"
+  //   }
+  // ]
+  public categoryAxis: Xaxis = new Xaxis("date", false, "white", "white");
+  public categoryField = "date";
   public chartCursor: UserCursor = new UserCursor();
   public export = {
     enabled: true
