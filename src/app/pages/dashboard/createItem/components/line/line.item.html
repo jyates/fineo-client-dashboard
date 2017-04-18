@@ -10,10 +10,7 @@
     </div>
   </div>
   <div class="row">
-    <line-chart 
-      [data]="data"
-      [config]="config"
-      [card]="card">
+    <line-chart [data]="data" [config]="config" [card]="card">
     </line-chart>
   </div>
   <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
@@ -27,13 +24,13 @@
     </div>
     <!-- Meta -->
     <div class="row form-group">
-      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12">
+      <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
         <label for="lineTitle" class="col-sm-2 control-label">Title</label>
         <div class="col-sm-10">
           <input [formControl]="form.controls['title']" type="text" class="form-control" id="lineTitle">
         </div>
       </div>
-      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-xs-5">
+      <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-xs-12">
         <h5 class="panel-subtitle">Size</h5>
         <div class="row">
           <div class="col-md-4">
@@ -61,7 +58,7 @@
         </div>
       </div>
       <!-- Smoothed vs. Regular line.  -->
-      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-xs-5">
+      <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-xs-12" style="padding-bottom: 40px;">
         <h5 class="panel-subtitle">Type</h5>
         <div class="row">
           <div class="col-md-4">
@@ -77,6 +74,70 @@
               <input type="radio" name="type" value="smoothedLine" [formControl]="form.controls['type']">
               <span>Smoothed Line</span>
             </label>
+          </div>
+        </div>
+      </div>
+      <!-- Resolution of the data. Split into two columns  -->
+      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <h5 class="panel-subtitle">Resolution</h5>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <div class="row">
+            <div class="col-md-4">
+              <label class="radio-inline custom-radio nowrap">
+                <input type="radio" name="res" value="fff" [formControl]="form.controls['resolution']">
+                <span>Milliseconds</span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="radio-inline custom-radio nowrap">
+                <input type="radio" name="res" value="ss" [formControl]="form.controls['resolution']">
+                <span>Seconds</span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="radio-inline custom-radio nowrap">
+                <input type="radio" name="res" value="mm" [formControl]="form.controls['resolution']">
+                <span>Minutes</span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="radio-inline custom-radio nowrap">
+                <input type="radio" name="res" value="hh" [formControl]="form.controls['resolution']">
+                <span>Hours</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <div class="row">
+            <div class="col-md-4">
+              <label class="radio-inline custom-radio nowrap">
+                <input type="radio" name="res" value="DD" [formControl]="form.controls['resolution']">
+                <span>Days</span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="radio-inline custom-radio nowrap">
+                <input type="radio" name="res" value="MM" [formControl]="form.controls['resolution']">
+                <span>Months</span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="radio-inline custom-radio nowrap">
+                <input type="radio" name="res" value="YYYY" [formControl]="form.controls['resolution']">
+                <span>Years</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>

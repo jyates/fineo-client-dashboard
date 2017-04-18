@@ -56,9 +56,10 @@ export class LineItem extends BaseCreateItem<LineConfig> {
       'title': [this.config.title, Validators.compose([Validators.required, Validators.minLength(1)])],
       'size': [this.config.size, Validators.compose([Validators.required, Validators.minLength(3)])],
       'type': [this.config.type, []],
+      'resolution': [this.config.xAxis.minPeriod, []]
       'queries': this.fb.array([]),
     });
-    this.listenForChanges(this.config, ["queries"], {}, {"type": this.resetConfig.bind(this)});
+    this.listenForChanges(this.config, ["queries", "resolution"], {}, {"type": this.resetConfig.bind(this)});
     this.addQueries(this.getQueries());
   }
 
@@ -67,8 +68,8 @@ export class LineItem extends BaseCreateItem<LineConfig> {
     this.chart.updateConfigExternal();
   }
 
-  private xAxis(): Xaxis {
-    return new Xaxis("date", true, this.textColor, this.textColor);
+  private xAxis(resolution = 'mm'): Xaxis {
+    return new Xaxis("date", true, this.textColor, this.textColor, resolution);
   }
 
   private getNextColor() {
@@ -155,7 +156,7 @@ export class LineItem extends BaseCreateItem<LineConfig> {
     return new LineConfig(fcontrols['title'].value,
       fcontrols['size'].value,
       lines,
-      this.xAxis(), 
+      this.xAxis(fcontrols.resolution), 
       fcontrols['type'].value);
   }
 }

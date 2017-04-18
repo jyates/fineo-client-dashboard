@@ -49,7 +49,6 @@ export class BaAmChart {
   }
 
   public updateXaxis(axis:Object){
-    debugger;
     this.chart.categoryAxis = axis;
   }
 

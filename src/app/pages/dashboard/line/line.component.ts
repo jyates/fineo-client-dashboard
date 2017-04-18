@@ -95,7 +95,6 @@ export class Line extends BaseCardComponent<LineConfig> {
       return;
     }
     console.log("Updating config");
-    debugger;
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;
     this.chartData.graphType = this.config.type;
