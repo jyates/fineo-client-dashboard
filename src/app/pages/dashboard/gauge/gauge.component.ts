@@ -6,7 +6,7 @@ import { BaseCardComponent, ItemConfig } from '../components';
 var nextId = 0;
 
 @Component({
-  selector: 'gauge-chart',
+  selector: 'gauge',
   encapsulation: ViewEncapsulation.None,
   styles: [require('./gauge.scss')],
   template: require('./gauge.html'),

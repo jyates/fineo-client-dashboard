@@ -32,6 +32,7 @@ export class Dashboard implements OnInit {
 
     };
     this.container.push(new DashboardElement(
+      gaugedata,
       'dashboard gauge', 'large',
       ['SELECT stats, `percent` FROM (VALUES (57,820, 75)) as MyTable("stats", "percent")'],
       'gauge', JSON.stringify(gconf)));
@@ -40,7 +41,7 @@ export class Dashboard implements OnInit {
 
 class DashboardElement {
   public config: any = {};
-  constructor(title: string, size: string, queries: Array<string>, public type: string, configAttributes: string) {
+  constructor(private data: DashboardDataService, title: string, size: string, queries: Array<string>, public type: string, configAttributes: string) {
     if (configAttributes) {
       this.config = JSON.parse(configAttributes);
     }

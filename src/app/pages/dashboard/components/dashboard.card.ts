@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 // import { DashboardDataService } from '../dashboard.component'
 import { ItemConfig, Query, CardConfig } from './index'
-import { DataReadService } from '../../../services'
+import { DashboardDataService } from '../dashboard.component'
 
 /**
 * Display the dashboard item type and manage getting refreshes of the data
@@ -25,10 +25,10 @@ export class DashboardCard implements OnInit {
   @Input()
   public noRefresh: boolean = false;
   @Input()
-  public data: any;
+  public dataService: DashboardDataService;
 
-  constructor(private dataService: DataReadService) {
-  }
+  // data used for the underlying ui component
+  public data;
 
   ngOnInit() {
     // only load data if there is no data

@@ -10,11 +10,11 @@
     </div>
   </div>
   <div class="row">
-    <gauge
+    <gauge-chart
       [data]="data"
       [config]="config"
       [card]="card">
-    </gauge>
+    </gauge-chart>
   </div>
   <form [formGroup]="form" (ngSubmit)="onSave()" class="form-horizontal">
     <div class="row">

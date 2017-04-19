@@ -6,8 +6,17 @@ import { GaugeConfig } from './gauge.component';
  * Wrapper around a GaugeUI that translates the data into the presentation layer of the GaugeUI component
  */
 @Component({
-  selector: 'gauge',
-  template: require('./gauge.handler.html'),
+  selector: 'gauge-chart',
+  template: `
+  <gauge
+  [data]="dataOut"
+  [config]="config"
+  [card]="card"
+  (deleteEvent)="handleDelete($event)"
+  (editEvent)="handleEdit($event)"
+>
+</gauge>
+`
 })
 export class GaugeHandler extends BaseElemHandler<GaugeConfig> {
 
