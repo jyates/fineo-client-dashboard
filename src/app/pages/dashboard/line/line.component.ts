@@ -15,7 +15,6 @@ var nextLineId = 0;
 */
 @Component({
   selector: 'line-chart-component',
-  // styleUrls: ['./line.scss'],
   templateUrl: './line.html'
 })
 export class Line extends BaseCardComponent<LineConfig> {
@@ -182,7 +181,6 @@ export class QueryChartConfig {
 }
 
 export class Xaxis {
-  // public boldPeriodBeginning = false;
   public gridAlpha = 0;
 
   constructor(public name: string, public parseDates: boolean = true, public color: string, public axisColor: string, public minPeriod = 'mm') { };
@@ -191,26 +189,8 @@ export class Xaxis {
 class ChartData {
 
   public dataProvider;
-  //  = [
-  //   { date: new Date(2012, 11, 1, 1, 1, 1, 1), y_g0: 0, y_g1: 0},
-  //   { date: new Date(2013, 0, 1, 1, 1, 1, 1), y_g0: 2000, y_g1: 19000 },
-  // ];
   public graphType: string;
   public graphs: Array<GraphInfo> ;
-  // = [
-  //   {
-  //     valueField: "y_g0",
-  //     bullet : "none",
-  //     useLineColorForBulletBorder: false,
-  //     lineThickness: 1,
-  //     negativeLineColor: "red",
-  //     fillAlphas: 1,
-  //     fillColorsField: 'lineColor',
-  //     id: "g0",
-  //     lineColor: "rgba(255, 255, 255, 0.3)",
-  //     type: "smoothedLine"
-  //   }
-  // ]
   public categoryAxis: Xaxis = new Xaxis("date", false, "white", "white");
   public categoryField = "date";
   public chartCursor: UserCursor = new UserCursor();

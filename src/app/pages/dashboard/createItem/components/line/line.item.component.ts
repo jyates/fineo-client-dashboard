@@ -38,6 +38,7 @@ export class LineItem extends BaseCreateItem<LineConfig> {
     this.textColor = layoutColors.defaultText;
     console.log("setting up line")
     if (this.config == null) {
+      console.log("No config set, using the default.");
       this.config = new LineConfig("Line Chart", "large",
         [
           // simple demo query with four points
