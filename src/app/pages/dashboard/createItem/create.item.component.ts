@@ -67,20 +67,37 @@ export class CreateItem implements OnInit {
     new Promise((accept, reject) => {
       setTimeout(() => {
         // send a fake result
-        accept(
-          // line data
-          [
-            // first query result
+        let name = config.constructor.name;
+        var result = null;
+        debugger;
+        if (name === "LineConfig") {
+          result = // line data
             [
-              { timestamp: 1491538857000, value: 1000 },
-              { timestamp: 1491800957000, value: 2000 },
-              { timestamp: 1492038957000, value: 2500 },
-              { timestamp: 1492049957000, value: 1250 },
-              { timestamp: 1493049957000, value: 1350 }
-            ],
-            // second query result
-            []
-          ]);
+              // first query result
+              [
+                { timestamp: 1491538857000, value: 1000 },
+                { timestamp: 1491800957000, value: 2000 },
+                { timestamp: 1492038957000, value: 2500 },
+                { timestamp: 1492049957000, value: 1250 },
+                { timestamp: 1493049957000, value: 1350 }
+              ],
+              // second query result
+              []
+            ];
+        }
+        else if (name === "GaugeConfig") {
+          result = { percent: 74, result: 125 }
+        } else if (name === "DonutConfig") {
+          result = {
+            column1: 10,
+            column2: 20,
+            column3: 75,
+            column4: 35,
+            column5: 122
+          }
+        }
+        accept(result);
+        // end function
       }, 200)
     }).then(result => {
       console.log("Got query result:", JSON.stringify(result));
