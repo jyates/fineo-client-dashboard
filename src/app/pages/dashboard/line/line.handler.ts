@@ -85,7 +85,6 @@ export class LineHandler extends BaseElemHandler<LineConfig> {
         queries.push(new LineQuery(q.text, q.name, q.color, chart));
       }
     }
-    debugger;
     let x = config.xAxis;
     let xaxis = new Xaxis(x.name, x.parseDates, x.color, x.axisColor, x.minPeriod);
     this.configOut = new LineConfig(config.title, config.size, queries, xaxis, config.type);

@@ -59,7 +59,7 @@ export class Line extends BaseCardComponent<LineConfig> {
     // }
     chart.addListener('rendered', () => {
       console.log("Chart is done rendering!");
-      if(this.pendingConfig){
+      if (this.pendingConfig) {
         this.pendingConfig = false;
         this.pendingData = false;
         console.log("Updating chart with pending config")
@@ -87,7 +87,7 @@ export class Line extends BaseCardComponent<LineConfig> {
     this.chartData.updateGraphQueries(this.config.queries);
 
     // early exit if the chart has not been created yet
-    if(!this.chartReady){
+    if (!this.chartReady) {
       this.pendingConfig = true;
       return;
     }
@@ -99,9 +99,9 @@ export class Line extends BaseCardComponent<LineConfig> {
   }
 
   private updateChartData() {
-    if(this.chartData.dataProvider && this.chartData.dataProvider.length > 0) {
+    if (this.chartData.dataProvider && this.chartData.dataProvider.length > 0) {
       if (this.chartReady) {
-          this.chartElem.updateData(this.chartData.dataProvider);
+        this.chartElem.updateData(this.chartData.dataProvider);
       } else {
         this.pendingData = true;
       }
@@ -191,7 +191,7 @@ class ChartData {
 
   public dataProvider;
   public graphType: string;
-  public graphs: Array<GraphInfo> ;
+  public graphs: Array<GraphInfo>;
   public categoryAxis: Xaxis = new Xaxis("date", false, "white", "white");
   public categoryField = "date";
   public chartCursor: UserCursor = new UserCursor();

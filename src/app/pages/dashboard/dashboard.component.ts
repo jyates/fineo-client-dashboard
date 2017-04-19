@@ -6,7 +6,7 @@ import { BaThemeConfigProvider, colorHelper } from '../../theme';
 import { CardConfig } from './components';
 import { GaugeConfig } from './gauge';
 import { DonutConfig, DonutHandler } from './donut';
-import { LineConfig, LineHandler, LineQuery, Xaxis, QueryChartConfig} from './line'
+import { LineConfig, LineHandler, LineQuery, Xaxis, QueryChartConfig } from './line'
 
 @Component({
   selector: 'dashboard',
@@ -66,9 +66,8 @@ export class Dashboard implements OnInit {
     let xaxis = new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText, 'DD');
     let lconfig = new LineConfig('fill', 'fill', [q1, q2], xaxis, 'smoothedLine');
     let slconfig = JSON.stringify(lconfig);
-    debugger;
     this.container.push(new DashboardElement(
-        this.data(LineHandler.DEMO_DATA), 'Medium Line Chart', 'medium', 'line', slconfig, false));
+      this.data(LineHandler.DEMO_DATA), 'Medium Line Chart', 'medium', 'line', slconfig, false));
   }
 
   private data(result: any): DashboardDataService {
@@ -107,11 +106,18 @@ class DashboardElement {
 */
 export class DashboardDataService {
 
-  constructor(private dataService: DataReadService, private data: any = null) { }
+  private data;
+  private index = 0;
+  constructor(private dataService: DataReadService, data: any = null) {
+    this.data = data;
+    if (!Array.isArray(data)) {
+      this.data = [data];
+    }
+  }
 
   public read(sql: string): Promise<any> {
     if (this.data) {
-      return Promise.resolve(this.data);
+      return Promise.resolve(this.data[this.index++ % this.data.length]);
     }
     return this.dataService.read(sql);
   }
