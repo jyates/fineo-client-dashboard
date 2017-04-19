@@ -19,13 +19,23 @@ export class CreateItem implements OnInit {
   private static DASHBOARD = "/pages/dashboard";
 
   private type: string;
-  private saving: boolean = false;
-  private refreshing: boolean = false;
   public data: Object = null;
 
+  private refresh: Refresh;
+  private refreshing: boolean = false;
+
+  private save: Save;
+  private saving: boolean = false;
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private service: DataReadService) {
+    service: DataReadService) {
+    if ('production' != ENV) {
+      this.refresh = new RefreshHandlerForTesting();
+      this.save = new SaveHandlerForTesting();
+    } else {
+      this.refresh = new RefreshHandler(service);
+      this.save = new SaveHandler();
+    }
   }
 
   ngOnInit() {
@@ -46,12 +56,7 @@ export class CreateItem implements OnInit {
     this.saving = true;
     // save the configuration value
     console.log("Saving", this.type, " => ", config.title, ":", config.queries);
-    new Promise((accept, reject) => {
-      setTimeout(() => {
-        console.log("done saving!");
-        accept(null);
-      }, 2000)
-    }).then(success => {
+    this.save.save(config).then(success => {
       this.saving = false;
       this.router.navigate([CreateItem.DASHBOARD]);
     }).catch(err => {
@@ -64,7 +69,45 @@ export class CreateItem implements OnInit {
     this.refreshing = true;
     console.log("Attempting to refresh data for query:", config.queries);
     // save the configuration value
-    new Promise((accept, reject) => {
+    this.refresh.refresh(config).then(result => {
+      console.log("Got query result:", JSON.stringify(result));
+      this.data = result;
+      this.refreshing = false;
+    }).catch(err => {
+      this.refreshing = false;
+      this.alertUser("Failed to refresh " + this.type + "!", err);
+    })
+  }
+
+  private alertUser(msg: string, cause: any) {
+    this.alertFineo(msg + "\nReason: " + JSON.stringify(cause))
+  }
+
+  private alertFineo(msg: string): void {
+    alert(msg + "\nPlease contact help@fineo.io with the output of the web console.");
+  }
+}
+
+interface Refresh {
+  refresh(config: ItemConfig): Promise<any>;
+}
+
+class RefreshHandler implements Refresh {
+  constructor(private service: DataReadService) { }
+
+  refresh(config: ItemConfig): Promise<any> {
+    let results = [];
+    config.queries.forEach(query => {
+      results.push(this.service.read(query.text));
+    });
+
+    return Promise.all(results);
+  }
+}
+
+class RefreshHandlerForTesting implements Refresh {
+  public refresh(config: ItemConfig): Promise<any> {
+    return new Promise((accept, reject) => {
       setTimeout(() => {
         // send a fake result
         let name = config.constructor.name;
@@ -99,21 +142,27 @@ export class CreateItem implements OnInit {
         accept(result);
         // end function
       }, 200)
-    }).then(result => {
-      console.log("Got query result:", JSON.stringify(result));
-      this.data = result;
-      this.refreshing = false;
-    }).catch(err => {
-      this.refreshing = false;
-      this.alertUser("Failed to refresh " + this.type + "!", err);
-    })
+    });
   }
+}
 
-  private alertUser(msg: string, cause: any) {
-    this.alertFineo(msg + "\nReason: " + JSON.stringify(cause))
+interface Save {
+  save(config: ItemConfig): Promise<any>;
+}
+
+class SaveHandler implements Save {
+  save(config: ItemConfig): Promise<any> {
+    return null;
   }
+}
 
-  private alertFineo(msg: string): void {
-    alert(msg + "\nPlease contact help@fineo.io with the output of the web console.");
+class SaveHandlerForTesting implements Save {
+  save(config: ItemConfig): Promise<any> {
+    return new Promise((accept, reject) => {
+      setTimeout(() => {
+        console.log("done saving!");
+        accept(null);
+      }, 2000)
+    });
   }
 }
