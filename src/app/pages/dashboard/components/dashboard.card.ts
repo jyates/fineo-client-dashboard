@@ -19,9 +19,6 @@ export class DashboardCard implements OnInit {
   public config: ItemConfig;
   @Input()
   public type: string;
-
-  @Input()
-  public card: CardConfig = new CardConfig();
   @Input()
   public noRefresh: boolean = false;
   @Input()
@@ -29,6 +26,7 @@ export class DashboardCard implements OnInit {
 
   // data used for the underlying ui component
   public data;
+  public card: CardConfig = new CardConfig(true, true, true);
 
   ngOnInit() {
     // only load data if there is no data

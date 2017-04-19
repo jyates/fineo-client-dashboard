@@ -1,13 +1,9 @@
-<h4>Simple Drag-and-Drop</h4>
-<ul dnd-sortable-container [sortableData]="container">
-  <li *ngFor="let item of container; let i = index" dnd-sortable [sortableIndex]="i">
-    <span dnd-sortable-handle>=</span>&nbsp;
-    {{item}}
-  </li>
-</ul>
-
-<small-spinner
-    [visible]="loading">
+<div class="row" dnd-sortable-container [sortableData]="container">
+    <div *ngFor="let item of container; let i = index" dnd-sortable [sortableIndex]="i">
+        <dashboard-card [config]=item.config [type]=item.type [dataService]=item.data></dashboard-card>
+    </div>
+</div>
+<small-spinner [visible]="loading">
 </small-spinner>
 <!-- <div class="row">
   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">

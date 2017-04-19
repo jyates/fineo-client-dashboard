@@ -112,7 +112,6 @@ class RefreshHandlerForTesting implements Refresh {
         // send a fake result
         let name = config.constructor.name;
         var result = null;
-        debugger;
         if (name === "LineConfig") {
           result = // line data
             [
