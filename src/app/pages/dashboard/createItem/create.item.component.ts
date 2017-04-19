@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 
 import { Subject } from 'rxjs/Subject';
 
@@ -31,6 +31,14 @@ export class CreateItem implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(path_info => {
       this.type = path_info["type"];
+    });
+
+    // go to the top of the page
+    this.router.events.subscribe((evt) => {
+      if (!(evt instanceof NavigationEnd)) {
+        return;
+      }
+      window.scrollTo(0, 0)
     });
   }
 
