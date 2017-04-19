@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseElemHandler } from '../components';
 import { DonutConfig } from './donut.component';
+import { BaThemeConfigProvider, colorHelper } from '../../../theme';
 
 /**
  * Wrapper around a GaugeUI that translates the data into the presentation layer of the GaugeUI component
@@ -27,6 +28,22 @@ export class DonutHandler extends BaseElemHandler<DonutConfig> {
     column5: 122
   }
 
+  constructor(private _baConfig: BaThemeConfigProvider) {
+    super();
+  }
+
+  static getThemeColors(theme: BaThemeConfigProvider) {
+    let dashboardColors = theme.get().colors.dashboard;
+    let colorOptions = [];
+    Object.keys(dashboardColors).forEach(name => {
+      colorOptions.push({
+        name: name,
+        color: dashboardColors[name]
+      })
+    });
+    return colorOptions;
+  }
+
   protected updateData(row): DonutData {
     if (!row) {
       console.log("No data row. Skipping!");
@@ -41,6 +58,10 @@ export class DonutHandler extends BaseElemHandler<DonutConfig> {
 
     let retn = new DonutData();
     var i = 0;
+    // ensure we have colors
+    if (!this.config.colorOptions) {
+      this.config.colorOptions = DonutHandler.getThemeColors(this._baConfig);
+    }
     let colorLen = this.config.colorOptions.length;
     Object.keys(row).sort().forEach(column => {
       var index = (i++ % colorLen);

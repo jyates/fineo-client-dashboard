@@ -5,7 +5,7 @@ import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators, FormCon
 import { Subject } from 'rxjs/Subject';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../../../theme';
-import { DonutConfig } from '../../../donut';
+import { DonutHandler, DonutConfig } from '../../../donut';
 import { BaseCreateItem } from '../base.create.item';
 
 
@@ -24,22 +24,12 @@ export class DonutItem extends BaseCreateItem<DonutConfig> {
     fb: FormBuilder) {
     super(fb, 'donut');
 
- // name and a value to display
-    let dashboardColors = this._baConfig.get().colors.dashboard;
-    let colorOptions = [];
-    Object.keys(dashboardColors).forEach(name => {
-      colorOptions.push({
-        name: name,
-        color: dashboardColors[name]
-      })
-    });
-
     // setup the base donut
     if (!this.config) {
       this.config =
         new DonutConfig("Donut",
           "SELECT 75 as c1, 125 as c2, 60 as c3, 30 as c4, 40 as c5, 70 as c6 FROM (VALUES (1))",
-          "large", "percent", true, "Total Value", colorOptions);
+          "large", "percent", true, "Total Value", DonutHandler.getThemeColors(this._baConfig));
     }
 
     // create the form to describe the contents
