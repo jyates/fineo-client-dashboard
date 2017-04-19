@@ -1,6 +1,6 @@
 <div class="row" dnd-sortable-container [sortableData]="container">
     <div *ngFor="let item of container; let i = index" dnd-sortable [sortableIndex]="i">
-        <dashboard-card [config]=item.config [type]=item.type [dataService]=item.data></dashboard-card>
+        <dashboard-card [config]=item.config [type]=item.type [dataService]=item.data [noRefresh]="!item.refresh"></dashboard-card>
     </div>
 </div>
 <small-spinner [visible]="loading">

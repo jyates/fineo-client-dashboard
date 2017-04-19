@@ -59,7 +59,7 @@ export class DonutHandler extends BaseElemHandler<DonutConfig> {
     let retn = new DonutData();
     var i = 0;
     // ensure we have colors
-    if (!this.config.colorOptions) {
+    if (!this.config.colorOptions || this.config.colorOptions.length == 0) {
       this.config.colorOptions = DonutHandler.getThemeColors(this._baConfig);
     }
     let colorLen = this.config.colorOptions.length;
