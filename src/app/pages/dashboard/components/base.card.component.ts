@@ -1,9 +1,10 @@
 import { ViewEncapsulation, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
-import {CardConfig} from './card.config'
+
+import { BaseCardEventHandler, CardConfig } from './index'
 /**
 * Wrapper around a 'baCard' that outputs the edit and delete event
 */
-export class BaseCardComponent<T> implements AfterViewInit, OnChanges {
+export class BaseCardComponent<T> extends BaseCardEventHandler implements AfterViewInit, OnChanges {
 
   @Input()
   public data: Object = null;
@@ -14,7 +15,9 @@ export class BaseCardComponent<T> implements AfterViewInit, OnChanges {
 
   private _init: boolean = false;
 
-  constructor(private item_prefix: string) { }
+  constructor(private item_prefix: string) {
+    super();
+  }
 
   ngAfterViewInit() {
     if (!this._init) {
@@ -38,19 +41,6 @@ export class BaseCardComponent<T> implements AfterViewInit, OnChanges {
 
   protected updateConfig(): void { };
   protected updateData(): void { };
-
-  // pass through the delete/edit events from the underlying card
-  @Output()
-  public deleteEvent = new EventEmitter();
-  @Output()
-  public editEvent = new EventEmitter();
-  public handleDelete(event): void {
-    this.deleteEvent.next(event);
-  }
-
-  public handleEdit(event): void {
-    this.editEvent.next(event);
-  }
 
   protected setSize(size: string, width: number, to: Object) {
     let widths = ["xl", "lg", "md", "sm", "xs"];

@@ -2,13 +2,15 @@ import { AfterViewInit, EventEmitter, Input, Output, OnChanges, SimpleChanges } 
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Subject } from 'rxjs/Subject';
+
+import { BaseCardEventHandler } from './base.card.event.handler'
 import { CardConfig } from './card.config'
 import { ItemConfig } from './item.config'
 
 /*
  * Base wrapper for managing the data to and from a dashboard item. Takes in data from 'dataIn' and exposes it as 'dataOut'.
  */
-export class BaseElemHandler<T extends ItemConfig> implements OnChanges {
+export class BaseElemHandler<T extends ItemConfig> extends BaseCardEventHandler implements OnChanges {
 
   @Input()
   public config: T;

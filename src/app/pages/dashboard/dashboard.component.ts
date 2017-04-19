@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { DataReadService, FineoApi, Metadata } from '../../services'
 import { BaThemeConfigProvider, colorHelper } from '../../theme';
 import { CardConfig } from './components';
@@ -44,7 +45,7 @@ export class Dashboard implements OnInit {
     // add the gauges
     this.container.push(new DashboardElement(this.data({ value: '2000', percent: 20 }),
       'Small Gauge', 'small', 'gauge', JSON.stringify(gconf2), false));
-    this.container.push(new DashboardElement(this.data({ value: '57,820', percent: 75 }), 
+    this.container.push(new DashboardElement(this.data({ value: '57,820', percent: 75 }),
       'Large Gauge', 'large', 'gauge', JSON.stringify(gconf), false));
     this.container.push(new DashboardElement(this.data({ value: '120', percent: 2 }),
       'Small Gauge 2', 'small', 'gauge', JSON.stringify(gconf2), false));
@@ -58,6 +59,14 @@ export class Dashboard implements OnInit {
 
   private data(result: any): DashboardDataService {
     return new DashboardDataService(this.dataService, result);
+  }
+
+  public deleteCard(index: number) {
+    console.log("Delete card selected for card:", index)
+  }
+
+  public editCard(index: number) {
+    console.log("Edit card selected for card:", index)
   }
 }
 

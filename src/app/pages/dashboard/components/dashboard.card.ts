@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 // import { DashboardDataService } from '../dashboard.component'
-import { ItemConfig, Query, CardConfig } from './index'
+import { ItemConfig, Query, CardConfig, BaseCardEventHandler } from './index'
 import { DashboardDataService } from '../dashboard.component'
 
 /**
@@ -10,7 +10,7 @@ import { DashboardDataService } from '../dashboard.component'
   selector: 'dashboard-card',
   templateUrl: './dashboard.card.html'
 })
-export class DashboardCard implements OnInit {
+export class DashboardCard extends BaseCardEventHandler implements OnInit {
 
   private FIVE_MINS_MILLIS: number = 5000;
   private done: boolean = false;
