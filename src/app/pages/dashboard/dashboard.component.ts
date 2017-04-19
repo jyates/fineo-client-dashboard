@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'
 
 import { DataReadService, FineoApi, Metadata } from '../../services'
 import { BaThemeConfigProvider, colorHelper } from '../../theme';
@@ -13,12 +14,14 @@ import { DonutConfig } from './donut';
 })
 export class Dashboard implements OnInit {
 
+  private static CREATE_ELEMENT = "/pages/dashboard/create";
+
   private loading: boolean = true;
   // there is only a single container, and sort order within the container
   public container: Array<DashboardElement> = []; //dashboard elements
 
   private meta: Metadata;
-  constructor(private dataService: DataReadService, fineo: FineoApi, private _baConfig: BaThemeConfigProvider) {
+  constructor(private dataService: DataReadService, fineo: FineoApi, private _baConfig: BaThemeConfigProvider, private router: Router) {
     this.meta = fineo.meta;
   }
 
@@ -67,6 +70,11 @@ export class Dashboard implements OnInit {
 
   public editCard(index: number) {
     console.log("Edit card selected for card:", index)
+  }
+
+  public addDashboardElement() {
+    console.log("Add new dashboard element");
+    this.router.navigate([Dashboard.CREATE_ELEMENT]);
   }
 }
 

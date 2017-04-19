@@ -9,8 +9,6 @@
           (deleteEvent)="deleteCard(i)"></dashboard-card>
     </div>
 </div>
-<small-spinner [visible]="loading">
-</small-spinner>
 <!-- <div class="row">
   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <pie-chart></pie-chart>
@@ -24,9 +22,12 @@
   <ba-card class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-xs-12" title="Revenue" baCardClass="medium-card">
     <dline-chart></dline-chart>
   </ba-card>
-</div>
+</div> -->
 <div class="row">
   <div class="col-sm-1" align="left">
     <button (click)="addDashboardElement()" type="button" class="btn btn-success btn-icon"><i class="ion-plus-round"></i></button>
   </div>
-</div> -->
+</div>
+
+<small-spinner [visible]="loading">
+</small-spinner>

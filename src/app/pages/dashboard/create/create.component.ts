@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
 import { BaThemeConfigProvider, colorHelper } from '../../../theme';
 import { LineHandler, Xaxis, QueryChartConfig, LineQuery, LineConfig } from '../line';
@@ -13,7 +13,7 @@ import { CardConfig } from '../components'
   styleUrls: ['./create.scss'],
   templateUrl: './create.html'
 })
-export class CreateComponent {
+export class CreateComponent implements OnInit {
 
   public card: CardConfig;
   private gauge: Object;
@@ -61,6 +61,15 @@ export class CreateComponent {
       ],
         new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText, 'DD'), "smoothedLine")
     }
+  }
+
+  ngOnInit() {
+    this.router.events.subscribe((evt) => {
+      if (!(evt instanceof NavigationEnd)) {
+        return;
+      }
+      window.scrollTo(0, 0)
+    });
   }
 
   private static donutColors(_baConfig: BaThemeConfigProvider): Object[] {
