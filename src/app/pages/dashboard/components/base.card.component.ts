@@ -36,8 +36,8 @@ export class BaseCardComponent<T> implements AfterViewInit, OnChanges {
     }
   }
 
-  protected updateConfig(): void { debugger;};
-  protected updateData(): void { debugger;};
+  protected updateConfig(): void { };
+  protected updateData(): void { };
 
   // pass through the delete/edit events from the underlying card
   @Output()

@@ -41,11 +41,9 @@ export class BaAmChart {
     console.log("Creating chart with config:", this.baAmChartConfiguration);
     this.chart = AmCharts.makeChart(this.id, this.baAmChartConfiguration);
     this.onChartReady.emit(this.chart);
-    debugger;
   }
 
   public resetChart(config:Object){
-    debugger;
     this.baAmChartConfiguration = config;
     this.chart = AmCharts.makeChart(this.id, config);
     this.onChartReady.emit(this.chart);

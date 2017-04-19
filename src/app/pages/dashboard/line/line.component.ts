@@ -66,7 +66,6 @@ export class Line extends BaseCardComponent<LineConfig> {
         this.updateConfig();
       }
       else if (this.pendingData) {
-        debugger;
         this.pendingData = false;
         console.log("Updating chart with pending data");
         this.chartElem.updateData(this.chartData.dataProvider);
@@ -75,14 +74,12 @@ export class Line extends BaseCardComponent<LineConfig> {
   }
 
   protected updateData() {
-    debugger;
     console.log("Updating data for line chart, data:", this.data);
     this.chartData.data(this.data);
     this.updateChartData();
   }
 
   protected updateConfig() {
-    debugger;
     console.log("Updating config");
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;
