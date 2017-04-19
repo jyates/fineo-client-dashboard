@@ -75,22 +75,25 @@ export class Line extends BaseCardComponent<LineConfig> {
   }
 
   protected updateData() {
+    debugger;
     console.log("Updating data for line chart, data:", this.data);
     this.chartData.data(this.data);
     this.updateChartData();
   }
 
   protected updateConfig() {
-    // early exit if the chart has not been created yet
-    if(!this.chartReady){
-      this.pendingConfig = true;
-      return;
-    }
+    debugger;
     console.log("Updating config");
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;
     this.chartData.graphType = this.config.type;
     this.chartData.updateGraphQueries(this.config.queries);
+
+    // early exit if the chart has not been created yet
+    if(!this.chartReady){
+      this.pendingConfig = true;
+      return;
+    }
     // make the updates to the graph
     this.chartElem.updateXaxis(this.chartData.categoryAxis);
     this.chartElem.updateGraphs(this.chartData.graphs);

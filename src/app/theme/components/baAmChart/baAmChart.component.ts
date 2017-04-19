@@ -26,7 +26,7 @@ export class BaAmChart {
   @Output() onChartReady = new EventEmitter<any>();
   @Input() id:string = "baAmChart"
 
-  @ViewChild("baAmChart") _select: ElementRef;
+  // @ViewChild("baAmChart") _select: ElementRef;
   private chart;
 
   constructor(private elRef: ElementRef, private _baAmChartThemeService: BaAmChartThemeService) {
@@ -39,9 +39,9 @@ export class BaAmChart {
 
   ngAfterViewInit() {
     console.log("Creating chart with config:", this.baAmChartConfiguration);
-    debugger;
-    this.chart = AmCharts.makeChart(this._select.nativeElement, this.baAmChartConfiguration);
+    this.chart = AmCharts.makeChart(this.id, this.baAmChartConfiguration);
     this.onChartReady.emit(this.chart);
+    debugger;
   }
 
   public resetChart(config:Object){
