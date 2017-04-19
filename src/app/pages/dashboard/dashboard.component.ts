@@ -5,7 +5,8 @@ import { DataReadService, FineoApi, Metadata } from '../../services'
 import { BaThemeConfigProvider, colorHelper } from '../../theme';
 import { CardConfig } from './components';
 import { GaugeConfig } from './gauge';
-import { DonutConfig } from './donut';
+import { DonutConfig, DonutHandler } from './donut';
+import { LineConfig, LineHandler, LineQuery, Xaxis, QueryChartConfig} from './line'
 
 @Component({
   selector: 'dashboard',
@@ -56,8 +57,18 @@ export class Dashboard implements OnInit {
     // a simple donut
     let dconfig = new DonutConfig();
     this.container.push(new DashboardElement(
-      this.data({ column1: 10, column2: 20, column3: 30, column4: 40 }),
+      this.data(DonutHandler.DEMO_DATA),
       'Large Donut Chart', 'large', 'donut', JSON.stringify(dconfig), false));
+
+    // and a simple line chart
+    let q1 = new LineQuery("DEMO QUERY", "query1", colorHelper.hexToRgbA(graphColor, 0.3), new QueryChartConfig("g0", "date", "value"));
+    let q2 = new LineQuery("DEMO QUERY", "query2", colorHelper.hexToRgbA(graphColor, 0.15), new QueryChartConfig("g1", "date", "value"));
+    let xaxis = new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText, 'DD');
+    let lconfig = new LineConfig('fill', 'fill', [q1, q2], xaxis, 'smoothedLine');
+    let slconfig = JSON.stringify(lconfig);
+    debugger;
+    this.container.push(new DashboardElement(
+        this.data(LineHandler.DEMO_DATA), 'Medium Line Chart', 'medium', 'line', slconfig, false));
   }
 
   private data(result: any): DashboardDataService {

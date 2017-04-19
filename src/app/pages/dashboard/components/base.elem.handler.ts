@@ -33,6 +33,9 @@ export class BaseElemHandler<T extends ItemConfig> extends BaseCardEventHandler 
       // reset the data to trigger a change event on the child
       this.dataOut = Object.create(result);
     }
+    if (changes['config']) {
+      this.updateConfig(this.config);
+    }
   }
 
   protected getOneRow(result: any): Object {
@@ -48,4 +51,5 @@ export class BaseElemHandler<T extends ItemConfig> extends BaseCardEventHandler 
   }
 
   protected updateData(result): Object { return null; }
+  protected updateConfig(config): void { };
 }
