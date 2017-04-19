@@ -7,7 +7,15 @@ import { DonutConfig } from './donut.component';
  */
 @Component({
   selector: 'donut-chart',
-  template: require('./donut.handler.html'),
+  template: `
+ <donut
+  [data]="dataOut"
+  [config]="config"
+  [card]="card"
+  (deleteEvent)="handleDelete($event)"
+  (editEvent)="handleEdit($event)">
+</donut>
+`
 })
 export class DonutHandler extends BaseElemHandler<DonutConfig> {
 
