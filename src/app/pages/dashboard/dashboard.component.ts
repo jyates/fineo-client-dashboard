@@ -70,12 +70,18 @@ export class Dashboard implements OnInit {
       this.data(LineHandler.DEMO_DATA), 'Medium Line Chart', 'medium', 'line', slconfig, false));
   }
 
+  /**
+   * Helper method to get create a dashboard service that just sends static data
+  */
   private data(result: any): DashboardDataService {
     return new DashboardDataService(this.dataService, result);
   }
 
   public deleteCard(index: number) {
     console.log("Delete card selected for card:", index)
+    this.loading = true;
+    // TODO delete the chart
+    setTimeout(() =>{this.loading = false}, 2000);
   }
 
   public editCard(index: number) {
