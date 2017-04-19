@@ -44,7 +44,7 @@ export class LineItem extends BaseCreateItem<LineConfig> {
           new LineQuery("SELECT `timestamp`,val FROM (VALUES (1,'1000'),(2,'2000'), (3, '2500'), (4, '1200')) as MyTable(`timestamp`,val)",
             "query1",
             this.getNextColor(),
-            new QueryChartConfig("0", "timestamp", "value"))
+            new QueryChartConfig("g0", "timestamp", "value"))
         ],
         this.xAxis(),
         "line");
@@ -56,13 +56,13 @@ export class LineItem extends BaseCreateItem<LineConfig> {
       'title': [this.config.title, Validators.compose([Validators.required, Validators.minLength(1)])],
       'size': [this.config.size, Validators.compose([Validators.required, Validators.minLength(3)])],
       'type': [this.config.type, []],
-      'resolution': [this.config.xAxis.minPeriod, []]
+      'resolution': [this.config.xAxis.minPeriod, []],
       'queries': this.fb.array([]),
     });
     this.listenForChanges(this.config, ["queries", "resolution"], {}, {
       // just generically update the configuration
       "type": this.resetConfig.bind(this), // bind ensures that we use 'this' as the context in the method
-      "resolution": this.resetConfig.bind(this)}
+      "resolution": this.resetConfig.bind(this)
     });
     this.addQueries(this.getQueries());
   }
@@ -153,14 +153,14 @@ export class LineItem extends BaseCreateItem<LineConfig> {
     for (var i = 0; i < queries.length; i++) {
       var controls = queries[i].controls;
       lines.push(new LineQuery(controls['query'].value, controls['name'].value, controls['color'].value,
-        new QueryChartConfig(i.toString(), "timestamp", controls['y-axis'].value)));
+        new QueryChartConfig("g"+i.toString(), "timestamp", controls['y-axis'].value)));
     }
 
     let fcontrols = this.form.controls;
     return new LineConfig(fcontrols['title'].value,
       fcontrols['size'].value,
       lines,
-      this.xAxis(fcontrols.resolution), 
+      this.xAxis(fcontrols['resolution'].value),
       fcontrols['type'].value);
   }
 }
