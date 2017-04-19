@@ -24,11 +24,12 @@ export class BaAmChart {
   @Input() baAmChartConfiguration: Object;
   @Input() baAmChartClass: string;
   @Output() onChartReady = new EventEmitter<any>();
+  @Input() id:string = "baAmChart"
 
-  @ViewChild('baAmChart') public _selector: ElementRef;
+  @ViewChild("baAmChart") _select: ElementRef;
   private chart;
 
-  constructor(private _baAmChartThemeService: BaAmChartThemeService) {
+  constructor(private elRef: ElementRef, private _baAmChartThemeService: BaAmChartThemeService) {
     this._loadChartsLib();
   }
 
@@ -38,13 +39,15 @@ export class BaAmChart {
 
   ngAfterViewInit() {
     console.log("Creating chart with config:", this.baAmChartConfiguration);
-    this.chart = AmCharts.makeChart(this._selector.nativeElement, this.baAmChartConfiguration);
+    debugger;
+    this.chart = AmCharts.makeChart(this._select.nativeElement, this.baAmChartConfiguration);
     this.onChartReady.emit(this.chart);
   }
 
   public resetChart(config:Object){
+    debugger;
     this.baAmChartConfiguration = config;
-    this.chart = AmCharts.makeChart(this._selector.nativeElement, config);
+    this.chart = AmCharts.makeChart(this.id, config);
     this.onChartReady.emit(this.chart);
   }
 

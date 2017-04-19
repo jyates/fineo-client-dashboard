@@ -8,6 +8,6 @@
     [deletable]="card.deletable"
     [editable]="card.editable"
     [sortable]="card.sortable">
-    <ba-am-chart baAmChartClass="dashboard-line-chart" [baAmChartConfiguration]="chartData" (onChartReady)="initChart($event)"></ba-am-chart>
+    <ba-am-chart baAmChartClass="dashboard-line-chart" [id]="id" [baAmChartConfiguration]="chartData" (onChartReady)="initChart($event)"></ba-am-chart>
   </ba-card>
 </div>

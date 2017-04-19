@@ -5,7 +5,7 @@ import { layoutPaths } from '../../../theme';
 import { BaAmChart } from '../../../theme/components/baAmChart'
 
 // force the line css import, which solves the /deep/ issue
-import 'style-loader!./line.scss';
+// import 'style-loader!./line.scss';
 
 var nextLineId = 0;
 /**
@@ -15,6 +15,7 @@ var nextLineId = 0;
 */
 @Component({
   selector: 'line-chart-component',
+  styleUrls: ['./line.scss'],
   templateUrl: './line.html'
 })
 export class Line extends BaseCardComponent<LineConfig> {
