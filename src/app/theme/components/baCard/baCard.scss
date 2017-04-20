@@ -1,5 +1,5 @@
 button.btn.btn-icon.edit-card {
-  // display: none;
+  visibility: hidden;
   border-color: transparent;
   width: 20px;
   vertical-align: top;
@@ -14,12 +14,8 @@ button.btn.btn-icon.edit-card {
   margin-right: 3px;
 }
 
-.clearfix {
-  overflow: auto;
-}
-
 button.btn.btn-danger.edit-card {
-  // display: none;
+  visibility: hidden;
   width: 20px;
   text-align: center;
   vertical-align: top;
@@ -33,5 +29,5 @@ button.btn.btn-danger.edit-card {
 
 .card:hover button.btn.btn-danger.edit-card,
 .card:hover button.btn.btn-icon.edit-card {
-  display: inline-block;
+  visibility: visible;
 }
