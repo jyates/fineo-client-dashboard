@@ -2,6 +2,7 @@
 .channels-block {
   width: 100%;
   position: relative;
+  padding: 10px;
 }
 
 .donut-container-small {
@@ -198,56 +199,3 @@ $min-donut-width: 375px;
     }
   }
 }
-
-// @media (max-width: $resM) {
-//   .card.medium-card.traffic-panel {
-//     height: auto;
-//   }
-//   div.channels-info {
-//     display: block;
-//     width: calc(100% - 88px);
-//     margin-top: -65px;
-//     margin-bottom: 10px;
-//   }
-//   .traffic-chart {
-//     position: inherit;
-//     float: none;
-//     margin: 0 auto;
-//   }
-//   .chart-bg {
-//     left: calc(50% - 90px);
-//   }
-// }
-// @media (max-width: 1465px) and (min-width: 1199px) {
-//   .channels-info {
-//     display: none;
-//   }
-//   .traffic-chart {
-//     position: inherit;
-//     float: none;
-//     margin: 0 auto;
-//   }
-//   .chart-bg {
-//     left: calc(50% - 90px);
-//   }
-// }
-// @media (max-width: 380px) {
-//   .traffic-chart {
-//     width: 240px;
-//   }
-//   .canvas-holder {
-//     width: 240px;
-//     height: 240px;
-//   }
-//   .chart-bg {
-//     top: 30px;
-//   }
-// }
-// @media (max-width: 320px) {
-//   .chart-bg {
-//     left: 50px;
-//     top: 50px;
-//     width: 142px;
-//     height: 142px;
-//   }
-// }
