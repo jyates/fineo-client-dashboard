@@ -1,7 +1,9 @@
 <div [attr.id]="id">
   <ba-card
     class="pie-chart-item-container"
-    [ngClass]="getChartSize()"
+    [ngClass]="{'col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 pie-chart-container-large': config.size == 'large', 
+      'col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 pie-chart-container-medium': config.size == 'medium',
+      'col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 pie-chart-container-small': config.size == 'small'}"
     [editable]="card.editable"
     [deletable]="card/deletable"
     [sortable]="card.sortable"

@@ -34,14 +34,6 @@ export class Line extends BaseCardComponent<LineConfig> {
     super("line-chart-container");
   }
 
-  private getSize() {
-    let elems = {};
-    this.setSize("small", 4, elems);
-    this.setSize("medium", 6, elems);
-    this.setSize("large", 12, elems);
-    return elems;
-  }
-
   // callback when chart is ready 
   initChart(chart: any) {
     console.log("Chart is initialized");

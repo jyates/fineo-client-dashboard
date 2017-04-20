@@ -19,14 +19,6 @@ export class Gauge extends BaseCardComponent<GaugeConfig> {
     super("pie-chart-container");
   }
 
-  private getChartSize() {
-    let elems = {};
-    this.setSize("small", 3, elems);
-    this.setSize("medium", 4, elems);
-    this.setSize("large", 6, elems);
-    return elems;
-  }
-
   public init() {
     let select = this.select();
     jQuery(select).each(function() {

@@ -66,13 +66,6 @@ export class Donut extends BaseCardComponent<DonutConfig> {
     });
   }
 
-  public getSize() {
-    let elems = {};
-    this.setSize("small", 4, elems);
-    this.setSize("large", 6, elems);
-    return elems;
-  }
-
   public itemDisplay(item: DonutDatum): string {
     if (this.config.valueType == "percent") {
       let display = Math.round(item.percent * 100) / 100;

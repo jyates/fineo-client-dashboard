@@ -41,21 +41,4 @@ export class BaseCardComponent<T> extends BaseCardEventHandler implements AfterV
 
   protected updateConfig(): void { };
   protected updateData(): void { };
-
-  protected setSize(size: string, width: number, to: Object) {
-    let widths = ["xl", "lg", "md", "sm", "xs"];
-    let attributes = []
-    widths.forEach(w => {
-      attributes.push("col-" + w + "-" + width);
-    });
-    this.addAttributes(size, attributes, to);
-  }
-
-  protected addAttributes(size: string, attributes: string[], to: Object) {
-    let enabled = this.config["size"] == size;
-    attributes.forEach(attrib => {
-      to[attrib] = enabled;
-    })
-    to[this.item_prefix + "-" + size] = enabled;
-  }
 }

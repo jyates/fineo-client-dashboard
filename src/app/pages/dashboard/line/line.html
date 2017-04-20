@@ -1,10 +1,12 @@
 <div>
   <ba-card 
     baCardClass="medium-card"
+    [ngClass]="{'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 line-chart-container-large': config.size == 'large', 
+      'col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 line-chart-container-medium': config.size == 'medium',
+      'col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 line-chart-container-small': config.size == 'small'}"
     [title]="config.title"
     (deleteEvent)="handleDelete($event)"
     (editEvent)="handleEdit($event)"
-    [ngClass]="getSize()"
     [deletable]="card.deletable"
     [editable]="card.editable"
     [sortable]="card.sortable">
