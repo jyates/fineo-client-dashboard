@@ -1,12 +1,10 @@
-
 button.btn.btn-icon.edit-card {
-  display: none;
+  // display: none;
   border-color: transparent;
   width: 20px;
   vertical-align: top;
   text-align: center;
   font-size: 20px;
-
   height: 22px;
   line-height: 18px;
   padding-left: 2px;
@@ -16,14 +14,24 @@ button.btn.btn-icon.edit-card {
   margin-right: 3px;
 }
 
+.clearfix {
+  overflow: auto;
+}
+
 button.btn.btn-danger.edit-card {
-  display: none;
+  // display: none;
   width: 20px;
   text-align: center;
   vertical-align: top;
   padding: 1px 2px;
 }
 
-.card:hover button.btn.btn-danger.edit-card, .card:hover button.btn.btn-icon.edit-card{
-  display : inline-block;
+.card-handle {
+  float: right;
+  max-width: 20%;
+}
+
+.card:hover button.btn.btn-danger.edit-card,
+.card:hover button.btn.btn-icon.edit-card {
+  display: inline-block;
 }
