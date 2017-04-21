@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 
 import { Subject } from 'rxjs/Subject';
@@ -14,27 +14,30 @@ import { ItemConfig } from '../components';
   styleUrls: ['./create.item.scss'],
   templateUrl: './create.item.html'
 })
-export class CreateItem implements OnInit {
+export class CreateItem implements OnInit  {
 
   private static DASHBOARD = "/pages/dashboard";
 
   private type: string;
   public data: Object = null;
 
-  private refresh: Refresh;
-  private refreshing: boolean = false;
 
-  private save: Save;
-  private saving: boolean = false;
+  // @Output()
+  // public save = new EventEmitter();
+
+  private refreshing:boolean = false;
+  private refresher: Refresh;
+  private saving:boolean = false;
+  private saver: Save;
   constructor(private route: ActivatedRoute,
     private router: Router,
     service: DataReadService) {
     if ('production' != ENV) {
-      this.refresh = new RefreshHandlerForTesting();
-      this.save = new SaveHandlerForTesting();
+      this.refresher = new RefreshHandlerForTesting();
+      this.saver = new SaveHandlerForTesting();
     } else {
-      this.refresh = new RefreshHandler(service);
-      this.save = new SaveHandler();
+      this.refresher = new RefreshHandler(service);
+      this.saver = new SaveHandler();
     }
   }
 
@@ -56,7 +59,7 @@ export class CreateItem implements OnInit {
     this.saving = true;
     // save the configuration value
     console.log("Saving", this.type, " => ", config.title, ":", config.queries);
-    this.save.save(config).then(success => {
+    this.saver.save(config).then(success => {
       this.saving = false;
       this.router.navigate([CreateItem.DASHBOARD]);
     }).catch(err => {
@@ -69,7 +72,7 @@ export class CreateItem implements OnInit {
     this.refreshing = true;
     console.log("Attempting to refresh data for query:", config.queries);
     // save the configuration value
-    this.refresh.refresh(config).then(result => {
+    this.refresher.refresh(config).then(result => {
       console.log("Got query result:", JSON.stringify(result));
       this.data = result;
       this.refreshing = false;

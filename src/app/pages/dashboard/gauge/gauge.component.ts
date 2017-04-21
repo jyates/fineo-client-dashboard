@@ -55,6 +55,31 @@ export class Gauge extends BaseCardComponent<GaugeConfig> {
   private select():string{
     return "#" + this.id + " .chart";
   }
+
+  public getSize(){
+    let elems = {};
+    this.setSize("small", 3, elems);
+    this.setSize("medium", 4, elems);
+    this.setSize("large", 6, elems);
+    return elems;
+  }
+
+ protected setSize(size: string, width: number, to: Object) {
+    let widths = ["xl", "lg", "md", "sm", "xs"];
+    let attributes = []
+    widths.forEach(w => {
+      attributes.push("col-" + w + "-" + width);
+    });
+    this.addAttributes(size, attributes, to);
+  }
+
+  protected addAttributes(size: string, attributes: string[], to: Object) {
+    let enabled = this.config["size"] == size;
+    attributes.forEach(attrib => {
+      to[attrib] = enabled;
+    })
+    to["pie-chart-container" + "-" + size] = enabled;
+  }
 }
 
 export class GaugeConfig extends ItemConfig {

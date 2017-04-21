@@ -1,0 +1,31 @@
+<div class="edit-dashboard-item-container">
+  <button class="btn btn-default" (click)="onCancel()">Cancel</button>
+  <div class="row" *ngIf="(item.type == 'gauge')">
+    <create-gauge
+      [data]="data"
+      [config]="item.config"
+      (save)="handleSave($event)"
+      (refresh)="handleRefresh($event)">
+    ></create-gauge>
+  </div>
+  <div class="row" *ngIf="(item.type == 'donut')">
+    <create-donut
+      [saving]="saving"
+      [refreshing]="refreshing"
+      [data]="data"
+      [config]="item.config"
+      (save)="handleSave($event)"
+      (refresh)="handleRefresh($event)">
+    </create-donut>
+  </div>
+  <div class="row" *ngIf="(item.type == 'line')">
+    <create-line-chart
+      [saving]="saving"
+      [refreshing]="refreshing"
+      [data]="data"
+      [config]="item.config"
+      (save)="handleSave($event)"
+      (refresh)="handleRefresh($event)">
+    </create-line-chart>
+  </div>
+</div>

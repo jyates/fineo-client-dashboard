@@ -60,7 +60,7 @@ export class LineItem extends BaseCreateItem<LineConfig> {
       'resolution': [this.config.xAxis.minPeriod, []],
       'queries': this.fb.array([]),
     });
-    this.listenForChanges(this.config, ["queries", "resolution"], {}, {
+    this.listenForChanges(["queries", "resolution"], {}, {
       // just generically update the configuration
       "type": this.resetConfig.bind(this), // bind ensures that we use 'this' as the context in the method
       "resolution": this.resetConfig.bind(this)
@@ -68,8 +68,19 @@ export class LineItem extends BaseCreateItem<LineConfig> {
     this.addQueries(this.getQueries());
   }
 
+  protected withConfig() {
+    this.setFields(this.config, this.form, ['queries', 'resolution', 'xAxis']);
+    this.form.controls['resolution'].setValue(this.config.xAxis.minPeriod);
+    let queries = <FormArray>this.form.controls['queries'];
+    for (var i = 0; i < queries.length; i++) {
+      queries.removeAt(i);
+    }
+    this.addQueries(queries);
+    // this.resetConfig();
+  }
+
   private resetConfig(){
-    console.log("re-setting config to force line object to respond")
+    console.log("re-setting config to force line object to respond");
     this.chart.config = this.getConfig();
   }
 
@@ -85,6 +96,9 @@ export class LineItem extends BaseCreateItem<LineConfig> {
 
   private addQueries(queries: FormArray) {
     let current: LineQuery[] = <LineQuery[]>this.config.queries
+    if(!current){
+      return;
+    }
     current.forEach(query => {
       queries.push(this.createQuery(query.text, query.name, query.chart.yfield, query.color));
     })

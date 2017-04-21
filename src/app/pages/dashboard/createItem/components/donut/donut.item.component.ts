@@ -41,7 +41,12 @@ export class DonutItem extends BaseCreateItem<DonutConfig> {
       'centerLabel': [this.config.centerLabel, []],
       'valueType': [this.config.valueType, [Validators.compose([Validators.required, Validators.minLength(1), Validators.pattern("raw|percent")])]]
     });
-    this.listenForChanges(this.config);
+    this.listenForChanges();
+  }
+
+  protected withConfig() {
+    this.setFields(this.config, this.form, ['queries', 'colorOptions']);
+    this.setFirstQueryInForm(this.form, 'query');
   }
 
   protected getConfig(): DonutConfig {

@@ -12,13 +12,14 @@ import { DashboardOutlet } from './dashboard.outlet.component';
 import { routing } from './dashboard.routing';
 
 import { Gauge, GaugeHandler } from './gauge';
-import { Donut, DonutHandler } from './donut'
-import { Line, LineHandler } from './line'
+import { Donut, DonutHandler } from './donut';
+import { Line, LineHandler } from './line';
 
-import { DashboardCard } from './components'
+import { DashboardCard } from './components';
+import { EditDashboardCard } from './edit.dashboard.card';
 
-import { CreateComponent } from './create'
-import { CreateItem, GaugeItem, DonutItem, LineItem } from './createItem'
+import { CreateComponent } from './create';
+import { CreateItem, GaugeItem, DonutItem, LineItem } from './createItem';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { CreateItem, GaugeItem, DonutItem, LineItem } from './createItem'
   declarations: [
     Dashboard,
     DashboardCard,
+    EditDashboardCard,
     // DashboardDataService,
     DashboardOutlet,
     CreateComponent,

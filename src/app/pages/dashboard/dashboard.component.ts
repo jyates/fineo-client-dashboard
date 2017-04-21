@@ -17,9 +17,13 @@ export class Dashboard implements OnInit {
 
   private static CREATE_ELEMENT = "/pages/dashboard/create";
 
+  // track the 'view mode' for the dashboard.
+  // Use different view modes we so don't need to deal with serializing configs, etc. between screens
+  public mode: string = 'display';
   private loading: boolean = true;
   // there is only a single container, and sort order within the container
   public container: Array<DashboardElement> = []; //dashboard elements
+  private editIndex: number = -1;
 
   private meta: Metadata;
   constructor(private dataService: DataReadService, fineo: FineoApi, private _baConfig: BaThemeConfigProvider, private router: Router) {
@@ -42,7 +46,7 @@ export class Dashboard implements OnInit {
     var layoutColors = this._baConfig.get().colors;
     var graphColor = this._baConfig.get().colors.custom.dashboardLineChart;
     // first gauge
-    let gquery = 'SELECT stats, `percent` FROM (VALUES (57,820, 75)) as MyTable("stats", "percent")';
+    let gquery = 'SELECT `value`, `percent` FROM (VALUES (57,820, 75)) as MyTable("value", "percent")';
     let gconf = new GaugeConfig('fill title', gquery, 'fillSize', 'money', 'value', 'percent');
     // second gauge
     let gconf2 = new GaugeConfig('fill title', gquery, 'fillSize', 'refresh', 'value', 'percent');
@@ -55,7 +59,7 @@ export class Dashboard implements OnInit {
       'Small Gauge 2', 'small', 'gauge', JSON.stringify(gconf2), false));
 
     // a simple donut
-    let dconfig = new DonutConfig();
+    let dconfig = new DonutConfig('fill', "SELECT 10 as column1, 20 as column2, 75 as column3, 35 as column4, 122 as column5 FROM (VALUES (1))");
     this.container.push(new DashboardElement(
       this.data(DonutHandler.DEMO_DATA),
       'Large Donut Chart', 'large', 'donut', JSON.stringify(dconfig), false));
@@ -81,11 +85,29 @@ export class Dashboard implements OnInit {
     console.log("Delete card selected for card:", index)
     this.loading = true;
     // TODO delete the chart
-    setTimeout(() =>{this.loading = false}, 2000);
+    setTimeout(() => { this.loading = false }, 2000);
   }
 
   public editCard(index: number) {
     console.log("Edit card selected for card:", index)
+    this.editIndex = index;
+    this.mode = 'edit';
+  }
+
+  public saveCard(index: number) {
+    console.log("Saving edit card: ", this.editIndex, "vs.", index);
+    this.loading = true;
+    setTimeout(() => {
+      this.mode = 'display';
+      this.loading = false;
+      this.editIndex = -1;
+    }, 2000);
+  }
+
+  public cancelEdit(index: number) {
+    console.log("Canceling editing card:", this.editCard, "vs.", index);
+    this.mode = 'display';
+    this.editIndex = -1;
   }
 
   public addDashboardElement() {
@@ -94,7 +116,7 @@ export class Dashboard implements OnInit {
   }
 }
 
-class DashboardElement {
+export class DashboardElement {
   public config: any = {};
   public card: CardConfig = new CardConfig(true, true, true);
   constructor(public data: DashboardDataService, title: string, size: string, public type: string,

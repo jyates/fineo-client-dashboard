@@ -44,7 +44,8 @@ export class BaseElemHandler<T extends ItemConfig> extends BaseCardEventHandler 
       if (result.length == 1) {
         return result[0];
       } else {
-        throw new TypeError("This only support a single row of data! Got result:\n" + result);
+        debugger;
+        throw new TypeError("This item only support a single row of data! Got result:\n" + result);
       }
     }
     return result;
