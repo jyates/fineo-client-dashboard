@@ -1,4 +1,4 @@
-import { AfterViewInit, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, EventEmitter, Input, Output, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Subject } from 'rxjs/Subject';
@@ -34,7 +34,7 @@ export class BaseElemHandler<T extends ItemConfig> extends BaseCardEventHandler 
       this.dataOut = Object.create(result);
     }
     if (changes['config']) {
-      this.updateConfig(this.config);
+      this.updateConfig(changes['config']);
     }
   }
 
@@ -52,5 +52,5 @@ export class BaseElemHandler<T extends ItemConfig> extends BaseCardEventHandler 
   }
 
   protected updateData(result): Object { return null; }
-  protected updateConfig(config): void { };
+  protected updateConfig(changes:SimpleChange): void { };
 }

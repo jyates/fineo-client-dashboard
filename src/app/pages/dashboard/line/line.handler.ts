@@ -1,6 +1,6 @@
-import { Component, ViewChild, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ViewChild, Input, EventEmitter, AfterViewInit, OnChanges, SimpleChange } from '@angular/core';
 import { BaseElemHandler, ItemConfig, Query } from '../components';
-import { LineConfig, LineQuery, Xaxis, QueryChartConfig } from './line.component'
+import { Line, LineConfig, LineQuery, Xaxis, QueryChartConfig } from './line.component'
 
 /**
 * Wrapper around a 'line-chart' that munges the incoming data into a palatable format. Its a bit clunky that we
@@ -53,6 +53,8 @@ export class LineHandler extends BaseElemHandler<LineConfig> {
   ]
   ];
 
+  @ViewChild(Line) public chart: Line;
+
   public configOut: LineConfig;
 
   protected updateData(results): Object {
@@ -69,12 +71,21 @@ export class LineHandler extends BaseElemHandler<LineConfig> {
     return out;
   }
 
-  public updateConfig(config) {
-    // if the configuration is coming from a serialized object, we need to translate it to a proper line config
-    if (!config || config instanceof LineConfig) {
+  public hintConfig(){
+    this.chart.hintConfig();
+  }
+
+  public updateConfig(changes:SimpleChange) {
+    if(!changes.currentValue){
+      return;
+    }
+    let config = changes.currentValue;
+    let previous = changes.previousValue;
+    if (config instanceof LineConfig) {
       this.configOut = config;
       return;
     }
+    debugger;
     // translate the given config into a proper line config
     let queries: Array<LineQuery> = [];
     if (config.queries) {

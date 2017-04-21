@@ -38,17 +38,6 @@ export class Line extends BaseCardComponent<LineConfig> {
   initChart(chart: any) {
     console.log("Chart is initialized");
     this.chartReady = true;
-    // TODO replace the initial zoom
-    // let zoomChart = () => {
-    //   chart.zoomToDates(new Date(2013, 3), new Date(2014, 0));
-    // };
-
-    // chart.addListener('rendered', zoomChart);
-    // zoomChart();
-
-    // if (chart.zoomChart) {
-    //   chart.zoomChart();
-    // }
     chart.addListener('rendered', () => {
       console.log("Chart is done rendering!");
       if (this.pendingConfig) {
@@ -71,7 +60,21 @@ export class Line extends BaseCardComponent<LineConfig> {
     this.updateChartData();
   }
 
+  public updateConfigExternal() {
+    console.log("Updating config from external request");
+    this.updateConfig();
+  }
+
+  public hintConfig(){
+    // debugger;
+    this.updateConfig();
+  }
+
   protected updateConfig() {
+    // debugger;
+    if(!this.config){
+      return;
+    }
     console.log("Updating config");
     this.chartData.categoryAxis = this.config.xAxis;
     this.chartData.categoryField = this.config.xAxis.name;

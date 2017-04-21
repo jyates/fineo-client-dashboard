@@ -81,7 +81,8 @@ export class LineItem extends BaseCreateItem<LineConfig> {
 
   private resetConfig(){
     console.log("re-setting config to force line object to respond");
-    this.chart.config = this.getConfig();
+    // this.chart.updateConfig({currentValue: this.config});
+    this.chart.hintConfig();
   }
 
   private xAxis(resolution = 'mm'): Xaxis {
@@ -95,7 +96,7 @@ export class LineItem extends BaseCreateItem<LineConfig> {
   }
 
   private addQueries(queries: FormArray) {
-    let current: LineQuery[] = <LineQuery[]>this.config.queries
+    let current = <LineQuery[]>this.config.queries
     if(!current){
       return;
     }
