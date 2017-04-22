@@ -69,6 +69,11 @@ export class LineItem extends BaseCreateItem<LineConfig> {
   }
 
   protected withConfig() {
+    // translate the current config into a line config, which we can modify and update properly,
+    // while correctly supporting the line handler
+    this.config = LineHandler.asLineConfig(this.config);
+
+    // track any from the config into the form
     this.setFields(this.config, this.form, ['queries', 'resolution', 'xAxis']);
     this.form.controls['resolution'].setValue(this.config.xAxis.minPeriod);
     let queries = <FormArray>this.form.controls['queries'];

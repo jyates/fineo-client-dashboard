@@ -85,7 +85,13 @@ export class LineHandler extends BaseElemHandler<LineConfig> {
       this.configOut = config;
       return;
     }
-    debugger;
+    // if we are in the standard dashboard, we get passed a standard Object, which we need to turn into a LineConfig,
+    // because line configs have functions that we need to leverage... or maybe we get rid of the line config functions
+    // in the gauge handler and do it in another object. But its done now and I have other things to do #startup
+    this.configOut = LineHandler.asLineConfig(config);
+  }
+
+  public static asLineConfig(config:any):LineConfig{
     // translate the given config into a proper line config
     let queries: Array<LineQuery> = [];
     if (config.queries) {
@@ -98,6 +104,6 @@ export class LineHandler extends BaseElemHandler<LineConfig> {
     }
     let x = config.xAxis;
     let xaxis = new Xaxis(x.name, x.parseDates, x.color, x.axisColor, x.minPeriod);
-    this.configOut = new LineConfig(config.title, config.size, queries, xaxis, config.type);
+    return new LineConfig(config.title, config.size, queries, xaxis, config.type);
   }
 }
