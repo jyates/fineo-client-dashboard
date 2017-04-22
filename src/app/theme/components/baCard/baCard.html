@@ -14,12 +14,12 @@
       <div>
         <div class="card-handle" [attr.dnd-sortable-handle]="sortable ? true : null">
           <button
-            *ngIf="editable"
+            [ngClass]="{'hide-button' : !editable}"
             class="btn btn-default btn-icon btn-icon-only edit-card"
             type="button"
             (click)="editItem()"><i style="vertical-align:center;" class="ion-gear-b"></i></button>
-          <button 
-            *ngIf="deletable"
+          <button
+          [ngClass]="{'hide-button' : !deletable}"
           class="btn btn-xs btn-danger edit-card"
           type="button"
           (click)="deleteItem()"><i class="ion-close-round"></i></button>

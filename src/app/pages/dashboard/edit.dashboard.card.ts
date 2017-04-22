@@ -93,9 +93,8 @@ export class EditDashboardCard implements OnInit {
   }
 
   public onCancel() {
-    debugger;
-    // this.item.config = JSON.parse(this.origConfig);
-    // this.cancel.emit(this.index);
+    this.item.config = JSON.parse(this.origConfig);
+    this.cancel.emit(this.index);
   }
 
   private alertUser(msg: string, cause: any) {

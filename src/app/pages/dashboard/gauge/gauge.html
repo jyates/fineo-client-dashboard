@@ -3,7 +3,7 @@
     class="pie-chart-item-container"
     [ngClass]="getSize()"
     [editable]="card.editable"
-    [deletable]="card/deletable"
+    [deletable]="card.deletable"
     [sortable]="card.sortable"
     (deleteEvent)="handleDelete($event)"
     (editEvent)="handleEdit($event)">
