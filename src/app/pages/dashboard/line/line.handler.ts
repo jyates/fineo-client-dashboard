@@ -23,33 +23,33 @@ import { Line, LineConfig, LineQuery, Xaxis, QueryChartConfig } from './line.com
 export class LineHandler extends BaseElemHandler<LineConfig> {
 
   public static DEMO_DATA = [[
-    { date: new Date(2012, 11, 1, 1, 1, 1, 1).getTime(), value: 0 },
-    { date: new Date(2013, 0, 1, 1, 1, 1, 1).getTime(), value: 15000 },
-    { date: new Date(2013, 1, 1, 1, 1, 1, 1).getTime(), value: 30000 },
-    { date: new Date(2013, 2).getTime(), value: 25000 },
-    { date: new Date(2013, 3).getTime(), value: 21000 },
-    { date: new Date(2013, 4).getTime(), value: 24000 },
-    { date: new Date(2013, 5).getTime(), value: 31000 },
-    { date: new Date(2013, 6).getTime(), value: 40000 },
-    { date: new Date(2013, 7).getTime(), value: 37000 },
-    { date: new Date(2013, 8).getTime(), value: 18000 },
-    { date: new Date(2013, 9).getTime(), value: 5000 },
-    { date: new Date(2013, 10).getTime(), value: 40000 },
-    { date: new Date(2013, 11).getTime(), value: 20000 }
+    { timestamp: new Date(2012, 11, 1, 1, 1, 1, 1).getTime(), value: 0 },
+    { timestamp: new Date(2013, 0, 1, 1, 1, 1, 1).getTime(), value: 15000 },
+    { timestamp: new Date(2013, 1, 1, 1, 1, 1, 1).getTime(), value: 30000 },
+    { timestamp: new Date(2013, 2).getTime(), value: 25000 },
+    { timestamp: new Date(2013, 3).getTime(), value: 21000 },
+    { timestamp: new Date(2013, 4).getTime(), value: 24000 },
+    { timestamp: new Date(2013, 5).getTime(), value: 31000 },
+    { timestamp: new Date(2013, 6).getTime(), value: 40000 },
+    { timestamp: new Date(2013, 7).getTime(), value: 37000 },
+    { timestamp: new Date(2013, 8).getTime(), value: 18000 },
+    { timestamp: new Date(2013, 9).getTime(), value: 5000 },
+    { timestamp: new Date(2013, 10).getTime(), value: 40000 },
+    { timestamp: new Date(2013, 11).getTime(), value: 20000 }
   ], [
-    { date: new Date(2012, 11, 1, 1, 1, 1, 1).getTime(), value: 0 },
-    { date: new Date(2013, 0, 1, 1, 1, 1, 1).getTime(), value: 19000 },
-    { date: new Date(2013, 1, 1, 1, 1, 1, 1).getTime(), value: 20000 },
-    { date: new Date(2013, 2).getTime(), value: 22000 },
-    { date: new Date(2013, 3).getTime(), value: 25000 },
-    { date: new Date(2013, 4).getTime(), value: 29000 },
-    { date: new Date(2013, 5).getTime(), value: 26000 },
-    { date: new Date(2013, 6).getTime(), value: 25000 },
-    { date: new Date(2013, 7).getTime(), value: 20000 },
-    { date: new Date(2013, 8).getTime(), value: 22000 },
-    { date: new Date(2013, 9).getTime(), value: 26000 },
-    { date: new Date(2013, 10).getTime(), value: 30000 },
-    { date: new Date(2013, 11).getTime(), value: 25000 }
+    { timestamp: new Date(2012, 11, 1, 1, 1, 1, 1).getTime(), value: 0 },
+    { timestamp: new Date(2013, 0, 1, 1, 1, 1, 1).getTime(), value: 19000 },
+    { timestamp: new Date(2013, 1, 1, 1, 1, 1, 1).getTime(), value: 20000 },
+    { timestamp: new Date(2013, 2).getTime(), value: 22000 },
+    { timestamp: new Date(2013, 3).getTime(), value: 25000 },
+    { timestamp: new Date(2013, 4).getTime(), value: 29000 },
+    { timestamp: new Date(2013, 5).getTime(), value: 26000 },
+    { timestamp: new Date(2013, 6).getTime(), value: 25000 },
+    { timestamp: new Date(2013, 7).getTime(), value: 20000 },
+    { timestamp: new Date(2013, 8).getTime(), value: 22000 },
+    { timestamp: new Date(2013, 9).getTime(), value: 26000 },
+    { timestamp: new Date(2013, 10).getTime(), value: 30000 },
+    { timestamp: new Date(2013, 11).getTime(), value: 25000 }
   ]
   ];
 

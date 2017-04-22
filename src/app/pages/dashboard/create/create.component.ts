@@ -56,8 +56,8 @@ export class CreateComponent implements OnInit {
     this.line = {
       data: LineHandler.DEMO_DATA,
       config: new LineConfig("Line Chart", "medium", [
-        new LineQuery("DEMO QUERY", "query1", colorHelper.hexToRgbA(graphColor, 0.3), new QueryChartConfig("g0", "date", "value")),
-        new LineQuery("DEMO QUERY", "query2", colorHelper.hexToRgbA(graphColor, 0.15), new QueryChartConfig("g1", "date", "value")),
+        new LineQuery("DEMO QUERY", "query1", colorHelper.hexToRgbA(graphColor, 0.3), new QueryChartConfig("g0", "timestamp", "value")),
+        new LineQuery("DEMO QUERY", "query2", colorHelper.hexToRgbA(graphColor, 0.15), new QueryChartConfig("g1", "timestamp", "value")),
       ],
         new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText, 'DD'), "smoothedLine")
     }

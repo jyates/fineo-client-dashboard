@@ -65,8 +65,8 @@ export class Dashboard implements OnInit {
       'Large Donut Chart', 'large', 'donut', JSON.stringify(dconfig), false));
 
     // and a simple line chart
-    let q1 = new LineQuery("DEMO QUERY", "query1", colorHelper.hexToRgbA(graphColor, 0.3), new QueryChartConfig("g0", "date", "value"));
-    let q2 = new LineQuery("DEMO QUERY", "query2", colorHelper.hexToRgbA(graphColor, 0.15), new QueryChartConfig("g1", "date", "value"));
+    let q1 = new LineQuery("DEMO QUERY", "query1", colorHelper.hexToRgbA(graphColor, 0.3), new QueryChartConfig("g0", "timestamp", "value"));
+    let q2 = new LineQuery("DEMO QUERY", "query2", colorHelper.hexToRgbA(graphColor, 0.15), new QueryChartConfig("g1", "timestamp", "value"));
     let xaxis = new Xaxis("date", true, layoutColors.defaultText, layoutColors.defaultText, 'DD');
     let lconfig = new LineConfig('fill', 'fill', [q1, q2], xaxis, 'smoothedLine');
     let slconfig = JSON.stringify(lconfig);
