@@ -52,7 +52,7 @@ An SSL certificate can be obtained from Let's Encrypt. This is achieved by simpl
 
 Start by creating a new certificate with:
 ```
-$ certbot certonly --manual
+$ sudo certbot certonly --manual
 ```
 
 Which will shortly bring you to a screen that says something like:
