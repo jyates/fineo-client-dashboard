@@ -64,9 +64,21 @@ ya6k1edW38z-your-value-here
 ```
 **Don't continue yet!!**
 
-Now you need to update/create the correct file under `src/.lets_encrypt` with the correct content.
+Now you need to update/create the correct file under `src/.lets_encrypt` with the correct content. This has been automated as a part of a deployment task, mediated by environment variables. The variables you need to set on the production app are:
 
-Now commit, build, and deploy the application. You should be able to browse to the expected Let's Encrypt file and see the correct output.
+ * LETS_ENCRYPT_FILE
+ * LETS_ENCYRPT_SECRET
+
+Generally, this will be in the form like:
+
+```
+LETS_ENCRYPT_FILE=8INHpryNgZwf9fdL7ZUaGErv8FRtR0KA0sBcynfoMds
+LETS_ENCRYPT_SECRET=8INHpryNgZwf9fdL7ZUaGErv8FRtR0KA0sBcynfoMds.ZiFMKNhK_iyLdSdCd0gVBAeiNjRDf47zYCWJaWeojo0
+```
+
+which maps ```LETS_ENCRYPT_SECRET``` to `http://app.fineo.io/.well-known/acme-challenge/${LETS_ENCRYPT_FILE}.html`.
+
+Then you just need to redeploy the application with the new path and verify that the Let's Encrypt path matches the value.
 
 See [this post](http://collectiveidea.com/blog/archives/2016/01/12/lets-encrypt-with-a-rails-app-on-heroku/) on how Let's Encrypt can work on Heroku and Rails (hint: this is only slightly different).
 
@@ -75,7 +87,7 @@ See [this post](http://collectiveidea.com/blog/archives/2016/01/12/lets-encrypt-
 When you are ready to update the certificate, do:
 
 ```
-$ certbot certonly --manual -d inchworm.io
+$ sudo certbot certonly --manual -d app.fineo.io
 ```
 
 ### Demo

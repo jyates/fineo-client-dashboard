@@ -163,7 +163,9 @@
     "build:electron.renderer": "npm run webpack -- --config config/electron/webpack.renderer.prod.js",
     "build:electron.main": "npm run webpack -- --config config/electron/webpack.electron.prod.js",
     "electron:start": "electron build",
-    "heroku-postbuild": "npm rebuild node-sass && npm run build:prod",
+
+    "lets-encrypt": "echo $LETS_ENCYRPT_SECRET > src/.lets_encrypt/acme-challenge/${LETS_ENCRYPT_FILE}.html",
+    "heroku-postbuild": "npm run lets-encrypt && npm rebuild node-sass && npm run build:prod",
     "rimraf": "rimraf",
     "webpack": "webpack --progress --profile --bail",
     "start": "npm run server:prod",
